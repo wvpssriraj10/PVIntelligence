@@ -1,7 +1,7 @@
 # ☀️ PVIntelligence
 
 > **AI-Driven Solar Power Forecasting using Transfer Learning & Explainable AI**  
-*Capstone Project — School of Computer Science and Engineering (SCOPE), VIT-AP University*[cite: 1]
+*Capstone Project — School of Computer Science and Engineering (SCOPE), VIT-AP University*
 
 ---
 
