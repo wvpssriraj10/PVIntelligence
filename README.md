@@ -60,3 +60,23 @@ To solve the challenge of **data scarcity in newly built solar farms**, PVIntell
    ┌─────────┴─────────┐
    ▼                   ▼
 [ SHAP XAI ]   [ Streamlit Web App ]
+
+```
+
+## Project Structure
+
+```text
+PVIntelligence/
+├── data/
+│   ├── raw/          # Raw, immutable data
+│   └── processed/    # Cleaned data ready for modeling
+├── models/           # Trained model weights, checkpoints, and artifacts
+├── notebooks/        # Jupyter notebooks for EDA and prototyping
+├── outputs/          # Generated figures, plots, and evaluation metrics
+├── src/              # Source code for data pipelines and modeling
+├── .gitignore        # Files ignored by Git
+├── pyproject.toml    # Project configuration and dependency definitions
+├── README.md         # Project documentation
+└── setup.py          # Setup script for project setup
+
+```
