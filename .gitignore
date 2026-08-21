@@ -1,0 +1,19 @@
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Data and Large Artifacts
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+models/*
+!models/.gitkeep
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+__pycache__/
+*.pyc
