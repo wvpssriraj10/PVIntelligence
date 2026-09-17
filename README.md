@@ -25,10 +25,9 @@ To solve the challenge of **data scarcity in newly built solar farms**, PVIntell
 | Contributor | Registration No. | Project Role | Primary Focus |
 | :--- | :--- | :--- | :--- |
 | **W V P S SRIRAJ** | `23BCE8414` | AI Deployment, XAI & Web Lead | Inference pipeline, SHAP XAI integration, Streamlit dashboard, GitHub integration |
-| **HARSH** | `23BCE8505` | Data Preparation Specialist | Data cleaning, pipeline management, feature engineering, timestamp alignment |
+| **HARSH** | `23BCE8505` | Transfer Learning Specialist | Layer freezing, fine-tuning on Region B dataset, comparative benchmarking |
 | **M JAHNAVI** | `23BCE8470` | Deep Learning Architect | Model architecture (LSTM/GRU), base model training on Region A, error metrics |
-| **AASTHA SHARMA** | `23BCE9279` | Transfer Learning Specialist | Layer freezing, fine-tuning on Region B dataset, comparative benchmarking |
-
+| **AASTHA SHARMA** | `23BCE9279`| Data Preparation Specialist | Data cleaning, pipeline management, feature engineering, timestamp alignment | 
 ---
 
 ## 🛠️ Tech Stack
