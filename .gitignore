@@ -17,3 +17,13 @@ models/*
 .DS_Store
 __pycache__/
 *.pyc
+
+# Environment secrets
+.env
+.env.local
+.env.prod
+*.key
+*.pem
+
+# Streamlit local cache
+.streamlit/secrets.toml
