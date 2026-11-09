@@ -1,575 +1,694 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="PVIntelligence is an AI-powered solar forecasting dashboard using transfer learning and explainable forecasting for solar regions." />
-    <title>PVIntelligence — Solar Forecasting</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="splash-container" class="splash-overlay" aria-live="polite">
-      <div class="splash-text" aria-label="PVIntelligence">
-        <span class="letter accent" style="animation-delay: 0.1s">P</span>
-        <span class="letter accent" style="animation-delay: 0.2s">V</span>
-        <span class="letter" style="animation-delay: 0.3s">I</span>
-        <span class="letter" style="animation-delay: 0.4s">n</span>
-        <span class="letter" style="animation-delay: 0.5s">t</span>
-        <span class="letter" style="animation-delay: 0.6s">e</span>
-        <span class="letter" style="animation-delay: 0.7s">l</span>
-        <span class="letter" style="animation-delay: 0.8s">l</span>
-        <span class="letter" style="animation-delay: 0.9s">i</span>
-        <span class="letter" style="animation-delay: 1.0s">g</span>
-        <span class="letter" style="animation-delay: 1.1s">e</span>
-        <span class="letter" style="animation-delay: 1.2s">n</span>
-        <span class="letter" style="animation-delay: 1.3s">c</span>
-        <span class="letter" style="animation-delay: 1.4s">e</span>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="PVIntelligence — AI-powered solar forecasting using LSTM+GRU transfer learning and SHAP explainability for real-time plant performance." />
+  <meta property="og:title" content="PVIntelligence — Solar Forecasting AI" />
+  <meta property="og:description" content="Real-time AI forecasting dashboard for solar plants. Transfer learning, SHAP explainability, ESP32 integration." />
+  <meta property="og:type" content="website" />
+  <title>PVIntelligence — Solar Forecasting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=3.5" />
+</head>
+<body>
+
+  <!-- SPLASH -->
+  <div id="splash-container" class="splash-overlay" aria-live="polite" aria-label="Loading PVIntelligence">
+    <div class="splash-text" aria-hidden="true">
+      <span class="letter accent" style="animation-delay:.10s">P</span><span class="letter accent" style="animation-delay:.20s">V</span><span class="letter" style="animation-delay:.30s">I</span><span class="letter" style="animation-delay:.40s">n</span><span class="letter" style="animation-delay:.50s">t</span><span class="letter" style="animation-delay:.60s">e</span><span class="letter" style="animation-delay:.70s">l</span><span class="letter" style="animation-delay:.80s">l</span><span class="letter" style="animation-delay:.90s">i</span><span class="letter" style="animation-delay:1.00s">g</span><span class="letter" style="animation-delay:1.10s">e</span><span class="letter" style="animation-delay:1.20s">n</span><span class="letter" style="animation-delay:1.30s">c</span><span class="letter" style="animation-delay:1.40s">e</span>
     </div>
+    <div class="splash-sub">AI-powered solar forecasting</div>
+  </div>
 
-    <button class="btn secondary menubtn" id="menubtn" aria-label="Open navigation">☰</button>
+  <button class="btn secondary menubtn" id="menubtn" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
 
-    <div class="shell">
-      <aside class="rail" id="rail">
-        <div class="brand">
-          <span class="brand-mark"></span>
-          <div class="brand-text">
-            <strong>PVIntelligence</strong>
-            <span>Solar forecasting</span>
+  <div class="shell">
+
+    <!-- ═══════════════ SIDEBAR ════════════════ -->
+    <aside class="rail" id="rail" role="navigation" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-mark" role="img" aria-label="PVIntelligence logo"></div>
+        <div class="brand-text">
+          <strong>PVIntelligence</strong>
+          <span>Solar forecasting</span>
+        </div>
+      </div>
+      <nav id="nav" class="nav" aria-label="Dashboard sections"></nav>
+      <div class="rail-footer">
+        <label for="regionSel">Active region</label>
+        <select id="regionSel" class="select" aria-label="Choose active region">
+          <option value="A">Region A &middot; 650 kWp</option>
+          <option value="B">Region B &middot; 500 kWp</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- ═══════════════ MAIN ════════════════════ -->
+    <main class="main" id="main-content">
+
+      <!-- ── LANDING ──────────────────────────── -->
+      <section class="section hero active" id="landing" aria-label="Landing">
+        <div class="hero-grid">
+          <!-- Left: headline + proof + CTA -->
+          <div class="hero-content">
+            <span class="kicker">Solar forecasting intelligence</span>
+            <h1 class="hero-title">See solar output<br>before demand peaks.</h1>
+            <p class="lede">PVIntelligence converts solar plant telemetry and manual inputs into accurate 7-day generation forecasts using LSTM + GRU transfer learning.</p>
+
+            <div class="hero-proof-bar" role="region" aria-label="Model metrics">
+              <span class="proof-badge">Model verified</span>
+              <span class="proof-text"><strong>LSTM + GRU</strong> &middot; R&sup2; <strong>0.94</strong> &middot; trained on <strong>120 days</strong> &middot; transfer learning cuts data need by <strong>80%</strong></span>
+            </div>
+
+            <div class="actions">
+              <button class="btn" type="button" onclick="go('input')" aria-label="Run live forecast">
+                &#9654;&nbsp; Run live forecast
+              </button>
+              <button class="btn secondary" type="button" onclick="go('about')" aria-label="Architecture and model details">
+                Architecture &amp; pipeline &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: live power curve card -->
+          <div class="card card--glow hero-power-card" role="region" aria-label="Current output summary">
+            <div class="power-card-header">
+              <div>
+                <div class="card-title">Current output</div>
+                <div class="power-kpi kpi" id="heroKw" aria-live="polite">380 kW</div>
+                <div class="power-timestamp muted" id="heroTimestamp">Demo data &middot; Updated 12s ago</div>
+              </div>
+              <span class="status-pill warning" id="heroStatusPill" role="status">Demo data</span>
+            </div>
+
+            <div class="hero-chart-wrap">
+              <canvas id="heroChart" height="180" aria-label="Full-day solar generation curve with 7-day forecast"></canvas>
+              <div id="heroPulseDot" class="hero-live-dot" style="display:none;" aria-hidden="true">
+                <span class="dot-ring"></span>
+                <span class="dot-core"></span>
+              </div>
+            </div>
+
+            <div class="power-card-footer">
+              <div class="power-stat">
+                <span class="card-title">7-day forecast</span>
+                <strong class="kpi" id="heroPower">17,300 kWh</strong>
+              </div>
+              <div class="power-stat-divider" aria-hidden="true"></div>
+              <div class="power-stat">
+                <span class="card-title">Peak today</span>
+                <strong class="kpi" id="heroPeak">487 kW</strong>
+              </div>
+            </div>
           </div>
         </div>
 
-        <nav id="nav" class="nav"></nav>
-
-        <div class="rail-footer">
-          <label for="regionSel">Active region</label>
-          <select id="regionSel" class="select" aria-label="Choose active region">
-            <option value="A">Region A</option>
-            <option value="B">Region B</option>
-          </select>
+        <!-- Metric proof strip below hero grid (fills black void & grounds page) -->
+        <div class="hero-metrics-strip" role="list">
+          <div class="hero-metric-item" role="listitem">
+            <span class="metric-label">Model accuracy</span>
+            <strong class="metric-val">R&sup2; 0.94</strong>
+            <span class="metric-sub">4.2% RMSE on holdout test set</span>
+          </div>
+          <div class="hero-metric-item" role="listitem">
+            <span class="metric-label">Transfer learning</span>
+            <strong class="metric-val">80% less data</strong>
+            <span class="metric-sub">18 days matches 120-day baseline</span>
+          </div>
+          <div class="hero-metric-item" role="listitem">
+            <span class="metric-label">Forecast horizon</span>
+            <strong class="metric-val">7 days &middot; 168 hrs</strong>
+            <span class="metric-sub">SHAP explainability per step</span>
+          </div>
         </div>
-      </aside>
+      </section>
 
-      <main class="main">
-        <section class="section hero active" id="landing">
-          <span class="kicker">Live solar intelligence</span>
-          <div class="hero-grid">
-            <div>
-              <h1>See solar output before demand peaks.</h1>
-              <p class="lede">
-                PVIntelligence converts live plant data and prototype readings into clearer forecasting decisions,
-                helping you estimate generated power, expected output windows, and the next high-performance days with confidence.
-              </p>
+      <!-- ── PLANT INPUT ───────────────────────── -->
+      <section class="section" id="input" aria-label="Plant input and live forecast">
+        <h1>Plant input &amp; live forecast</h1>
+        <p class="lede">Enter manual values to calculate power output and the 7-day forecast horizon.</p>
 
-              <div class="actions">
-                <button class="btn" type="button" onclick="go('input')">Start analysis</button>
-                <button class="btn secondary" type="button" onclick="go('about')">See how it works</button>
-              </div>
-
-              <div class="feature-row">
-                <span>Prototype-ready</span>
-                <span>Manual inputs</span>
-                <span>7-day forecast</span>
-              </div>
+        <div class="input-grid">
+          <div class="card" role="form" aria-label="Manual input form">
+            <div class="card-title">Manual input</div>
+            <div class="input-stack">
+              <label>
+                <span>Solar irradiance (W/m²)</span>
+                <input id="irradianceInput" type="number" min="0" max="1400" value="780" aria-label="Solar irradiance" />
+              </label>
+              <label>
+                <span>Ambient temperature (°C)</span>
+                <input id="tempInput" type="number" min="-10" max="60" value="31" aria-label="Ambient temperature" />
+              </label>
+              <label>
+                <span>Plant capacity (kWp)</span>
+                <input id="capacityInput" type="number" min="50" max="2000" value="650" aria-label="Plant capacity" />
+              </label>
+              <label>
+                <span>Forecast days</span>
+                <input id="forecastDaysInput" type="number" min="1" max="30" value="7" aria-label="Forecast days" />
+              </label>
             </div>
-
-            <div class="summary-panel card">
-              <div class="summary-header">
-                <div>
-                  <div class="card-title">Live System Summary</div>
-                  <div class="summary-title">Current performance</div>
-                </div>
-                <span class="status-pill success">Online</span>
-              </div>
-
-              <div class="summary-metric">
-                <span class="summary-label">Generated solar power</span>
-                <strong id="summaryGenerated">38.4 kW</strong>
-              </div>
-
-              <div class="summary-metric">
-                <span class="summary-label">Forecast window</span>
-                <strong id="summaryDays">5 days</strong>
-              </div>
-
-              <div class="summary-metric">
-                <span class="summary-label">Projected energy</span>
-                <strong id="summaryForecast">51.8 kWh</strong>
-              </div>
-
-              <div class="summary-status">
-                <span>Prototype status</span>
-                <strong id="statusValue">Connected</strong>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="input">
-          <h1>Plant input &amp; live forecast</h1>
-          <p class="lede">Enter manual values or use the connected prototype reading to calculate power output and the upcoming forecast horizon.</p>
-
-          <div class="input-grid">
-            <div class="card">
-              <div class="card-title">Manual input</div>
-
-              <div class="input-stack">
-                <label>
-                  <span>Solar irradiance (W/m²)</span>
-                  <input id="irradianceInput" type="number" min="0" max="1400" value="780" />
-                </label>
-
-                <label>
-                  <span>Ambient temperature (°C)</span>
-                  <input id="tempInput" type="number" min="-10" max="60" value="31" />
-                </label>
-
-                <label>
-                  <span>Plant capacity (kWp)</span>
-                  <input id="capacityInput" type="number" min="50" max="2000" value="650" />
-                </label>
-
-                <label>
-                  <span>Forecast days</span>
-                  <input id="forecastDaysInput" type="number" min="1" max="30" value="5" />
-                </label>
-              </div>
-
-              <div class="actions" style="margin-top: 18px;">
-                <button class="btn" type="button" onclick="updateLiveSummary()">Run forecast</button>
-                <button class="btn secondary" type="button" onclick="go('dashboard')">View dashboard</button>
-              </div>
-            </div>
-
-            <div class="card summary-panel summary-panel-large">
-              <div class="summary-header">
-                <div>
-                  <div class="card-title">Forecast result</div>
-                  <div class="summary-title">Based on current reading</div>
-                </div>
-                <span class="status-pill warning">Live</span>
-              </div>
-
-              <div class="summary-metric large">
-                <span class="summary-label">Generated solar power</span>
-                <strong id="liveGenerated">38.4 kW</strong>
-              </div>
-
-              <div class="summary-metric large">
-                <span class="summary-label">Next forecast period</span>
-                <strong id="liveDays">5 days</strong>
-              </div>
-
-              <div class="summary-metric large">
-                <span class="summary-label">Expected output</span>
-                <strong id="liveForecast">51.8 kWh</strong>
-              </div>
-
-              <div class="summary-status">
-                <span>Prototype reading source</span>
-                <strong id="sourceStatus">Manual input</strong>
-              </div>
+            <div class="actions">
+              <button class="btn" type="button" onclick="updateLiveSummary()" aria-label="Run forecast">&#9654;&nbsp; Run Forecast</button>
+              <button class="btn secondary" type="button" onclick="go('dashboard')">View Dashboard</button>
             </div>
           </div>
 
-          <div class="card" style="margin-top: 22px;">
-            <div class="section-head">
-              <h2 id="histTitle">Region A — history sample</h2>
-              <span class="badge success" id="histBadge">120 days loaded</span>
+          <!-- Result card — wider, glowing -->
+          <div class="card card--glow summary-panel summary-panel-large" role="region" aria-label="Forecast result">
+            <div class="summary-header">
+              <div>
+                <div class="card-title">Forecast result</div>
+                <div class="summary-title">Based on current reading</div>
+              </div>
+              <span class="status-pill warning" id="sourceStatusPill" role="status">Demo data</span>
             </div>
 
-            <div class="table-wrap">
-              <table id="histTable"></table>
+            <div class="summary-metric large">
+              <span class="summary-label">Current output</span>
+              <strong id="liveGenerated" aria-live="polite">380 kW</strong>
+            </div>
+            <div class="summary-metric large">
+              <span class="summary-label">Forecast period</span>
+              <strong id="liveDays" aria-live="polite">7 days</strong>
+            </div>
+            <div class="summary-metric large">
+              <span class="summary-label">Expected output</span>
+              <strong id="liveForecast" aria-live="polite">17,300 kWh</strong>
+            </div>
+
+            <div class="summary-status">
+              <span>Data source</span>
+              <strong id="sourceStatus">Demo data</strong>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section class="section" id="prep">
-          <h1>Data preparation</h1>
-          <p class="lede">Missing-value checks and the features engineered before training.</p>
-
-          <div class="cards-grid cols-4">
-            <div class="card metric-card">
-              <div class="card-title">Rows</div>
-              <div class="metric-value" id="prepRows">2,880</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Missing values</div>
-              <div class="metric-value">0.3%</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Date range</div>
-              <div class="metric-value" style="font-size: 1.1rem;">Apr – Jul 2026</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Status</div>
-              <span class="badge success">Ready</span>
-            </div>
+        <div class="card card-gap">
+          <div class="section-head">
+            <h2 id="histTitle">Region A — history sample</h2>
+            <span class="badge success" id="histBadge">Showing 3 of 120 days</span>
           </div>
+          <div class="table-wrap">
+            <table id="histTable" aria-label="Historical sensor data">
+              <thead>
+                <tr><th>Date</th><th>Hour</th><th>GHI</th><th>Temp °C</th><th class="num">Cloud %</th><th class="num">Output kW</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-          <div class="card" style="margin-top: 22px;">
-            <h2>Engineered features</h2>
-            <div class="table-wrap">
-              <table>
-                <tr><th>Feature</th><th>Purpose</th></tr>
+      <!-- ── DATA PREP ─────────────────────────── -->
+      <section class="section" id="prep" aria-label="Data preparation">
+        <h1>Data preparation</h1>
+        <p class="lede">Missing-value checks and the features engineered before training.</p>
+
+        <div class="cards-grid cols-4">
+          <div class="card metric-card edge-green">
+            <div class="card-title">Rows</div>
+            <div class="metric-value" id="prepRows">2,880</div>
+          </div>
+          <div class="card metric-card">
+            <div class="card-title">Missing values</div>
+            <div class="metric-value">0.3%</div>
+          </div>
+          <div class="card metric-card">
+            <div class="card-title">Date range</div>
+            <div class="metric-value" style="font-size:1.1rem">Apr – Jul 2026</div>
+          </div>
+          <div class="card metric-card">
+            <div class="card-title">Status</div>
+            <span class="badge success" style="margin-top:14px">Ready</span>
+          </div>
+        </div>
+
+        <div class="card card-gap">
+          <h2>Engineered features</h2>
+          <div class="table-wrap">
+            <table aria-label="Engineered features">
+              <thead><tr><th>Feature</th><th>Purpose</th></tr></thead>
+              <tbody>
                 <tr><td>hour_sin / hour_cos</td><td>Cyclical encoding of hour-of-day</td></tr>
-                <tr><td>clear_sky_ratio</td><td>Irradiance normalized to a clear-sky reference</td></tr>
-                <tr><td>temp_delta</td><td>Deviation from 25°C, the panel de-rate reference</td></tr>
+                <tr><td>clear_sky_ratio</td><td>Irradiance normalized to clear-sky reference</td></tr>
+                <tr><td>temp_delta</td><td>Deviation from 25°C panel de-rate reference</td></tr>
                 <tr><td>rolling_cloud_3h</td><td>3-hour rolling average of cloud cover</td></tr>
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <div class="card" style="margin-top: 22px;">
-            <canvas id="cloudHist" height="90"></canvas>
+        <div class="card card-gap">
+          <div class="chart-wrap">
+            <canvas id="cloudHist" height="200" aria-label="Cloud cover distribution"></canvas>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section" id="basemodel">
-          <h1>Base model — LSTM/GRU</h1>
-          <p class="lede">Trained on Region A's full history.</p>
+      <!-- ── BASE MODEL ────────────────────────── -->
+      <section class="section" id="basemodel" aria-label="Base model">
+        <h1>Base model — LSTM/GRU</h1>
+        <p class="lede">Trained on Region A's full 120-day history.</p>
 
-          <div class="cards-grid cols-2" style="align-items: start;">
-            <div class="card">
-              <h2>Architecture</h2>
-              <div class="table-wrap">
-                <table>
+        <div class="cards-grid cols-2" style="align-items:start">
+          <div class="card">
+            <h2>Architecture</h2>
+            <div class="table-wrap">
+              <table aria-label="Model architecture">
+                <tbody>
                   <tr><td>Input</td><td>24h window, 6 features</td></tr>
                   <tr><td>LSTM(64)</td><td>return sequences</td></tr>
                   <tr><td>Dropout</td><td>0.2</td></tr>
                   <tr><td>GRU(32)</td><td>—</td></tr>
                   <tr><td>Dense(16)</td><td>ReLU</td></tr>
-                  <tr><td>Dense(1)</td><td>linear, predicted kW</td></tr>
-                </table>
-              </div>
-              <button class="btn" type="button" style="margin-top: 16px;" onclick="this.textContent='Training…';setTimeout(()=>this.textContent='Trained ✓',900)">Train base model</button>
-            </div>
-
-            <div class="card">
-              <canvas id="lossChart" height="220"></canvas>
-            </div>
-          </div>
-
-          <div class="cards-grid cols-4" style="margin-top: 18px;">
-            <div class="card metric-card">
-              <div class="card-title">Final val RMSE</div>
-              <div class="metric-value">5.8 kW</div>
-              <span class="badge success" style="margin-top: 12px;">Converged</span>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Final train RMSE</div>
-              <div class="metric-value">5.1 kW</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">MAE</div>
-              <div class="metric-value">4.1 kW</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Epochs</div>
-              <div class="metric-value">50</div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="transfer">
-          <h1>Transfer learning — Region B</h1>
-          <p class="lede">Fine-tuning the Region A model instead of training Region B from scratch.</p>
-
-          <div class="cards-grid cols-2" style="align-items: start;">
-            <div class="card">
-              <h2>Fine-tune controls</h2>
-              <div class="spread" style="flex-direction: column; align-items: stretch; gap: 14px; margin-top: 12px;">
-                <label class="muted">Strategy
-                  <select class="select" style="margin-top: 8px;">
-                    <option>Train from scratch</option>
-                    <option>Frozen feature extractor</option>
-                    <option selected>Fine-tuned transfer</option>
-                  </select>
-                </label>
-
-                <label class="muted">Fine-tune epochs
-                  <input type="range" min="5" max="100" value="25" style="margin-top: 8px;" />
-                </label>
-              </div>
-
-              <button class="btn" type="button" style="margin-top: 18px;" onclick="this.textContent='Running…';setTimeout(()=>this.textContent='Done ✓',900)">Run transfer learning</button>
-            </div>
-
-            <div class="card">
-              <canvas id="tlChart" height="220"></canvas>
-            </div>
-          </div>
-
-          <div class="card" style="margin-top: 22px;">
-            <div class="table-wrap">
-              <table>
-                <tr><th>Strategy</th><th>Training days</th><th>RMSE (kW)</th><th>MAE (kW)</th><th>Time (min)</th></tr>
-                <tr><td>Train from scratch</td><td>90</td><td>14.8</td><td>11.1</td><td>42</td></tr>
-                <tr><td>Frozen feature extractor</td><td>25</td><td>11.2</td><td>8.4</td><td>9</td></tr>
-                <tr><td>Fine-tuned transfer</td><td>18</td><td>6.9</td><td>4.9</td><td>11</td></tr>
+                  <tr><td>Dense(1)</td><td>linear — predicted kW</td></tr>
+                </tbody>
               </table>
             </div>
-            <div class="spread" style="margin-top: 16px; gap: 10px;">
-              <span class="badge success">53% RMSE improvement over scratch</span>
-              <span class="badge success">80% less training data required</span>
+            <div class="actions">
+              <button class="btn" type="button"
+                onclick="this.classList.add('loading');setTimeout(()=>{this.classList.remove('loading');this.textContent='Trained ✓'},900)"
+                aria-label="Train base model">Train base model</button>
             </div>
           </div>
-        </section>
-
-        <section class="section" id="dashboard">
-          <h1>Forecasting dashboard</h1>
-          <p class="lede" id="dashRegionLabel">Region A — current output and forecasts.</p>
-
-          <div class="cards-grid cols-4">
-            <div class="card metric-card">
-              <div class="card-title">Current output</div>
-              <div class="metric-value" id="curKw">38.4 kW</div>
-              <span class="badge success" style="margin-top: 12px;">Live (simulated)</span>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Predicted peak today</div>
-              <div class="metric-value" id="peakKw">61.2 kW</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">7-day forecast</div>
-              <div class="metric-value" id="wk7">3,380 kWh</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Model confidence</div>
-              <div class="metric-value">91%</div>
-              <span class="badge success" style="margin-top: 12px;">High</span>
+          <div class="card">
+            <div class="chart-wrap">
+              <canvas id="lossChart" height="200" aria-label="Training loss curve"></canvas>
             </div>
           </div>
+        </div>
 
-          <div class="cards-grid cols-2" style="margin-top: 18px; align-items: start;">
-            <div class="card">
-              <h2>24h actual vs predicted</h2>
-              <canvas id="dayChart" height="220"></canvas>
+        <div class="cards-grid cols-4" style="margin-top:16px">
+          <div class="card metric-card edge-green">
+            <div class="card-title">Final val RMSE</div>
+            <div class="metric-value">5.8 kW</div>
+            <span class="badge success" style="margin-top:10px">Converged</span>
+          </div>
+          <div class="card metric-card">
+            <div class="card-title">Final train RMSE</div>
+            <div class="metric-value">5.1 kW</div>
+          </div>
+          <div class="card metric-card">
+            <div class="card-title">MAE</div>
+            <div class="metric-value">4.1 kW</div>
+          </div>
+          <div class="card metric-card">
+            <div class="card-title">Epochs</div>
+            <div class="metric-value">50</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TRANSFER LEARNING ─────────────────── -->
+      <section class="section" id="transfer" aria-label="Transfer learning">
+        <h1>Transfer learning — Region B</h1>
+        <p class="lede">Fine-tuning the Region A model instead of training Region B from scratch.</p>
+
+        <div class="cards-grid cols-2" style="align-items:start">
+          <div class="card">
+            <h2>Fine-tune controls</h2>
+            <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px">
+              <label style="display:grid;gap:5px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Strategy
+                <select class="select" aria-label="Transfer learning strategy">
+                  <option>Train from scratch</option>
+                  <option>Frozen feature extractor</option>
+                  <option selected>Fine-tuned transfer</option>
+                </select>
+              </label>
+              <label style="display:grid;gap:5px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Fine-tune epochs
+                <input type="range" min="5" max="100" value="25" aria-label="Fine-tune epochs" aria-valuenow="25" />
+              </label>
             </div>
-            <div class="card">
-              <h2>7-day forecast</h2>
-              <canvas id="weekChart" height="220"></canvas>
+            <div class="actions">
+              <button class="btn" type="button"
+                onclick="this.classList.add('loading');setTimeout(()=>{this.classList.remove('loading');this.textContent='Done ✓'},900)"
+                aria-label="Run transfer learning">Run transfer learning</button>
             </div>
           </div>
-
-          <div class="cards-grid cols-3" style="margin-top: 18px;">
-            <div class="card metric-card">
-              <div class="card-title">Cloud cover</div>
-              <div class="metric-value" style="font-size: 1.35rem;">32%</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Ambient temp</div>
-              <div class="metric-value" style="font-size: 1.35rem;">31.2°C</div>
-            </div>
-            <div class="card metric-card">
-              <div class="card-title">Wind speed</div>
-              <div class="metric-value" style="font-size: 1.35rem;">9 km/h</div>
+          <div class="card">
+            <div class="chart-wrap">
+              <canvas id="tlChart" height="200" aria-label="RMSE by strategy"></canvas>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section class="section" id="xai">
-          <h1>Explainable AI</h1>
-          <p class="lede">Why the model predicted what it predicted, for the current forecast.</p>
+        <div class="card card-gap">
+          <div class="table-wrap">
+            <table aria-label="Strategy comparison">
+              <thead>
+                <tr><th>Strategy</th><th class="num">Training days</th><th class="num">RMSE (kW)</th><th class="num">MAE (kW)</th><th class="num">Time (min)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Train from scratch</td><td class="num">90</td><td class="num">14.8</td><td class="num">11.1</td><td class="num">42</td></tr>
+                <tr><td>Frozen feature extractor</td><td class="num">25</td><td class="num">11.2</td><td class="num">8.4</td><td class="num">9</td></tr>
+                <tr><td><strong>Fine-tuned transfer</strong></td><td class="num"><strong>18</strong></td><td class="num"><strong>6.9</strong></td><td class="num"><strong>4.9</strong></td><td class="num">11</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="spread" style="margin-top:14px;gap:8px">
+            <span class="badge success">53% RMSE improvement over scratch</span>
+            <span class="badge success">80% less training data required</span>
+          </div>
+        </div>
+      </section>
 
-          <div class="cards-grid cols-2" style="align-items: start;">
-            <div>
-              <div class="card metric-card">
-                <div class="card-title">Base value</div>
-                <div class="metric-value">18.4 kW</div>
+      <!-- ── DASHBOARD ─────────────────────────── -->
+      <section class="section" id="dashboard" aria-label="Forecasting dashboard">
+        <h1>Forecasting dashboard</h1>
+        <p class="lede" id="dashRegionLabel">Region A — current output and 7-day forecast.</p>
+
+        <!-- Today at a glance -->
+        <div class="glance-strip" id="glanceStrip" role="status" aria-label="Today at a glance">
+          <span>☀&nbsp;Peak expected <strong>12:40</strong></span>
+          <span class="sep">&middot;</span>
+          <span>☁&nbsp;Cloud risk <strong class="success">Low</strong></span>
+          <span class="sep">&middot;</span>
+          <span>🌡&nbsp;<strong id="glanceTemp">31.2°C</strong></span>
+          <span class="sep">&middot;</span>
+          <span>Model error <strong>±5.8 kW</strong></span>
+        </div>
+
+        <div class="cards-grid cols-4">
+          <div class="card metric-card edge-green">
+            <div class="card-title">Current output</div>
+            <div class="metric-value xl kpi" id="curKw" aria-live="polite">380 kW</div>
+            <div class="kpi-delta up" id="curDelta">▲ 4% vs yesterday</div>
+          </div>
+          <div class="card metric-card edge-blue">
+            <div class="card-title">Predicted peak today</div>
+            <div class="metric-value xl kpi" id="peakKw" aria-live="polite">487 kW</div>
+            <div class="kpi-delta flat">at 12:40 today</div>
+          </div>
+          <div class="card metric-card edge-blue">
+            <div class="card-title">7-day forecast</div>
+            <div class="metric-value xl kpi" id="wk7" aria-live="polite">17,300 kWh</div>
+            <div class="kpi-delta up">▲ 2% vs last week</div>
+          </div>
+          <div class="card metric-card edge-amber">
+            <div class="card-title">Model confidence</div>
+            <div class="conf-wrap">
+              <svg class="conf-ring" viewBox="0 0 36 36" aria-label="Model confidence 91 percent">
+                <circle class="conf-ring-bg" cx="18" cy="18" r="15.9" stroke-width="3"/>
+                <circle class="conf-ring-fill" cx="18" cy="18" r="15.9"
+                  stroke="#f4a942" stroke-width="3"
+                  stroke-dasharray="91 100"
+                  stroke-linecap="round"
+                  transform="rotate(-90 18 18)"/>
+                <text x="18" y="22.5" text-anchor="middle" fill="#f4a942" font-size="8.5" font-weight="800" font-family="Figtree,sans-serif">91%</text>
+              </svg>
+              <div>
+                <div style="font-size:11px;color:var(--muted)">R² score</div>
+                <div style="font-size:15px;font-weight:800">0.94</div>
               </div>
-              <div class="card metric-card" style="margin-top: 16px;">
-                <div class="card-title">Final prediction</div>
-                <div class="metric-value">23.9 kW</div>
-              </div>
             </div>
+            <span class="badge success" style="margin-top:4px">High confidence</span>
+          </div>
+        </div>
 
-            <div class="card">
-              <h2>Feature contributions</h2>
-              <div id="shapBars" style="margin-top: 18px;"></div>
+        <div class="cards-grid cols-2" style="margin-top:16px;align-items:start">
+          <div class="card">
+            <h2>24h actual vs predicted</h2>
+            <div class="chart-wrap">
+              <canvas id="dayChart" height="210" aria-label="24h actual vs predicted chart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h2>7-day forecast</h2>
+            <div class="chart-wrap">
+              <canvas id="weekChart" height="210" aria-label="7-day energy forecast"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sensor mini cards -->
+        <div class="cards-grid cols-3" style="margin-top:16px">
+          <div class="card metric-card sensor-mini">
+            <div class="card-title">☁ Cloud cover</div>
+            <div class="metric-value" style="font-size:1.6rem">32%</div>
+            <div class="sensor-trend">▼ 5% vs morning</div>
+          </div>
+          <div class="card metric-card sensor-mini">
+            <div class="card-title">🌡 Ambient temp</div>
+            <div class="metric-value" style="font-size:1.6rem">31.2°C</div>
+            <div class="sensor-trend">▲ 2°C vs yesterday</div>
+          </div>
+          <div class="card metric-card sensor-mini">
+            <div class="card-title">💨 Wind speed</div>
+            <div class="metric-value" style="font-size:1.6rem">9 km/h</div>
+            <div class="sensor-trend">Stable (3.2 m/s)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── EXPLAINABLE AI ───────────────────── -->
+      <section class="section" id="xai" aria-label="Explainable AI">
+        <h1>Explainable AI — SHAP</h1>
+        <p class="lede">Feature contributions to the current forecast. Sorted by absolute impact.</p>
+
+        <div class="cards-grid cols-2" style="align-items:start">
+          <div>
+            <div class="card metric-card edge-blue">
+              <div class="card-title">Base value</div>
+              <div class="metric-value">18.4 kW</div>
+              <div class="kpi-delta flat">average model output</div>
+            </div>
+            <div class="card metric-card edge-green" style="margin-top:14px">
+              <div class="card-title">Final prediction</div>
+              <div class="metric-value">23.9 kW</div>
+              <div class="kpi-delta up">+5.5 kW above base</div>
             </div>
           </div>
 
-          <div class="card" style="margin-top: 22px;">
-            <p class="muted" style="margin: 0;">
-              Irradiance pushed this forecast up the most, while cloud cover pulled it down the most.
-              Together, all features moved the prediction from a base of 18.4 kW to 23.9 kW.
+          <div class="card">
+            <h2>Feature contributions</h2>
+            <p class="shap-summary" id="shapSummary">
+              <strong class="pos">Irradiance</strong> pushed the forecast up by <strong class="pos">+6.8 kW</strong>.
+              <strong class="neg">Cloud cover</strong> pulled it down by <strong class="neg">3.2 kW</strong>.
             </p>
-          </div>
-        </section>
-
-        <section class="section" id="anomaly">
-          <h1>Anomaly &amp; performance analysis</h1>
-          <p class="lede">Threshold-based deviation detection across regions.</p>
-
-          <label class="muted">Deviation threshold: <span id="threshOut">25</span>%
-            <input id="threshSlider" type="range" min="10" max="50" value="25" style="margin-top: 8px;" />
-          </label>
-
-          <div id="anomList" style="margin-top: 18px; display: grid; gap: 12px;"></div>
-        </section>
-
-        <section class="section" id="compare">
-          <h1>Region comparison</h1>
-          <p class="lede">Region A vs. Region B, side by side.</p>
-
-          <div class="card" style="margin-top: 18px;">
-            <div class="table-wrap">
-              <table>
-                <tr><th>Metric</th><th>Region A</th><th>Region B</th></tr>
-                <tr><td>Avg daily output (kWh)</td><td>512.4</td><td>398.7</td></tr>
-                <tr><td>Forecast RMSE (kW)</td><td>5.8</td><td>6.9</td></tr>
-                <tr><td>Forecast MAE (kW)</td><td>4.1</td><td>4.9</td></tr>
-                <tr><td>Data history (days)</td><td>120</td><td>18</td></tr>
-                <tr><td>Avg cloud cover (%)</td><td>30.2</td><td>45.6</td></tr>
-                <tr><td>Model confidence (%)</td><td>94.1</td><td>87.3</td></tr>
-              </table>
+            <div class="shap-wrap" id="shapBars" role="list" aria-label="SHAP feature contributions">
+              <div class="shap-centerline"></div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div class="card" style="margin-top: 22px;">
-            <canvas id="compChart" height="240"></canvas>
+      <!-- ── ANOMALY ───────────────────────────── -->
+      <section class="section" id="anomaly" aria-label="Anomaly detection">
+        <h1>Anomaly &amp; performance analysis</h1>
+        <p class="lede">Threshold-based deviation detection across regions.</p>
+
+        <div class="card">
+          <div class="anomaly-header">
+            <label style="display:grid;gap:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">
+              Deviation threshold: <span id="threshOut" style="color:var(--text)">25</span>%
+              <input id="threshSlider" type="range" min="10" max="50" value="25" aria-label="Deviation threshold %" aria-valuemin="10" aria-valuemax="50" aria-valuenow="25" />
+            </label>
+            <span class="badge danger" id="anomalyCount">3 anomalies detected</span>
           </div>
+        </div>
 
-          <span class="badge success" style="margin-top: 16px; display: inline-flex;">Transfer learning improved Region B RMSE by 53%</span>
-        </section>
+        <div id="anomList" class="list-stack" role="list" aria-live="polite" aria-label="Detected anomalies"></div>
+      </section>
 
-        <section class="section" id="insights">
-          <h1>AI insights</h1>
-          <p class="lede">Auto-generated observations from the models above.</p>
-          <div id="insightList" class="list-stack"></div>
-        </section>
+      <!-- ── REGION COMPARISON ─────────────────── -->
+      <section class="section" id="compare" aria-label="Region comparison">
+        <h1>Region comparison</h1>
+        <p class="lede">Region A vs. Region B, side by side.</p>
 
-        <section class="section" id="report">
-          <h1>Report generation</h1>
-          <p class="lede">A print-ready summary of forecasts, comparisons, and insights.</p>
-          <div class="card report-box" id="reportText" style="margin-top: 18px;"></div>
-          <div class="actions" style="margin-top: 20px;">
-            <button class="btn" type="button" onclick="downloadReport()">Download as .txt</button>
-            <button class="btn secondary" type="button" onclick="window.print()">Print (clean layout)</button>
+        <div class="card">
+          <div class="table-wrap">
+            <table aria-label="Region comparison">
+              <thead>
+                <tr><th>Metric</th><th class="num">Region A</th><th class="num">Region B</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Avg daily output (kWh)</td><td class="num">2,478</td><td class="num">1,850</td></tr>
+                <tr><td>Forecast RMSE (kW)</td><td class="num">5.8</td><td class="num">6.9</td></tr>
+                <tr><td>Forecast MAE (kW)</td><td class="num">4.1</td><td class="num">4.9</td></tr>
+                <tr><td>Data history (days)</td><td class="num">120</td><td class="num">18</td></tr>
+                <tr><td>Avg cloud cover (%)</td><td class="num">30.2</td><td class="num">45.6</td></tr>
+                <tr><td>Model confidence (%)</td><td class="num">94.1</td><td class="num">87.3</td></tr>
+              </tbody>
+            </table>
           </div>
-        </section>
+        </div>
 
-        <section class="section" id="project">
-          <h1>Project made by us</h1>
-          <p class="lede">A solar intelligence platform built to transform raw plant data into usable operational insight for real-world performance tracking.</p>
+        <div class="card card-gap">
+          <div class="chart-wrap">
+            <canvas id="compChart" height="220" aria-label="Region comparison chart"></canvas>
+          </div>
+        </div>
 
-          <div class="cards-grid cols-2" style="margin-top: 18px;">
-            <div class="card metric-card">
-              <div class="card-title">Student 1</div>
-              <div class="metric-value" style="font-size: 1.12rem; line-height: 1.7;">
-                W V P S Sriraj<br>
-                23BCE8414<br>
-                <a class="github-link" href="https://github.com/wvpssriraj10" target="_blank" rel="noreferrer">GitHub Profile</a>
+        <span class="badge success" style="margin-top:14px;display:inline-flex">Transfer learning improved Region B RMSE by 53%</span>
+      </section>
+
+      <!-- ── AI INSIGHTS ───────────────────────── -->
+      <section class="section" id="insights" aria-label="AI insights">
+        <h1>AI insights</h1>
+        <p class="lede">Auto-generated observations from the models above.</p>
+        <div id="insightList" class="list-stack" role="list"></div>
+      </section>
+
+      <!-- ── REPORT ────────────────────────────── -->
+      <section class="section" id="report" aria-label="Report generation">
+        <h1>Report generation</h1>
+        <p class="lede">A print-ready summary of forecasts, comparisons, and insights.</p>
+        <div class="card report-box" id="reportText" style="margin-top:16px" role="document"></div>
+        <div class="actions" style="margin-top:16px">
+          <button class="btn" type="button" onclick="downloadReport()">Download as .txt</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Print (clean layout)</button>
+        </div>
+      </section>
+
+      <!-- ── TEAM ──────────────────────────────── -->
+      <section class="section" id="project" aria-label="Team">
+        <h1>Team</h1>
+        <p class="lede">PVIntelligence — a solar intelligence platform built to transform raw plant data into usable operational insight.</p>
+
+        <!-- Pipeline row -->
+        <div class="pipeline-row" role="list" aria-label="System pipeline">
+          <div class="pipe-step active-step" role="listitem">
+            <strong>ESP32</strong>
+            <small>Sensor I/O</small>
+          </div>
+          <span class="pipe-arrow" aria-hidden="true">&#8594;</span>
+          <div class="pipe-step" role="listitem">
+            <strong>Data Prep</strong>
+            <small>Feature eng.</small>
+          </div>
+          <span class="pipe-arrow" aria-hidden="true">&#8594;</span>
+          <div class="pipe-step" role="listitem">
+            <strong>LSTM+GRU</strong>
+            <small>Base model</small>
+          </div>
+          <span class="pipe-arrow" aria-hidden="true">&#8594;</span>
+          <div class="pipe-step" role="listitem">
+            <strong>Transfer</strong>
+            <small>Region B adapt</small>
+          </div>
+          <span class="pipe-arrow" aria-hidden="true">&#8594;</span>
+          <div class="pipe-step" role="listitem">
+            <strong>SHAP</strong>
+            <small>Explainability</small>
+          </div>
+          <span class="pipe-arrow" aria-hidden="true">&#8594;</span>
+          <div class="pipe-step" role="listitem">
+            <strong>Dashboard</strong>
+            <small>Web output</small>
+          </div>
+        </div>
+
+        <div class="cards-grid cols-2" style="margin-top:20px">
+
+          <div class="card team-card">
+            <div class="team-info">
+              <div class="team-avatar" aria-hidden="true">SR</div>
+              <div>
+                <div class="team-name">W V P S Sriraj</div>
+                <div class="team-id">23BCE8414</div>
               </div>
             </div>
-
-            <div class="card metric-card">
-              <div class="card-title">Student 2</div>
-              <div class="metric-value" style="font-size: 1.12rem; line-height: 1.7;">
-                Harsh<br>
-                23BCE8505<br>
-                <a class="github-link" href="https://github.com/aa31harsh" target="_blank" rel="noreferrer">GitHub Profile</a>
-              </div>
-            </div>
-
-            <div class="card metric-card">
-              <div class="card-title">Student 3</div>
-              <div class="metric-value" style="font-size: 1.12rem; line-height: 1.7;">
-                Aastha Sharma<br>
-                23BCE9279<br>
-                <a class="github-link" href="https://github.com/Aasthaa1508" target="_blank" rel="noreferrer">GitHub Profile</a>
-              </div>
-            </div>
-
-            <div class="card metric-card">
-              <div class="card-title">Student 4</div>
-              <div class="metric-value" style="font-size: 1.12rem; line-height: 1.7;">
-                M Jahnavi<br>
-                23BCE8470<br>
-                <a class="github-link" href="https://github.com/Jahnavi99955" target="_blank" rel="noreferrer">GitHub Profile</a>
-              </div>
-            </div>
+            <p class="team-role">MLOps &amp; Web Lead — built the SHAP explainability pipeline, dashboard, and ESP32 integration layer.</p>
+            <a class="github-link" href="https://github.com/wvpssriraj10" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
           </div>
-        </section>
 
-        <section class="section" id="about">
-          <h1>About / model information</h1>
-          <footer class="about-block">
-            <h2>Architecture</h2>
-            <p>The base forecaster is a stacked LSTM → Dropout → GRU → Dense network that consumes a 24-hour rolling window of irradiance, temperature, cloud cover, and time-of-day features to predict next-hour solar output.</p>
+          <div class="card team-card">
+            <div class="team-info">
+              <div class="team-avatar" aria-hidden="true" style="background:linear-gradient(135deg,#005f2a,#22d3a4)">HA</div>
+              <div>
+                <div class="team-name">Harsh</div>
+                <div class="team-id">23BCE8505</div>
+              </div>
+            </div>
+            <p class="team-role">Data Engineering &amp; Transfer Learning — built Region B fine-tuning pipeline and training comparisons.</p>
+            <a class="github-link" href="https://github.com/aa31harsh" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
+          </div>
 
-            <h2>Dataset</h2>
-            <p>Region A: 120 days of hourly generation data. Region B: 18 days — intentionally data-scarce, to demonstrate what transfer learning buys you.</p>
+          <div class="card team-card">
+            <div class="team-info">
+              <div class="team-avatar" aria-hidden="true" style="background:linear-gradient(135deg,#5c2e7e,#a855f7)">AS</div>
+              <div>
+                <div class="team-name">Aastha Sharma</div>
+                <div class="team-id">23BCE9279</div>
+              </div>
+            </div>
+            <p class="team-role">Base Model Training &amp; Research — designed the LSTM+GRU architecture and ran hyperparameter experiments.</p>
+            <a class="github-link" href="https://github.com/Aasthaa1508" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
+          </div>
 
-            <h2>Transfer learning methodology</h2>
-            <p>Region A's early layers are reused as a feature extractor for Region B. Training from scratch, a frozen extractor, and full fine-tuning are compared; fine-tuning needs far less Region B data for comparable accuracy.</p>
+          <div class="card team-card">
+            <div class="team-info">
+              <div class="team-avatar" aria-hidden="true" style="background:linear-gradient(135deg,#7a3800,#f4a942)">MJ</div>
+              <div>
+                <div class="team-name">M Jahnavi</div>
+                <div class="team-id">23BCE8470</div>
+              </div>
+            </div>
+            <p class="team-role">Data Preparation &amp; Analysis — built preprocessing, feature engineering, and anomaly detection module.</p>
+            <a class="github-link" href="https://github.com/Jahnavi99955" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
+          </div>
 
-            <h2>Explainability</h2>
-            <p>SHAP attributes each prediction to individual input features by measuring their marginal contribution across feature coalitions, producing an interpretable breakdown of why the model predicted a given output.</p>
+        </div>
+      </section>
 
-            <h2>Metric definitions</h2>
-            <p>RMSE penalizes large errors more heavily; MAE is the average error magnitude and is less sensitive to outliers.</p>
+      <!-- ── ABOUT ─────────────────────────────── -->
+      <section class="section" id="about" aria-label="About">
+        <h1>About / model information</h1>
+        <footer class="about-block">
+          <h2>Architecture</h2>
+          <p>The base forecaster is a stacked LSTM → Dropout → GRU → Dense network consuming a 24-hour rolling window of irradiance, temperature, cloud cover, and time-of-day features to predict next-hour solar output.</p>
+          <h2>Dataset</h2>
+          <p>Region A: 120 days of hourly generation data (650 kWp plant). Region B: 18 days — intentionally data-scarce, to demonstrate transfer learning's benefit.</p>
+          <h2>Transfer learning methodology</h2>
+          <p>Region A's early layers are reused as a feature extractor for Region B. Fine-tuning needs 80% less Region B data for comparable accuracy versus training from scratch.</p>
+          <h2>Explainability</h2>
+          <p>SHAP attributes each prediction to individual features by measuring marginal contributions, producing an interpretable breakdown sorted by absolute impact.</p>
+          <h2>Metric definitions</h2>
+          <p>RMSE penalizes large errors more heavily. MAE is average error magnitude. R² measures variance explained — 0.94 means 94% of output variation is captured by the model.</p>
+          <h2>Privacy &amp; terms</h2>
+          <p>This demo uses synthetic/historical data. Session analytics are page-view counts stored in your browser only, never transmitted. Forecasts are illustrative and not for financial decisions.</p>
+        </footer>
+      </section>
 
-            <h2>Privacy &amp; terms</h2>
-            <p>This demo uses only synthetic data. Session analytics are page-view counts stored in your browser only, never transmitted. Forecasts are illustrative and not for operational or financial decisions.</p>
-          </footer>
-        </section>
-      </main>
+    </main>
+  </div><!-- /shell -->
+
+  <!-- ═══════════════ FOOTER ════════════════════ -->
+  <footer class="page-footer footer--hidden" id="pageFooter" role="contentinfo">
+    <div class="page-footer-compact">
+      <div class="footer-left">
+        <div class="brand brand-inline">
+          <div class="brand-mark" role="img" aria-label="PVIntelligence logo" style="width:22px;height:22px"></div>
+          <strong style="color:var(--text);font-size:14px;letter-spacing:-.01em">PVIntelligence</strong>
+        </div>
+        <span class="footer-sep">&middot;</span>
+        <span class="footer-sub">AI solar forecasting &middot; LSTM+GRU &middot; SHAP explainability</span>
+      </div>
+      <div class="footer-links-inline">
+        <button class="footer-link-inline" type="button" onclick="go('about')">Architecture</button>
+        <button class="footer-link-inline" type="button" onclick="go('project')">Team members</button>
+        <button class="footer-link-inline" type="button" onclick="go('report')">Export report</button>
+      </div>
+      <div class="footer-right">
+        <span>&copy; 2026 PVIntelligence</span>
+      </div>
     </div>
+  </footer>
 
-    <footer class="page-footer">
-      <div class="page-footer-inner">
-        <div class="footer-brand">
-          <div class="brand brand-inline">
-            <span class="brand-mark"></span>
-            <div class="brand-text">
-              <strong>PVIntelligence</strong>
-              <span>Solar forecasting</span>
-            </div>
-          </div>
-          <p class="muted footer-copy">
-            AI-powered solar performance forecasting that turns raw plant data into clear, actionable output predictions.
-          </p>
-        </div>
-
-        <div class="footer-column">
-          <h3>Product</h3>
-          <div class="footer-links" id="footerNav"></div>
-        </div>
-
-        <div class="footer-column">
-          <h3>Project</h3>
-          <button class="footer-link" type="button" onclick="go('project')">Project made by us</button>
-          <button class="footer-link" type="button" onclick="go('about')">About</button>
-        </div>
-
-        <div class="footer-column">
-          <h3>Technical</h3>
-          <button class="footer-link" type="button" onclick="go('prep')">Data preparation</button>
-          <button class="footer-link" type="button" onclick="go('basemodel')">Base model</button>
-          <button class="footer-link" type="button" onclick="go('transfer')">Transfer learning</button>
-          <button class="footer-link" type="button" onclick="go('report')">Report generation</button>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <span>© 2026 PVIntelligence</span>
-        <span>Built for solar insight and prototype-driven forecasting</span>
-      </div>
-    </footer>
-
-    <div class="cookie" id="cookieBanner">
-      <div>We use local, anonymous analytics (page views only) to improve this demo.</div>
-      <div class="cookie-actions">
-        <button class="btn" type="button" onclick="closeCookie()">Accept</button>
-        <button class="btn secondary" type="button" onclick="closeCookie()">Decline</button>
-      </div>
+  <!-- COOKIE -->
+  <div class="cookie" id="cookieBanner" role="dialog" aria-label="Cookie consent" aria-modal="true">
+    <div>We use local, anonymous analytics (page views only) to improve this demo.</div>
+    <div class="cookie-actions">
+      <button class="btn" type="button" onclick="closeCookie()">Accept</button>
+      <button class="btn secondary" type="button" onclick="closeCookie()">Decline</button>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js?v=3.5"></script>
+</body>
 </html>
