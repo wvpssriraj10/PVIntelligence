@@ -727,16 +727,29 @@ async function fetchCustomLocationWeather(cityName) {
   }
 }
 
+function setForecastDays(days) {
+  const el = document.getElementById('forecastDaysInput');
+  if (el) {
+    el.value = days;
+    updateLiveSummary();
+  }
+}
+
 function detectUserLocation() {
+  const btn = document.getElementById('gpsBtn') || document.querySelector('button[onclick="detectUserLocation()"]');
   if (!navigator.geolocation) {
     alert('Geolocation is not supported by your browser.');
     return;
   }
-  const btn = document.querySelector('button[onclick="detectUserLocation()"]');
   if (btn) btn.textContent = '📍 Locating...';
+
+  const resetTimer = setTimeout(() => {
+    if (btn && btn.textContent === '📍 Locating...') btn.textContent = '📍 My GPS';
+  }, 7000);
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
+      clearTimeout(resetTimer);
       const lat = parseFloat(pos.coords.latitude.toFixed(2));
       const lon = parseFloat(pos.coords.longitude.toFixed(2));
       _setVal('customLat', lat);
@@ -748,10 +761,11 @@ function detectUserLocation() {
       setTimeout(() => { if (btn) btn.textContent = '📍 My GPS'; }, 2500);
     },
     (err) => {
+      clearTimeout(resetTimer);
       alert('Could not detect location: ' + err.message);
       if (btn) btn.textContent = '📍 My GPS';
     },
-    { timeout: 8000 }
+    { timeout: 6000, enableHighAccuracy: false }
   );
 }
 
@@ -1041,9 +1055,11 @@ function updateLiveSummary(isAutoFromWeather = false) {
   _set('wk7',    `${Math.round(dailyKwh * 7).toLocaleString()} kWh`);
 
   if (!isAutoFromWeather) {
-    _dataSource  = 'Manual input';
+    if (!_dataSource || _dataSource === 'Demo fallback') {
+      _dataSource = 'Manual input';
+    }
     _lastUpdated = Date.now();
-    updateWeatherBadges('Manual input');
+    updateWeatherBadges(_dataSource);
   }
 
   drawHeroChart();
