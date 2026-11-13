@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=4.3" />
+  <link rel="stylesheet" href="styles.css?v=5.0" />
 </head>
 <body>
 
@@ -68,22 +68,14 @@
     </div>
   </header>
 
-  <!-- ═══════════════ SUB-NAV HORIZONTAL PILL BAR ════════════════ -->
+    <!-- ═══════════════ SUB-NAV HORIZONTAL PILL BAR ════════════════ -->
   <nav class="subnav-bar" id="subnav" aria-label="Dashboard sections">
     <div class="subnav-inner">
-      <button class="subnav-btn active" type="button" data-id="landing" onclick="go('landing')">Overview</button>
-      <button class="subnav-btn" type="button" data-id="input" onclick="go('input')">Plant Input</button>
-      <button class="subnav-btn" type="button" data-id="prep" onclick="go('prep')">Data Prep</button>
-      <button class="subnav-btn" type="button" data-id="basemodel" onclick="go('basemodel')">Base Model</button>
-      <button class="subnav-btn" type="button" data-id="transfer" onclick="go('transfer')">Transfer Learning</button>
-      <button class="subnav-btn" type="button" data-id="dashboard" onclick="go('dashboard')">Forecasting</button>
-      <button class="subnav-btn" type="button" data-id="xai" onclick="go('xai')">SHAP Explainability</button>
-      <button class="subnav-btn" type="button" data-id="anomaly" onclick="go('anomaly')">Anomaly Detection</button>
-      <button class="subnav-btn" type="button" data-id="compare" onclick="go('compare')">Region Compare</button>
-      <button class="subnav-btn" type="button" data-id="insights" onclick="go('insights')">AI Insights</button>
-      <button class="subnav-btn" type="button" data-id="report" onclick="go('report')">Executive Report</button>
-      <button class="subnav-btn" type="button" data-id="project" onclick="go('project')">Team</button>
-      <button class="subnav-btn" type="button" data-id="about" onclick="go('about')">Architecture</button>
+      <button class="subnav-btn active" type="button" data-id="landing" onclick="go('landing')">⚡ Live Forecast &amp; Demo</button>
+      <button class="subnav-btn" type="button" data-id="transfer" onclick="go('transfer')">🧠 Transfer Learning (Core ML)</button>
+      <button class="subnav-btn" type="button" data-id="xai" onclick="go('xai')">🔍 Explainability &amp; Diagnostics</button>
+      <button class="subnav-btn" type="button" data-id="prep" onclick="go('prep')">📊 Data &amp; Regional Analytics</button>
+      <button class="subnav-btn" type="button" data-id="project" onclick="go('project')">📄 Team &amp; Architecture</button>
     </div>
   </nav>
 
@@ -117,27 +109,32 @@
   <!-- ═══════════════ MAIN CONTENT VIEWPORT ════════════════ -->
   <div class="shell">
     <main class="main" id="main-content">
-
-      <!-- ── 1. OVERVIEW (FedEx DCA Style Landing) ──────────────── -->
-      <section class="section active" id="landing" aria-label="Overview Dashboard">
+      <!-- ── 1. LIVE FORECAST & DEMO ───────────────────────────── -->
+      <section class="section active" id="landing" aria-label="Live Solar Forecasting & Demo">
         
         <!-- Dashboard Page Header -->
         <div class="page-header-row">
           <div class="page-header-text">
-            <h1>Solar Generation &amp; Predictive Telemetry</h1>
-            <p>Real-time LSTM+GRU edge forecasting and SHAP performance analytics across Region A &amp; Region B.</p>
+            <h1>Solar Generation &amp; Live Forecasting</h1>
+            <p>Real-time satellite weather ingestion, city coordinates selection, and LSTM+GRU neural network generation forecasts.</p>
           </div>
           <div class="page-header-actions">
             <span class="status-pill-badge turquoise weather-status-badge" id="heroStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
-            <span class="btn-pill">7-Day Horizon</span>
             <button class="btn-pill" type="button" onclick="syncLiveWeather()">↻ Sync Feed</button>
-            <button class="btn-pill primary" type="button" onclick="go('report')">↓ Export Report</button>
+            <button class="btn-pill primary" type="button" onclick="go('project')">↓ Export Report</button>
+          </div>
+        </div>
+
+        <!-- Purpose Banner -->
+        <div class="purpose-banner">
+          <span class="purpose-badge">Live Demonstration</span>
+          <div class="purpose-text">
+            <strong>Section Purpose:</strong> Auto-ingest live satellite weather from Open-Meteo for any Indian city or custom GPS coordinates, and project real-time multi-day solar power curves (7, 10, or 14 days) using our hybrid LSTM+GRU network.
           </div>
         </div>
 
         <!-- 4 Summary KPI Metrics Grid -->
         <div class="kpi-grid-4">
-          <!-- KPI 1: Current Generation -->
           <div class="kpi-card">
             <div class="kpi-card-header">
               <span class="kpi-label">Current Generation</span>
@@ -150,7 +147,6 @@
             <div class="kpi-footer-sub" id="heroTimestamp">Demo data &middot; Updated 12s ago</div>
           </div>
 
-          <!-- KPI 2: Predicted Peak -->
           <div class="kpi-card">
             <div class="kpi-card-header">
               <span class="kpi-label">Predicted Peak Output</span>
@@ -163,10 +159,9 @@
             <div class="kpi-footer-sub">Clear-sky index: 0.94 &middot; Nominal</div>
           </div>
 
-          <!-- KPI 3: 7-Day Forecast Energy -->
           <div class="kpi-card">
             <div class="kpi-card-header">
-              <span class="kpi-label">7-Day Energy Forecast</span>
+              <span class="kpi-label">Expected Multi-Day Generation</span>
               <span class="kpi-icon-pill pink">📊</span>
             </div>
             <div class="kpi-num-row">
@@ -176,10 +171,9 @@
             <div class="kpi-footer-sub">Est. generation value: $2,420 grid credit</div>
           </div>
 
-          <!-- KPI 4: Model Validation Score -->
           <div class="kpi-card">
             <div class="kpi-card-header">
-              <span class="kpi-label">Model Validation RMSE</span>
+              <span class="kpi-label">Model Validation Score</span>
               <span class="kpi-icon-pill turquoise">🎯</span>
             </div>
             <div class="kpi-num-row">
@@ -190,176 +184,8 @@
           </div>
         </div>
 
-        <!-- Analytics & Quick Actions Row (2 Columns) -->
-        <div class="analytics-actions-grid">
-          
-          <!-- Left: Solar Curve Surface -->
-          <div class="dca-card">
-            <div class="dca-card-header">
-              <div>
-                <h2 class="dca-card-title">Solar Generation Profile &amp; 24h Forecast</h2>
-                <div class="dca-card-subtitle">Real-time telemetry and LSTM+GRU neural network generation predictions</div>
-              </div>
-              <div class="chart-legend-pills">
-                <span class="legend-pill"><span class="legend-dot turquoise"></span> Reference Actual</span>
-                <span class="legend-pill"><span class="legend-dot pink"></span> Predicted</span>
-                <span class="legend-pill"><span class="legend-dot purple"></span> Solar Peak</span>
-              </div>
-            </div>
-
-            <!-- Canvas Container -->
-            <div class="hero-chart-wrap">
-              <canvas id="heroChart" height="210" aria-label="Full-day solar generation curve with 7-day forecast"></canvas>
-              <div id="heroPulseDot" class="hero-live-dot" style="display:none;" aria-hidden="true">
-                <span class="dot-ring"></span>
-                <span class="dot-core"></span>
-              </div>
-            </div>
-
-            <!-- Sub-Stats Bar -->
-            <div class="analytics-footer-stats">
-              <div class="stat-col">
-                <span class="stat-col-label">Daily Peak Expected</span>
-                <strong class="stat-col-value monospaced" id="footerPeakExpected">487.0 kW</strong>
-              </div>
-              <div class="stat-col">
-                <span class="stat-col-label">Daytime Average Output</span>
-                <strong class="stat-col-value monospaced" id="footerDayAverage">285.4 kW</strong>
-              </div>
-              <div class="stat-col">
-                <span class="stat-col-label">Telemetry Ingestion Link</span>
-                <strong class="stat-col-value" id="telemetryFeedLink" style="color:var(--turquoise)">● Live Weather Feed</strong>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: Quick Actions Surface -->
-          <div class="dca-card quick-actions-card">
-            <div>
-              <div class="dca-card-header" style="margin-bottom:8px">
-                <div>
-                  <h2 class="dca-card-title">Quick Actions</h2>
-                  <div class="dca-card-subtitle">Operational workflows &amp; model triggers</div>
-                </div>
-              </div>
-
-              <div class="actions-stack">
-                <button class="action-item-pill" type="button" onclick="go('input')">
-                  <div class="action-left">
-                    <span class="action-icon">⚡</span>
-                    <span>Run Live Plant Simulation</span>
-                  </div>
-                  <span class="action-arrow">&rarr;</span>
-                </button>
-
-                <button class="action-item-pill" type="button" onclick="go('transfer')">
-                  <div class="action-left">
-                    <span class="action-icon">🧠</span>
-                    <span>Fine-Tune Region B Transfer</span>
-                  </div>
-                  <span class="action-arrow">&rarr;</span>
-                </button>
-
-                <button class="action-item-pill" type="button" onclick="go('xai')">
-                  <div class="action-left">
-                    <span class="action-icon">🔍</span>
-                    <span>Inspect SHAP Feature Impact</span>
-                  </div>
-                  <span class="action-arrow">&rarr;</span>
-                </button>
-
-                <button class="action-item-pill" type="button" onclick="go('anomaly')">
-                  <div class="action-left">
-                    <span class="action-icon">⚠</span>
-                    <span>Scan Anomaly Thresholds</span>
-                  </div>
-                  <span class="action-arrow">&rarr;</span>
-                </button>
-
-                <button class="action-item-pill" type="button" onclick="go('compare')">
-                  <div class="action-left">
-                    <span class="action-icon">📊</span>
-                    <span>Compare Regional Output</span>
-                  </div>
-                  <span class="action-arrow">&rarr;</span>
-                </button>
-
-                <button class="action-item-pill" type="button" onclick="go('report')">
-                  <div class="action-left">
-                    <span class="action-icon">📄</span>
-                    <span>Generate Executive Report</span>
-                  </div>
-                  <span class="action-arrow">&rarr;</span>
-                </button>
-              </div>
-            </div>
-
-            <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
-              <div class="kpi-trend neutral" style="width:100%;justify-content:center">
-                System Status: All 6 Pipelines Active
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Recent Activity & Sensor Telemetry Table (Full Width) -->
-        <div class="dca-card table-card">
-          <div class="table-header-bar">
-            <div>
-              <h2 class="dca-card-title">Recent Plant Records &amp; Sensor Telemetry</h2>
-              <div class="dca-card-subtitle">Real-time historical irradiance, temperature, and generator performance readings</div>
-            </div>
-            
-            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-              <div class="table-search-box">
-                <svg class="table-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" id="telemetrySearch" class="table-search-input" placeholder="Filter telemetry rows..." onkeyup="filterTelemetryTable()" />
-              </div>
-              <div class="table-filter-pills">
-                <button class="filter-pill-btn active" type="button" onclick="setTelemetryFilter('all', this)">All</button>
-                <button class="filter-pill-btn" type="button" onclick="setTelemetryFilter('optimal', this)">Optimal</button>
-                <button class="filter-pill-btn" type="button" onclick="setTelemetryFilter('peak', this)">Peak</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="dca-table-wrap">
-            <table class="dca-table" id="recentTable" aria-label="Recent sensor and generation records">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Region</th>
-                  <th class="num">GHI (W/m²)</th>
-                  <th class="num">Temp (°C)</th>
-                  <th class="num">Cloud (%)</th>
-                  <th class="num">Output (kW)</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="recentTableBody">
-                <!-- Dynamically populated from DATA[region].rows -->
-              </tbody>
-            </table>
-          </div>
-
-          <div class="table-footer-bar">
-            <span>Showing 6 of 2,880 historical telemetry rows</span>
-            <span>Synced from live weather feed &middot; Model Loss RMSE 5.8 kW</span>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ── 2. PLANT INPUT ───────────────────────── -->
-      <section class="section" id="input" aria-label="Plant input and live forecast">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Plant Input &amp; Live Simulation</h1>
-            <p>Auto-ingest live satellite weather for any city or custom coordinates and forecast multi-day solar generation.</p>
-          </div>
+        <!-- Plant Location Selector & Live Telemetry Controls (Interactive Demo Anchor) -->
+        <div id="input-card" style="margin-top:24px">
           <div class="page-header-actions">
             <span class="status-pill-badge turquoise weather-status-badge" id="sourceStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
           </div>
@@ -479,71 +305,159 @@
             </table>
           </div>
         </div>
+        </div>
+
+        <!-- Solar Generation Profile & 24h/7d Forecasting Surface -->
+        <div id="dashboard-card" style="margin-top:24px">
+          <div class="analytics-actions-grid">
+            <div class="dca-card">
+              <div class="dca-card-header">
+                <div>
+                  <h2 class="dca-card-title">Solar Generation Profile &amp; 24h Forecast</h2>
+                  <div class="dca-card-subtitle">Real-time telemetry and LSTM+GRU neural network generation predictions</div>
+                </div>
+                <div class="chart-legend-pills">
+                  <span class="legend-pill"><span class="legend-dot turquoise"></span> Reference Actual</span>
+                  <span class="legend-pill"><span class="legend-dot pink"></span> Predicted</span>
+                  <span class="legend-pill"><span class="legend-dot purple"></span> Solar Peak</span>
+                </div>
+              </div>
+              <div class="hero-chart-wrap">
+                <canvas id="heroChart" height="210" aria-label="Full-day solar generation curve with 7-day forecast"></canvas>
+                <div id="heroPulseDot" class="hero-live-dot" style="display:none;" aria-hidden="true">
+                  <span class="dot-ring"></span>
+                  <span class="dot-core"></span>
+                </div>
+              </div>
+              <div class="analytics-footer-stats">
+                <div class="stat-col">
+                  <span class="stat-col-label">Daily Peak Expected</span>
+                  <strong class="stat-col-value monospaced" id="footerPeakExpected">487.0 kW</strong>
+                </div>
+                <div class="stat-col">
+                  <span class="stat-col-label">Daytime Average Output</span>
+                  <strong class="stat-col-value monospaced" id="footerDayAverage">285.4 kW</strong>
+                </div>
+                <div class="stat-col">
+                  <span class="stat-col-label">Telemetry Ingestion Link</span>
+                  <strong class="stat-col-value" id="telemetryFeedLink" style="color:var(--turquoise)">● Live Weather Feed</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="dca-card quick-actions-card">
+              <div>
+                <div class="dca-card-header" style="margin-bottom:8px">
+                  <div>
+                    <h2 class="dca-card-title">Quick Actions &amp; Navigation</h2>
+                    <div class="dca-card-subtitle">One-click jump to pipeline modules</div>
+                  </div>
+                </div>
+                <div class="actions-stack">
+                  <button class="action-item-pill" type="button" onclick="go('transfer')">
+                    <div class="action-left"><span class="action-icon">🧠</span><span>Transfer Learning Experiment</span></div>
+                    <span class="action-arrow">&rarr;</span>
+                  </button>
+                  <button class="action-item-pill" type="button" onclick="go('xai')">
+                    <div class="action-left"><span class="action-icon">🔍</span><span>Inspect SHAP Feature Impact</span></div>
+                    <span class="action-arrow">&rarr;</span>
+                  </button>
+                  <button class="action-item-pill" type="button" onclick="go('xai')">
+                    <div class="action-left"><span class="action-icon">⚠</span><span>Scan Anomaly Thresholds</span></div>
+                    <span class="action-arrow">&rarr;</span>
+                  </button>
+                  <button class="action-item-pill" type="button" onclick="go('prep')">
+                    <div class="action-left"><span class="action-icon">📊</span><span>Data Preprocessing &amp; Regions</span></div>
+                    <span class="action-arrow">&rarr;</span>
+                  </button>
+                  <button class="action-item-pill" type="button" onclick="go('project')">
+                    <div class="action-left"><span class="action-icon">📄</span><span>View Team &amp; Architecture</span></div>
+                    <span class="action-arrow">&rarr;</span>
+                  </button>
+                </div>
+              </div>
+              <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+                <div class="kpi-trend neutral" style="width:100%;justify-content:center">
+                  System Status: All Ingestion Pipelines Active
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-Day Forecast & Weather Telemetry Row -->
+          <div style="margin-top:20px">
+            <div class="page-header-actions">
+            <span class="status-pill-badge turquoise weather-status-badge" id="dashStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
+          </div>
+        </div>
+
+        <div class="dca-card" style="margin-bottom:20px;padding:16px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13.5px">
+            <span>☀ Peak expected at <strong style="color:var(--text)" id="glancePeak">12:40 PM</strong></span>
+            <span>☁ Cloud risk <strong style="color:var(--turquoise)" id="glanceCloudRisk">Low</strong></span>
+            <span>🌡 Ambient: <strong id="glanceTemp" style="color:var(--text)">31.2°C</strong></span>
+            <span>Model error: <strong style="color:var(--text)" id="glanceError">±5.8 kW</strong></span>
+          </div>
+        </div>
+
+        <div class="cards-grid cols-2" style="align-items:start">
+          <div class="dca-card">
+            <h2 class="dca-card-title">24h Reference Actual vs Predicted Curve</h2>
+            <div class="hero-chart-wrap" style="height:210px">
+              <canvas id="dayChart" height="210" aria-label="24h actual vs predicted chart"></canvas>
+            </div>
+          </div>
+          <div class="dca-card">
+            <h2 class="dca-card-title">7-Day Generation Forecast</h2>
+            <div class="hero-chart-wrap" style="height:210px">
+              <canvas id="weekChart" height="210" aria-label="7-day energy forecast"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="cards-grid cols-3" style="margin-top:20px">
+          <div class="dca-card metric-card">
+            <span class="kpi-label">☁ Cloud Cover</span>
+            <div class="metric-value monospaced" id="dashCloud">32%</div>
+            <span class="kpi-trend turquoise" id="dashCloudTrend">▼ Live feed</span>
+          </div>
+          <div class="dca-card metric-card">
+            <span class="kpi-label">🌡 Ambient Temp</span>
+            <div class="metric-value monospaced" id="dashTemp">31.2°C</div>
+            <span class="kpi-trend violet" id="dashTempTrend">▲ Live feed</span>
+          </div>
+          <div class="dca-card metric-card">
+            <span class="kpi-label">💨 Wind Speed</span>
+            <div class="metric-value monospaced" id="dashWind">9 km/h</div>
+            <span class="kpi-trend neutral" id="dashWindSub">Stable (2.5 m/s)</span>
+          </div>
+        </div>
+          </div>
+        </div>
       </section>
 
-      <!-- ── 3. DATA PREP ─────────────────────────── -->
-      <section class="section" id="prep" aria-label="Data preparation">
+      <!-- ── 2. TRANSFER LEARNING (CORE ML) ────────────────────── -->
+      <section class="section" id="transfer" aria-label="Transfer Learning Core ML">
         <div class="page-header-row">
           <div class="page-header-text">
-            <h1>Data Preparation &amp; Feature Pipeline</h1>
-            <p>Missing-value checks, normalization scalers, and cyclical features engineered before model training.</p>
+            <h1>Transfer Learning — Region B Adaptation</h1>
+            <p>Pre-training on Region A (120 days) and transferring learned representations to Region B (18 days).</p>
           </div>
         </div>
 
-        <div class="cards-grid cols-4">
-          <div class="dca-card metric-card">
-            <span class="kpi-label">Training Records</span>
-            <div class="metric-value monospaced" id="prepRows">2,880</div>
-            <span class="kpi-trend turquoise">100% verified</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">Missing Values</span>
-            <div class="metric-value monospaced">0.3%</div>
-            <span class="kpi-trend turquoise">Imputed via KNN</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">Date Range</span>
-            <div class="metric-value monospaced" style="font-size:1.3rem">Apr – Jul 2026</div>
-            <span class="kpi-trend neutral">120 days total</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">Feature Pipeline</span>
-            <div class="metric-value monospaced" style="font-size:1.3rem">Ready</div>
-            <span class="kpi-trend turquoise">Standardized</span>
+        <div class="purpose-banner">
+          <span class="purpose-badge">Core Academic Result</span>
+          <div class="purpose-text">
+            <strong>Section Purpose:</strong> Demonstrates our main machine learning innovation. Instead of requiring 120+ days of historical sensor data to train a solar forecasting model at a new site, we freeze the pre-trained recurrent layers from Region A and fine-tune only the top layers on Region B. This reduces data collection needs by 80% while achieving 53% lower RMSE compared to training from scratch.
           </div>
         </div>
 
-        <div class="dca-card card-gap">
-          <h2 class="dca-card-title">Engineered Features</h2>
-          <div class="dca-table-wrap" style="margin-top:14px">
-            <table class="dca-table" aria-label="Engineered features">
-              <thead><tr><th>Feature Name</th><th>Engineering Rationale &amp; Formula</th></tr></thead>
-              <tbody>
-                <tr><td><code>hour_sin / hour_cos</code></td><td>Cyclical periodic 24h diurnal encoding of hour-of-day</td></tr>
-                <tr><td><code>clear_sky_ratio</code></td><td>Normalized global horizontal irradiance against theoretical clear-sky reference</td></tr>
-                <tr><td><code>temp_delta</code></td><td>Cell temperature deviation from standard 25°C panel de-rating coefficient</td></tr>
-                <tr><td><code>rolling_cloud_3h</code></td><td>3-hour rolling window moving average of satellite and sensor cloud cover</td></tr>
-              </tbody>
-            </table>
+        <!-- Part 1: Base Model Architecture & Training Convergence -->
+        <div id="basemodel-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge purple">Part 1</span> Base Model (Region A — 120 Days Pre-Training)
+          </h2>
           </div>
-        </div>
-
-        <div class="dca-card card-gap">
-          <h2 class="dca-card-title">Cloud Cover Distribution</h2>
-          <div class="hero-chart-wrap" style="height:200px">
-            <canvas id="cloudHist" height="200" aria-label="Cloud cover distribution"></canvas>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── 4. BASE MODEL ────────────────────────── -->
-      <section class="section" id="basemodel" aria-label="Base model">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Base Model — LSTM + GRU Network</h1>
-            <p>Pre-trained on Region A's full 120-day historical time-series dataset.</p>
-          </div>
-        </div>
 
         <div class="cards-grid cols-2" style="align-items:start">
           <div class="dca-card">
@@ -597,16 +511,14 @@
             <span class="kpi-trend violet">Early stopped</span>
           </div>
         </div>
-      </section>
-
-      <!-- ── 5. TRANSFER LEARNING ─────────────────── -->
-      <section class="section" id="transfer" aria-label="Transfer learning">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Transfer Learning — Region B Adaptation</h1>
-            <p>Fine-tuning pre-trained Region A representations for data-scarce Region B with 80% less training data.</p>
-          </div>
         </div>
+
+        <!-- Part 2: Transfer Learning Fine-Tuning & Learning Curves -->
+        <div id="transfer-card">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge turquoise">Part 2</span> Fine-Tuned Transfer Learning (Region B — 18 Days Adaptation)
+          </h2>
+          </div>
 
         <div class="cards-grid cols-2" style="align-items:start">
           <div class="dca-card">
@@ -674,71 +586,31 @@
             <canvas id="tlDaysChart" height="220" aria-label="RMSE vs training days curve"></canvas>
           </div>
         </div>
-      </section>
-
-      <!-- ── 6. FORECASTING VIEW ─────────────────── -->
-      <section class="section" id="dashboard" aria-label="Forecasting dashboard">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Detailed Forecasting Matrix</h1>
-            <p id="dashRegionLabel">Region A — current generation output and multi-day expected curves.</p>
-          </div>
-          <div class="page-header-actions">
-            <span class="status-pill-badge turquoise weather-status-badge" id="dashStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
-          </div>
-        </div>
-
-        <div class="dca-card" style="margin-bottom:20px;padding:16px 20px">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13.5px">
-            <span>☀ Peak expected at <strong style="color:var(--text)" id="glancePeak">12:40 PM</strong></span>
-            <span>☁ Cloud risk <strong style="color:var(--turquoise)" id="glanceCloudRisk">Low</strong></span>
-            <span>🌡 Ambient: <strong id="glanceTemp" style="color:var(--text)">31.2°C</strong></span>
-            <span>Model error: <strong style="color:var(--text)" id="glanceError">±5.8 kW</strong></span>
-          </div>
-        </div>
-
-        <div class="cards-grid cols-2" style="align-items:start">
-          <div class="dca-card">
-            <h2 class="dca-card-title">24h Reference Actual vs Predicted Curve</h2>
-            <div class="hero-chart-wrap" style="height:210px">
-              <canvas id="dayChart" height="210" aria-label="24h actual vs predicted chart"></canvas>
-            </div>
-          </div>
-          <div class="dca-card">
-            <h2 class="dca-card-title">7-Day Generation Forecast</h2>
-            <div class="hero-chart-wrap" style="height:210px">
-              <canvas id="weekChart" height="210" aria-label="7-day energy forecast"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <div class="cards-grid cols-3" style="margin-top:20px">
-          <div class="dca-card metric-card">
-            <span class="kpi-label">☁ Cloud Cover</span>
-            <div class="metric-value monospaced" id="dashCloud">32%</div>
-            <span class="kpi-trend turquoise" id="dashCloudTrend">▼ Live feed</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">🌡 Ambient Temp</span>
-            <div class="metric-value monospaced" id="dashTemp">31.2°C</div>
-            <span class="kpi-trend violet" id="dashTempTrend">▲ Live feed</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">💨 Wind Speed</span>
-            <div class="metric-value monospaced" id="dashWind">9 km/h</div>
-            <span class="kpi-trend neutral" id="dashWindSub">Stable (2.5 m/s)</span>
-          </div>
         </div>
       </section>
 
-      <!-- ── 7. EXPLAINABLE AI ───────────────────── -->
-      <section class="section" id="xai" aria-label="Explainable AI">
+      <!-- ── 3. EXPLAINABILITY & DIAGNOSTICS ───────────────────── -->
+      <section class="section" id="xai" aria-label="Explainability & Diagnostics">
         <div class="page-header-row">
           <div class="page-header-text">
-            <h1>Explainable AI — SHAP Feature Attribution</h1>
-            <p>Marginal Shapley feature contributions explaining the model prediction, sorted by impact.</p>
+            <h1>Explainability &amp; Operational Diagnostics</h1>
+            <p>Game-theoretic SHAP feature attribution, automated anomaly detection, and operational AI insights.</p>
           </div>
         </div>
+
+        <div class="purpose-banner">
+          <span class="purpose-badge">Model Trust &amp; Safety</span>
+          <div class="purpose-text">
+            <strong>Section Purpose:</strong> Solves the neural network "black box" problem. SHAP explains the exact contribution of each weather feature (solar irradiance, temperature, cloud cover) to every prediction, while our anomaly detection scanner flags physical faults such as panel soiling, inverter clipping, and sensor drops.
+          </div>
+        </div>
+
+        <!-- Part 1: SHAP Feature Attribution -->
+        <div id="shap-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge turquoise">Part 1</span> SHAP Feature Attribution &amp; Explainability
+          </h2>
+          </div>
 
         <div class="cards-grid cols-2" style="align-items:start">
           <div>
@@ -763,16 +635,14 @@
             <div class="shap-wrap" id="shapBars" role="list" aria-label="SHAP feature contributions"></div>
           </div>
         </div>
-      </section>
-
-      <!-- ── 8. ANOMALY DETECTION ────────────────── -->
-      <section class="section" id="anomaly" aria-label="Anomaly detection">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Anomaly &amp; Performance Deviation Detection</h1>
-            <p>Threshold-based deviation scanner detecting soiling, inverter drops, and hardware faults.</p>
-          </div>
         </div>
+
+        <!-- Part 2: Anomaly Detection Scanner -->
+        <div id="anomaly-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge coral">Part 2</span> Anomaly &amp; Performance Deviation Detection
+          </h2>
+          </div>
 
         <div class="dca-card">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
@@ -787,16 +657,93 @@
         </div>
 
         <div id="anomList" class="list-stack" role="list" aria-live="polite" aria-label="Detected anomalies"></div>
+        </div>
+
+        <!-- Part 3: AI Operational Insights -->
+        <div id="insights-card">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge violet">Part 3</span> Automated Operational AI Insights
+          </h2>
+          </div>
+        <div id="insightList" class="list-stack" role="list"></div>
+        </div>
       </section>
 
-      <!-- ── 9. REGION COMPARISON ────────────────── -->
-      <section class="section" id="compare" aria-label="Region comparison">
+      <!-- ── 4. DATA & REGIONAL ANALYTICS ──────────────────────── -->
+      <section class="section" id="prep" aria-label="Data Engineering & Regional Analytics">
         <div class="page-header-row">
           <div class="page-header-text">
-            <h1>Regional Telemetry Comparison</h1>
-            <p>Side-by-side performance benchmarks: Region A (120 days) vs. Region B (18 days).</p>
+            <h1>Data Engineering &amp; Regional Analytics</h1>
+            <p>Feature engineering pipeline, cloud cover distributions, and regional climate comparisons.</p>
           </div>
         </div>
+
+        <div class="purpose-banner">
+          <span class="purpose-badge">Data Pipeline</span>
+          <div class="purpose-text">
+            <strong>Section Purpose:</strong> Details the data engineering process (missing-value imputation, MinMax scaling, diurnal cyclical encoding) and contrasts the solar generation characteristics of Bhadla (Region A, high-irradiance desert) against Charanka (Region B, semi-arid).
+          </div>
+        </div>
+
+        <!-- Part 1: Data Preparation & Scalers -->
+        <div id="prep-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge turquoise">Part 1</span> Data Preparation &amp; Feature Engineering
+          </h2>
+          </div>
+
+        <div class="cards-grid cols-4">
+          <div class="dca-card metric-card">
+            <span class="kpi-label">Training Records</span>
+            <div class="metric-value monospaced" id="prepRows">2,880</div>
+            <span class="kpi-trend turquoise">100% verified</span>
+          </div>
+          <div class="dca-card metric-card">
+            <span class="kpi-label">Missing Values</span>
+            <div class="metric-value monospaced">0.3%</div>
+            <span class="kpi-trend turquoise">Imputed via KNN</span>
+          </div>
+          <div class="dca-card metric-card">
+            <span class="kpi-label">Date Range</span>
+            <div class="metric-value monospaced" style="font-size:1.3rem">Apr – Jul 2026</div>
+            <span class="kpi-trend neutral">120 days total</span>
+          </div>
+          <div class="dca-card metric-card">
+            <span class="kpi-label">Feature Pipeline</span>
+            <div class="metric-value monospaced" style="font-size:1.3rem">Ready</div>
+            <span class="kpi-trend turquoise">Standardized</span>
+          </div>
+        </div>
+
+        <div class="dca-card card-gap">
+          <h2 class="dca-card-title">Engineered Features</h2>
+          <div class="dca-table-wrap" style="margin-top:14px">
+            <table class="dca-table" aria-label="Engineered features">
+              <thead><tr><th>Feature Name</th><th>Engineering Rationale &amp; Formula</th></tr></thead>
+              <tbody>
+                <tr><td><code>hour_sin / hour_cos</code></td><td>Cyclical periodic 24h diurnal encoding of hour-of-day</td></tr>
+                <tr><td><code>clear_sky_ratio</code></td><td>Normalized global horizontal irradiance against theoretical clear-sky reference</td></tr>
+                <tr><td><code>temp_delta</code></td><td>Cell temperature deviation from standard 25°C panel de-rating coefficient</td></tr>
+                <tr><td><code>rolling_cloud_3h</code></td><td>3-hour rolling window moving average of satellite and sensor cloud cover</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dca-card card-gap">
+          <h2 class="dca-card-title">Cloud Cover Distribution</h2>
+          <div class="hero-chart-wrap" style="height:200px">
+            <canvas id="cloudHist" height="200" aria-label="Cloud cover distribution"></canvas>
+          </div>
+        </div>
+        </div>
+
+        <!-- Part 2: Region A vs Region B Comparison -->
+        <div id="compare-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge purple">Part 2</span> Regional Telemetry Benchmark (Region A vs Region B)
+          </h2>
+          </div>
 
         <div class="dca-card">
           <div class="dca-table-wrap">
@@ -822,26 +769,59 @@
             <canvas id="compChart" height="220" aria-label="Region comparison chart"></canvas>
           </div>
         </div>
-      </section>
+        </div>
 
-      <!-- ── 10. AI INSIGHTS ─────────────────────── -->
-      <section class="section" id="insights" aria-label="AI insights">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Automated AI Operational Insights</h1>
-            <p>Heuristic and ML-generated recommendations based on real-time solar telemetry.</p>
+        <!-- Part 3: Sensor Records Log Table -->
+        <div id="records-card">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge neutral">Part 3</span> Sensor Telemetry Log &amp; Historical Records
+          </h2>
+          <!-- Recent Activity & Sensor Telemetry Table (Full Width) -->
+        <div class="dca-card table-card">
+          <div class="table-header-bar">
+            <div>
+              <h2 class="dca-card-title">Recent Plant Records &amp; Sensor Telemetry</h2>
+              <div class="dca-card-subtitle">Real-time historical irradiance, temperature, and generator performance readings</div>
+            </div>
+            
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <div class="table-search-box">
+                <svg class="table-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="telemetrySearch" class="table-search-input" placeholder="Filter telemetry rows..." onkeyup="filterTelemetryTable()" />
+              </div>
+              <div class="table-filter-pills">
+                <button class="filter-pill-btn active" type="button" onclick="setTelemetryFilter('all', this)">All</button>
+                <button class="filter-pill-btn" type="button" onclick="setTelemetryFilter('optimal', this)">Optimal</button>
+                <button class="filter-pill-btn" type="button" onclick="setTelemetryFilter('peak', this)">Peak</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div id="insightList" class="list-stack" role="list"></div>
       </section>
 
-      <!-- ── 11. AUDIT REPORT ────────────────────── -->
-      <section class="section" id="report" aria-label="Report generation">
+      <!-- ── 5. TEAM & ARCHITECTURE ────────────────────────────── -->
+      <section class="section" id="project" aria-label="Team, Architecture & Report">
         <div class="page-header-row">
           <div class="page-header-text">
-            <h1>Executive Audit Report</h1>
-            <p>Print-ready summary of predictions, transfer learning benchmarks, and station telemetry.</p>
+            <h1>Team, Architecture &amp; Executive Report</h1>
+            <p>Student researchers, system pipeline architecture, and printable audit reports.</p>
           </div>
+        </div>
+
+        <div class="purpose-banner">
+          <span class="purpose-badge">Project Governance</span>
+          <div class="purpose-text">
+            <strong>Section Purpose:</strong> Academic project documentation providing student roles, end-to-end system architecture, and one-click printable executive reports for evaluation and viva.
+          </div>
+        </div>
+
+        <!-- Part 1: Executive Audit Report -->
+        <div id="report-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge turquoise">Part 1</span> Executive Audit Report Generator
+          </h2>
           <div class="page-header-actions">
             <button class="btn primary" type="button" onclick="downloadReport()">Download .txt</button>
             <button class="btn secondary" type="button" onclick="window.print()">Print Report</button>
@@ -849,16 +829,14 @@
         </div>
 
         <div class="dca-card" id="reportText" role="document" style="font-family:var(--font-mono);font-size:13px;line-height:1.7;white-space:pre-wrap"></div>
-      </section>
-
-      <!-- ── 12. TEAM ────────────────────────────── -->
-      <section class="section" id="project" aria-label="Team">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Engineering &amp; Research Team</h1>
-            <p>PVIntelligence is developed for academic evaluation, expo review, and real-time plant operations.</p>
-          </div>
         </div>
+
+        <!-- Part 2: Engineering & Research Team -->
+        <div id="team-card" style="margin-bottom:24px">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge purple">Part 2</span> Engineering &amp; Research Team
+          </h2>
+          </div>
 
         <div class="pipeline-row" role="list" aria-label="System pipeline">
           <div class="pipe-step" role="listitem">
@@ -941,16 +919,14 @@
             <a class="github-link" href="https://github.com/Jahnavi99955" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
           </div>
         </div>
-      </section>
-
-      <!-- ── 13. ARCHITECTURE & DOCS ─────────────── -->
-      <section class="section" id="about" aria-label="About">
-        <div class="page-header-row">
-          <div class="page-header-text">
-            <h1>Architecture &amp; Documentation</h1>
-            <p>Technical implementation details of the neural forecasting network and telemetry layer.</p>
-          </div>
         </div>
+
+        <!-- Part 3: System Architecture & Technical Specifications -->
+        <div id="about-card">
+          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            <span class="status-pill-badge violet">Part 3</span> System Architecture &amp; Methodology Documentation
+          </h2>
+          </div>
 
         <div class="dca-card">
           <h2 class="dca-card-title">Network Architecture</h2>
@@ -965,8 +941,8 @@
           <h2 class="dca-card-title">Explainability Protocol</h2>
           <p style="color:var(--text-secondary);margin:8px 0 16px">SHAP computes marginal Shapley values for each feature, showing plant engineers exactly why a specific output was forecasted.</p>
         </div>
+        </div>
       </section>
-
     </main>
   </div>
 
@@ -998,6 +974,6 @@
   </div>
 
   <script src="weather.js?v=1.2"></script>
-  <script src="script.js?v=4.7"></script>
+  <script src="script.js?v=5.0"></script>
 </body>
 </html>

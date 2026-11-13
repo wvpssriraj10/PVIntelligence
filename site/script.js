@@ -349,14 +349,32 @@ const rail       = document.getElementById('rail');
 const menubtn    = document.getElementById('menubtn');
 const pageFooter = document.getElementById('pageFooter');
 
+const SECTION_MAP = {
+  'landing': 'landing',
+  'input': 'landing',
+  'dashboard': 'landing',
+  'transfer': 'transfer',
+  'basemodel': 'transfer',
+  'xai': 'xai',
+  'anomaly': 'xai',
+  'insights': 'xai',
+  'prep': 'prep',
+  'compare': 'prep',
+  'project': 'project',
+  'about': 'project',
+  'report': 'project'
+};
+
 function go(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === id));
-  document.querySelectorAll('#subnav .subnav-btn').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+  const targetId = SECTION_MAP[id] || id;
+
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === targetId));
+  document.querySelectorAll('#subnav .subnav-btn').forEach(b => b.classList.toggle('active', b.dataset.id === targetId));
   
   if (rail) rail.classList.remove('open');
   if (menubtn) menubtn.setAttribute('aria-expanded', 'false');
 
-  if (id === 'landing') {
+  if (targetId === 'landing') {
     drawHeroChart();
   }
 
@@ -364,7 +382,16 @@ function go(id) {
     requestAnimationFrame(() => refreshCharts());
   });
 
-  try { localStorage.setItem('pv_last_page', id); } catch (e) {}
+  if (id !== targetId) {
+    const cardEl = document.getElementById(id + '-card') || document.getElementById(id);
+    if (cardEl) {
+      setTimeout(() => {
+        cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }
+
+  try { localStorage.setItem('pv_last_page', targetId); } catch (e) {}
 }
 
 /* ============================================================
