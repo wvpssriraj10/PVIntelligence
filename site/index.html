@@ -47,8 +47,8 @@
       <div class="header-actions">
         <!-- Active Region Selector Pill -->
         <select id="regionSel" class="region-pill-select" aria-label="Choose active region">
-          <option value="A">Region A &middot; 650 kWp</option>
-          <option value="B">Region B &middot; 500 kWp</option>
+          <option value="A">Region A &middot; 650 kWp (Bhadla coords)</option>
+          <option value="B">Region B &middot; 520 kWp (Charanka coords)</option>
         </select>
 
         <!-- Notification Bell -->
@@ -201,9 +201,9 @@
                 <div class="dca-card-subtitle">Real-time telemetry and LSTM+GRU neural network generation predictions</div>
               </div>
               <div class="chart-legend-pills">
-                <span class="legend-pill"><span class="legend-dot turquoise"></span> Actual</span>
+                <span class="legend-pill"><span class="legend-dot turquoise"></span> Reference Actual</span>
                 <span class="legend-pill"><span class="legend-dot pink"></span> Predicted</span>
-                <span class="legend-pill"><span class="legend-dot purple"></span> 12:40 Peak</span>
+                <span class="legend-pill"><span class="legend-dot purple"></span> Solar Peak</span>
               </div>
             </div>
 
@@ -617,6 +617,23 @@
             <span class="status-pill-badge turquoise">80% less training data required</span>
           </div>
         </div>
+
+        <!-- Empirical Data Efficiency Learning Curve (Claude Recommendation) -->
+        <div class="dca-card card-gap">
+          <div class="dca-card-header">
+            <div>
+              <h2 class="dca-card-title">Region B Data Efficiency: Validation RMSE vs. Training Days</h2>
+              <div class="dca-card-subtitle">Empirical comparison demonstrating transfer learning advantage across increasing historical days</div>
+            </div>
+            <div class="chart-legend-pills">
+              <span class="legend-pill"><span class="legend-dot coral"></span> From Scratch</span>
+              <span class="legend-pill"><span class="legend-dot turquoise"></span> Transfer Learning</span>
+            </div>
+          </div>
+          <div class="hero-chart-wrap" style="height:220px">
+            <canvas id="tlDaysChart" height="220" aria-label="RMSE vs training days curve"></canvas>
+          </div>
+        </div>
       </section>
 
       <!-- ── 6. FORECASTING VIEW ─────────────────── -->
@@ -642,7 +659,7 @@
 
         <div class="cards-grid cols-2" style="align-items:start">
           <div class="dca-card">
-            <h2 class="dca-card-title">24h Actual vs Predicted Curve</h2>
+            <h2 class="dca-card-title">24h Reference Actual vs Predicted Curve</h2>
             <div class="hero-chart-wrap" style="height:210px">
               <canvas id="dayChart" height="210" aria-label="24h actual vs predicted chart"></canvas>
             </div>

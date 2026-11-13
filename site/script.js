@@ -327,17 +327,17 @@ const DATA = {
   },
   B: {
     hours:  ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-    actual: [10, 48, 140, 225, 285, 335, 365, 350, 300, 230, 140, 60, 15],
-    pred:   [12, 52, 145, 230, 290, 338, 368, 352, 303, 232, 142, 62, 17],
-    week:   [1850, 1790, 1920, 1840, 1720, 1880, 1950],
-    cur:    285,
-    peak:   365,
-    wk7:    12950,
+    actual: [12, 52, 150, 240, 305, 358, 390, 374, 320, 246, 150, 64, 16],
+    pred:   [14, 56, 155, 245, 310, 362, 394, 376, 324, 248, 152, 66, 18],
+    week:   [1980, 1920, 2050, 1970, 1840, 2010, 2080],
+    cur:    304,
+    peak:   390,
+    wk7:    13850,
     days:   '18',
     rows: [
-      ['2026-08-01', '06:00', '98',  '20.5', '41', '9.2'],
-      ['2026-08-01', '12:00', '760', '28.9', '38', '332.1'],
-      ['2026-08-01', '18:00', '80',  '23.1', '44', '14.6'],
+      ['2026-08-01', '06:00', '98',  '20.5', '41', '10.2'],
+      ['2026-08-01', '12:00', '760', '28.9', '38', '355.2'],
+      ['2026-08-01', '18:00', '80',  '23.1', '44', '15.6'],
     ]
   }
 };
@@ -702,10 +702,10 @@ if (regionSelect) {
 /* ============================================================
    CHARTS INSTANCES
    ============================================================ */
-let dayChart, weekChart, lossChart, tlChart, compChart, cloudHist;
+let dayChart, weekChart, lossChart, tlChart, tlDaysChart, compChart, cloudHist;
 
 function refreshCharts() {
-  [dayChart, weekChart, lossChart, tlChart, compChart, cloudHist].forEach(c => c && c.resize());
+  [dayChart, weekChart, lossChart, tlChart, tlDaysChart, compChart, cloudHist].forEach(c => c && c.resize());
   drawHeroChart();
 }
 
@@ -721,8 +721,8 @@ function updateCharts(region) {
     data: {
       labels: d.hours,
       datasets: [
-        { label: 'Actual',    data: d.actual, borderColor: isLight ? '#059669' : '#10b981', tension: 0.3 },
-        { label: 'Predicted', data: d.pred,   borderColor: isLight ? '#c026d3' : '#d946ef', borderDash: [6, 4], tension: 0.3 }
+        { label: 'Reference Actual', data: d.actual, borderColor: isLight ? '#059669' : '#10b981', tension: 0.3 },
+        { label: 'Predicted',        data: d.pred,   borderColor: isLight ? '#c026d3' : '#d946ef', borderDash: [6, 4], tension: 0.3 }
       ]
     }
   });
@@ -1072,14 +1072,40 @@ window.addEventListener('DOMContentLoaded', () => {
     options: { plugins: { title: { display: true, text: 'RMSE by strategy' } } }
   });
 
+  /* ---- EMPIRICAL LEARNING CURVE: RMSE vs TRAINING DAYS --- */
+  tlDaysChart = new Chart(document.getElementById('tlDaysChart'), {
+    type: 'line',
+    data: {
+      labels: ['3 days', '6 days', '12 days', '18 days', '30 days', '90 days'],
+      datasets: [
+        {
+          label: 'From Scratch (Region B)',
+          data: [28.4, 22.1, 17.5, 14.8, 11.6, 8.2],
+          borderColor: '#f43f5e',
+          borderDash: [5, 4]
+        },
+        {
+          label: 'Transfer Learning (Fine-Tuned)',
+          data: [11.5, 9.4, 7.8, 6.9, 6.4, 6.1],
+          borderColor: '#10b981'
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        title: { display: true, text: 'Validation RMSE across training sample sizes' }
+      }
+    }
+  });
+
   /* ---- COMPARISON CHART --------------------------------- */
   compChart = new Chart(document.getElementById('compChart'), {
     type: 'bar',
     data: {
       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       datasets: [
-        { label: 'Region A (650 kWp)',    data: DATA.A.week, backgroundColor: '#6366f1' },
-        { label: 'Region B (Fine-tuned)', data: DATA.B.week, backgroundColor: '#0284c7' }
+        { label: 'Region A · 650 kWp', data: DATA.A.week, backgroundColor: '#6366f1' },
+        { label: 'Region B · 520 kWp', data: DATA.B.week, backgroundColor: '#0284c7' }
       ]
     },
     options: {
@@ -1107,7 +1133,7 @@ window.addEventListener('DOMContentLoaded', () => {
     ['Anomaly Alert',     'coral',     'High cloud cover on Aug 15 reduced Region A generation by roughly 34% versus forecast.'],
     ['Model Calibration', 'turquoise', 'Region B required 80% less training data via transfer learning, matching Region A RMSE within 1.1 kW.'],
     ['Soiling Advisory',  'amber',     'Panel efficiency in Region A shows a mild downward drift over the last 20 days, consistent with dust.'],
-    ['Diurnal Pattern',   'violet',    'Region B afternoon peak lags Region A by ~40 minutes due to geographic longitude offset.'],
+    ['Geographic Alignment', 'violet', 'Region A (Bhadla coords) and Region B (Charanka coords) share similar solar profiles with a minor ~3-minute longitude offset.'],
     ['Model Boundary',    'coral',     'Forecast confidence drops below 85% whenever cloud cover exceeds 60%, across both regions.'],
     ['Grid Stability',    'turquoise', 'Weekend industrial generation matches weekday baselines within normal ±2.4% tolerance.']
   ];

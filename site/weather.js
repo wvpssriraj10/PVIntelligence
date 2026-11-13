@@ -8,13 +8,13 @@
 
 /* ============================================================
    REGIONS CONFIGURATION
-   Region A: 650 kWp Industrial Array (Bhadla / Thar, Rajasthan)
-   Region B: 500 kWp Distributed Array (Charanka / Patan, Gujarat)
+   Region A: 650 kWp array modeled at Bhadla coordinates (Rajasthan)
+   Region B: 520 kWp array modeled at Charanka coordinates (Gujarat)
    ============================================================ */
 const REGIONS = {
   A: {
     key: 'A',
-    name: 'Region A · 650 kWp',
+    name: 'Region A · 650 kWp (Bhadla coords)',
     lat: 27.54,
     lon: 71.91,
     capacity: 650,
@@ -22,10 +22,10 @@ const REGIONS = {
   },
   B: {
     key: 'B',
-    name: 'Region B · 500 kWp',
+    name: 'Region B · 520 kWp (Charanka coords)',
     lat: 23.90,
     lon: 71.20,
-    capacity: 500,
+    capacity: 520,
     baseRmse: 6.9
   }
 };
@@ -61,7 +61,7 @@ function getOfflineDemoData(regionKey) {
 
       let ghi = 0;
       if (h >= 6 && h <= 18) {
-        const peakHour = isA ? 12.6 : 13.3; // Region B afternoon peak offset
+        const peakHour = 12.5; // ~12:30 PM solar peak
         const dist = Math.abs(h - peakHour);
         const maxGhi = isA ? 880 : 760;
         ghi = Math.max(0, Math.round(maxGhi * Math.cos((dist / 6.5) * (Math.PI / 2))));
