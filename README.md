@@ -18,7 +18,6 @@ The system is designed around a real-use case: a solar site with limited histori
 * **Explainable AI (XAI):** SHAP (SHapley Additive exPlanations) feature attribution quantifying the marginal impact of irradiance, temperature, cloud cover, and cyclical time features.
 * **Live Weather & Solar Telemetry (Open-Meteo):** Real-time solar irradiance (GHI in W/m²), ambient temperature (°C), cloud cover (%), and wind speed ingestion for both Region A (Bhadla) and Region B (Charanka) coordinates.
 * **Resilient Dual-Tier Fallback & Caching:** 15-minute `localStorage` cache TTL with 8-second timeout. Gracefully cascades to cached telemetry or offline demo data with honest provenance badges (`Live weather`, `Cached weather data`, `Offline demo data`, `Manual input`).
-* **Interactive DCA Analytics Dashboard:** FedEx DCA-inspired layout featuring a 64px persistent header, responsive 4-column KPI grid, 24h solar curve engine, 7-day energy forecasts, and sensor telemetry tables.
 * **Prototype & Simulation Input Flow:** Users can enter manual values or click *"⚡ Use live weather"* to dynamically compute real-time power and multi-day horizons.
 * **Project Showcase UI:** Dedicated sections for architecture, datasets, transfer learning benchmarks, AI operational insights, executive report export, and research team profiles.
 
