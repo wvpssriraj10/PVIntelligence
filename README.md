@@ -91,16 +91,11 @@ The root `index.html` redirects to the site preview for convenience.
 
 ---
 
-## 🚀 Live Deployment
+## 🚀 Live Deployment Sites
 
 ### Option 1: Vercel (Team-Neutral URL for Group Submissions)
-Deploying to Vercel provides a clean, neutral URL (e.g. `https://pvintelligence.vercel.app`) rather than a single member's username:
+Available at: [https://pvintelligence.vercel.app/](https://pvintelligence.vercel.app/)
 
-1. Sign in to [vercel.com](https://vercel.com) with GitHub.
-2. Click **"Add New..."** &rarr; **"Project"** and select `PVIntelligence`.
-3. The included `vercel.json` automatically sets `site/` as the public web root.
-4. Set the project name (e.g., `pvintelligence` or `pv-intelligence`), then click **Deploy**.
-5. Every `git push` to `main` will automatically trigger instant production updates.
 
 ### Option 2: GitHub Pages
 Available at: [https://wvpssriraj10.github.io/PVIntelligence/](https://wvpssriraj10.github.io/PVIntelligence/)
