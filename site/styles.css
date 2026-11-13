@@ -103,6 +103,47 @@ html.light, :root[data-theme="light"] {
   --shadow-hover: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--border-hover);
 }
 
+/* ---- SPLASH OPENING ANIMATION ------------------------------- */
+.splash-overlay {
+  position: fixed; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  background: #080a10;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(99, 102, 241, 0.18) 0%, transparent 70%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 36px 36px, 36px 36px;
+  z-index: 99999;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s ease;
+}
+.splash-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.splash-text {
+  display: flex; justify-content: center; align-items: center;
+  font-family: var(--font); font-size: clamp(2.2rem, 6.5vw, 4.4rem);
+  font-weight: 800; letter-spacing: 0.04em;
+}
+.letter {
+  color: var(--text); opacity: 0; transform: translateY(22px);
+  animation: splashTextReveal 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.letter.accent {
+  color: var(--brand-purple);
+  text-shadow: 0 0 28px rgba(99, 102, 241, 0.7);
+}
+@keyframes splashTextReveal {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.92); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.splash-sub {
+  color: var(--text-muted); font-size: 13.5px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; opacity: 0;
+  animation: splashTextReveal 0.45s ease 1.1s forwards;
+}
+
 /* ---- RESET & GLOBAL STYLES -------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }

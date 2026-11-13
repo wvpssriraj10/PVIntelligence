@@ -771,6 +771,20 @@ window.addEventListener('DOMContentLoaded', () => {
   setRegion('A');
   go('landing');
 
+  /* ---- SPLASH OPENING ANIMATION ------------------------- */
+  const splash = document.getElementById('splash-container');
+  if (splash) {
+    const dismissSplash = () => {
+      splash.classList.add('hidden');
+      setTimeout(() => {
+        try { splash.remove(); } catch (e) {}
+      }, 450);
+    };
+    setTimeout(dismissSplash, 1750);
+    splash.addEventListener('click', dismissSplash);
+    window.addEventListener('keydown', dismissSplash, { once: true });
+  }
+
   requestAnimationFrame(() => requestAnimationFrame(refreshCharts));
 
   /* ---- SHAP BARS ---------------------------------------- */
