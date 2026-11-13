@@ -16,10 +16,15 @@ The system is designed around a real-use case: a solar site with limited histori
 * **Time-Series Forecasting:** Stacked LSTM/GRU neural network for photovoltaic (PV) power prediction.
 * **Transfer Learning:** Domain adaptation transferring representation weights from data-rich Region A (120 days) to data-scarce Region B (18 days), reducing data requirements by 80% with 53% lower validation RMSE.
 * **Explainable AI (XAI):** SHAP (SHapley Additive exPlanations) feature attribution quantifying the marginal impact of irradiance, temperature, cloud cover, and cyclical time features.
-* **Live Weather & Solar Telemetry (Open-Meteo):** Real-time solar irradiance (GHI in W/m²), ambient temperature (°C), cloud cover (%), and wind speed ingestion for both Region A (Bhadla) and Region B (Charanka) coordinates.
+* **Live Satellite Weather Telemetry (Open-Meteo):** Real-time global satellite weather auto-ingestion by city presets (Bengaluru, Chennai, Amaravati/VIT-AP, Hyderabad, Delhi, Mumbai, Bhadla, Charanka) or custom GPS coordinates.
+* **Dynamic Forecast Horizon:** Configurable multi-day forecasting horizons (7 days, 10 days, 14 days) with instant total generation projection for viva demonstration.
+* **Streamlined 5-Module Presentation UI:** Reorganized from 13 flat tabs into 5 logical modules with plain-English "Section Purpose" explainer banners for evaluators:
+  1. `⚡ Live Forecast & Demo`: City presets, GPS auto-detect, customizable forecast days, and real-time generation curves.
+  2. `🧠 Transfer Learning (Core ML)`: Region A base pre-training, fine-tuned adaptation, and empirical RMSE vs. training days proof.
+  3. `🔍 Explainability & Diagnostics`: SHAP attribution bars, threshold-based fault scanner (soiling & clipping), and AI insights.
+  4. `📊 Data & Regional Analytics`: Feature engineering, MinMax scalers, and Rajasthan vs. Gujarat climate comparison.
+  5. `📄 Team & Architecture`: Printable executive audit report, student profiles, and end-to-end pipeline diagrams.
 * **Resilient Dual-Tier Fallback & Caching:** 15-minute `localStorage` cache TTL with 8-second timeout. Gracefully cascades to cached telemetry or offline demo data with honest provenance badges (`Live weather`, `Cached weather data`, `Offline demo data`, `Manual input`).
-* **Prototype & Simulation Input Flow:** Users can enter manual values or click *"⚡ Use live weather"* to dynamically compute real-time power and multi-day horizons.
-* **Project Showcase UI:** Dedicated sections for architecture, datasets, transfer learning benchmarks, AI operational insights, executive report export, and research team profiles.
 
 ---
 
