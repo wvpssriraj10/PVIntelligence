@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="PVIntelligence — Industrial Solar Forecasting & Telemetry Platform using LSTM+GRU transfer learning and SHAP explainability." />
+  <meta name="description" content="PVIntelligence — Industrial Solar Forecasting & Telemetry Platform using LSTM+GRU transfer learning, SHAP explainability, and live Open-Meteo solar radiation telemetry." />
   <meta property="og:title" content="PVIntelligence — Solar Forecasting & Telemetry" />
-  <meta property="og:description" content="Real-time AI telemetry & forecasting dashboard for solar plants. Transfer learning, SHAP explainability, ESP32 integration." />
+  <meta property="og:description" content="Real-time AI telemetry & forecasting dashboard for solar plants. Transfer learning, SHAP explainability, and live Open-Meteo weather feed integration." />
   <meta property="og:type" content="website" />
   <title>PVIntelligence — Solar Forecasting &amp; Telemetry</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -128,9 +128,9 @@
             <p>Real-time LSTM+GRU edge forecasting and SHAP performance analytics across Region A &amp; Region B.</p>
           </div>
           <div class="page-header-actions">
-            <span class="status-pill-badge turquoise" id="heroStatusPill" role="status">● ESP32 Live</span>
+            <span class="status-pill-badge turquoise weather-status-badge" id="heroStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
             <span class="btn-pill">7-Day Horizon</span>
-            <button class="btn-pill" type="button" onclick="updateLiveSummary()">↻ Sync Feed</button>
+            <button class="btn-pill" type="button" onclick="syncLiveWeather()">↻ Sync Feed</button>
             <button class="btn-pill primary" type="button" onclick="go('report')">↓ Export Report</button>
           </div>
         </div>
@@ -220,15 +220,15 @@
             <div class="analytics-footer-stats">
               <div class="stat-col">
                 <span class="stat-col-label">Daily Peak Expected</span>
-                <strong class="stat-col-value monospaced">487.0 kW</strong>
+                <strong class="stat-col-value monospaced" id="footerPeakExpected">487.0 kW</strong>
               </div>
               <div class="stat-col">
                 <span class="stat-col-label">Daytime Average Output</span>
-                <strong class="stat-col-value monospaced">285.4 kW</strong>
+                <strong class="stat-col-value monospaced" id="footerDayAverage">285.4 kW</strong>
               </div>
               <div class="stat-col">
                 <span class="stat-col-label">Telemetry Ingestion Link</span>
-                <strong class="stat-col-value" style="color:var(--turquoise)">● ESP32 Hardware Bus</strong>
+                <strong class="stat-col-value" id="telemetryFeedLink" style="color:var(--turquoise)">● Live Weather Feed</strong>
               </div>
             </div>
           </div>
@@ -347,7 +347,7 @@
 
           <div class="table-footer-bar">
             <span>Showing 6 of 2,880 historical telemetry rows</span>
-            <span>Synced from ESP32 buffer &middot; Model Loss RMSE 5.8 kW</span>
+            <span>Synced from live weather feed &middot; Model Loss RMSE 5.8 kW</span>
           </div>
         </div>
 
@@ -361,7 +361,7 @@
             <p>Enter manual values to calculate real-time power output and multi-day forecasting horizons.</p>
           </div>
           <div class="page-header-actions">
-            <span class="status-pill-badge warning" id="sourceStatusPill" role="status">Demo data</span>
+            <span class="status-pill-badge turquoise weather-status-badge" id="sourceStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
           </div>
         </div>
 
@@ -388,6 +388,7 @@
             </div>
             <div class="actions">
               <button class="btn primary" type="button" onclick="updateLiveSummary()" aria-label="Run forecast">&#9654;&nbsp; Run Live Forecast</button>
+              <button class="btn secondary" type="button" id="useLiveWeatherBtn" onclick="applyLiveWeatherToInputs()" aria-label="Use live weather">⚡ Use live weather</button>
               <button class="btn secondary" type="button" onclick="go('dashboard')">View Forecasting View</button>
             </div>
           </div>
@@ -625,14 +626,17 @@
             <h1>Detailed Forecasting Matrix</h1>
             <p id="dashRegionLabel">Region A — current generation output and multi-day expected curves.</p>
           </div>
+          <div class="page-header-actions">
+            <span class="status-pill-badge turquoise weather-status-badge" id="dashStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
+          </div>
         </div>
 
         <div class="dca-card" style="margin-bottom:20px;padding:16px 20px">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13.5px">
-            <span>☀ Peak expected at <strong style="color:var(--text)">12:40 PM</strong></span>
-            <span>☁ Cloud risk <strong style="color:var(--turquoise)">Low</strong></span>
+            <span>☀ Peak expected at <strong style="color:var(--text)" id="glancePeak">12:40 PM</strong></span>
+            <span>☁ Cloud risk <strong style="color:var(--turquoise)" id="glanceCloudRisk">Low</strong></span>
             <span>🌡 Ambient: <strong id="glanceTemp" style="color:var(--text)">31.2°C</strong></span>
-            <span>Model error: <strong style="color:var(--text)">±5.8 kW</strong></span>
+            <span>Model error: <strong style="color:var(--text)" id="glanceError">±5.8 kW</strong></span>
           </div>
         </div>
 
@@ -654,18 +658,18 @@
         <div class="cards-grid cols-3" style="margin-top:20px">
           <div class="dca-card metric-card">
             <span class="kpi-label">☁ Cloud Cover</span>
-            <div class="metric-value monospaced">32%</div>
-            <span class="kpi-trend turquoise">▼ 5% vs morning</span>
+            <div class="metric-value monospaced" id="dashCloud">32%</div>
+            <span class="kpi-trend turquoise" id="dashCloudTrend">▼ Live feed</span>
           </div>
           <div class="dca-card metric-card">
             <span class="kpi-label">🌡 Ambient Temp</span>
-            <div class="metric-value monospaced">31.2°C</div>
-            <span class="kpi-trend violet">▲ 2°C vs yesterday</span>
+            <div class="metric-value monospaced" id="dashTemp">31.2°C</div>
+            <span class="kpi-trend violet" id="dashTempTrend">▲ Live feed</span>
           </div>
           <div class="dca-card metric-card">
             <span class="kpi-label">💨 Wind Speed</span>
-            <div class="metric-value monospaced">9 km/h</div>
-            <span class="kpi-trend neutral">Stable (3.2 m/s)</span>
+            <div class="metric-value monospaced" id="dashWind">9 km/h</div>
+            <span class="kpi-trend neutral" id="dashWindSub">Stable (2.5 m/s)</span>
           </div>
         </div>
       </section>
@@ -744,11 +748,11 @@
                 <tr><th>Performance Metric</th><th class="num">Region A (Baseline)</th><th class="num">Region B (Transfer)</th></tr>
               </thead>
               <tbody>
-                <tr><td>Average Daily Output</td><td class="num">2,478 kWh</td><td class="num">1,850 kWh</td></tr>
+                <tr><td>Average Daily Output</td><td class="num" id="compDailyA">2,478 kWh</td><td class="num" id="compDailyB">1,850 kWh</td></tr>
                 <tr><td>Forecast RMSE</td><td class="num">5.8 kW</td><td class="num">6.9 kW</td></tr>
                 <tr><td>Forecast MAE</td><td class="num">4.1 kW</td><td class="num">4.9 kW</td></tr>
                 <tr><td>Historical Data Available</td><td class="num">120 days</td><td class="num">18 days</td></tr>
-                <tr><td>Average Cloud Cover</td><td class="num">30.2%</td><td class="num">45.6%</td></tr>
+                <tr><td>Live Average Cloud Cover</td><td class="num" id="compCloudA">22.0%</td><td class="num" id="compCloudB">38.0%</td></tr>
                 <tr><td>Model Confidence Score</td><td class="num">94.1%</td><td class="num">87.3%</td></tr>
               </tbody>
             </table>
@@ -801,8 +805,8 @@
 
         <div class="pipeline-row" role="list" aria-label="System pipeline">
           <div class="pipe-step" role="listitem">
-            <strong>ESP32 Node</strong>
-            <small>Edge Sensor I/O</small>
+            <strong>Weather Feed</strong>
+            <small>Edge Telemetry</small>
           </div>
           <span class="pipe-arrow">&rarr;</span>
           <div class="pipe-step" role="listitem">
@@ -936,6 +940,7 @@
     </div>
   </div>
 
-  <script src="script.js?v=4.3"></script>
+  <script src="weather.js?v=1.0"></script>
+  <script src="script.js?v=4.4"></script>
 </body>
 </html>
