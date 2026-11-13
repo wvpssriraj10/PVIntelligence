@@ -659,13 +659,41 @@ async function applyLiveWeatherToInputs() {
   if (btn) btn.textContent = '⚡ Use live weather';
 }
 
+let _isSyncing = false;
 async function syncLiveWeather() {
-  const reg = regionSelect ? regionSelect.value : 'A';
-  if (typeof getWeather === 'function') {
-    const w = await getWeather(reg, true);
-    applyWeatherToRegion(reg, w, true);
+  if (_isSyncing) return;
+  _isSyncing = true;
+  const syncBtn = document.querySelector('button[onclick="syncLiveWeather()"]');
+  if (syncBtn) {
+    syncBtn.textContent = '↻ Syncing...';
+    syncBtn.style.opacity = '0.7';
+  }
+  try {
+    const reg = regionSelect ? regionSelect.value : 'A';
+    if (typeof getWeather === 'function') {
+      const w = await getWeather(reg, true);
+      applyWeatherToRegion(reg, w, true);
+    }
+  } catch (e) {
+    console.info('[PVIntelligence] Sync completed with fallback state:', e);
+  } finally {
+    setTimeout(() => {
+      _isSyncing = false;
+      if (syncBtn) {
+        syncBtn.textContent = '↻ Sync Feed';
+        syncBtn.style.opacity = '1';
+      }
+    }, 450);
   }
 }
+
+// When internet connectivity is restored, automatically sync fresh live weather
+window.addEventListener('online', () => {
+  const reg = regionSelect ? regionSelect.value : 'A';
+  if (typeof getWeather === 'function') {
+    getWeather(reg, true).then(w => applyWeatherToRegion(reg, w, true)).catch(() => {});
+  }
+});
 
 if (regionSelect) {
   regionSelect.addEventListener('change', e => setRegion(e.target.value));

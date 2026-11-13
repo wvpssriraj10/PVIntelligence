@@ -109,6 +109,20 @@ async function getWeather(regionKey, forceRefresh = false) {
   }
 
   const now = Date.now();
+
+  // If browser is currently offline, immediately return cached or demo data without firing network requests
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    if (cached && cached.hourly && cached.current) {
+      return {
+        source: 'Cached weather data',
+        fetchedAt: cached.timestamp || now,
+        hourly: cached.hourly,
+        current: cached.current
+      };
+    }
+    return getOfflineDemoData(reg.key);
+  }
+
   if (!forceRefresh && cached && cached.timestamp && (now - cached.timestamp < CACHE_TTL_MS)) {
     return {
       source: cached.source || 'Live weather',
@@ -181,7 +195,7 @@ async function getWeather(regionKey, forceRefresh = false) {
     return result;
   } catch (err) {
     clearTimeout(timeoutId);
-    console.warn(`Weather fetch failed for Region ${regionKey} (${err.message}). Using fallback.`);
+    console.info(`[PVIntelligence] Offline or network unreachable for Region ${regionKey}. Using ${cached ? 'cached data' : 'offline demo dataset'}.`);
 
     // Fallback 1: Cached weather data
     if (cached && cached.hourly && cached.current) {
