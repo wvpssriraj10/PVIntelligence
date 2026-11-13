@@ -213,6 +213,58 @@ async function getWeather(regionKey, forceRefresh = false) {
 }
 
 /**
+ * Fetches real-time 7-day solar telemetry for any arbitrary latitude and longitude.
+ */
+async function fetchWeatherForCoordinates(lat, lon, label = 'Custom location') {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_10m&forecast_days=7&timezone=auto`;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) throw new Error(`Open-Meteo HTTP error ${res.status}`);
+    const json = await res.json();
+    if (!json.hourly || !json.hourly.time) throw new Error('Malformed Open-Meteo response');
+
+    const times = json.hourly.time;
+    const rads = json.hourly.shortwave_radiation || [];
+    const temps = json.hourly.temperature_2m || [];
+    const clouds = json.hourly.cloud_cover || [];
+    const winds = json.hourly.wind_speed_10m || [];
+
+    const hourly = [];
+    for (let i = 0; i < times.length; i++) {
+      hourly.push({
+        time: times[i],
+        ghi: Math.round(Math.max(0, Number(rads[i]) || 0)),
+        temp: parseFloat((Number(temps[i]) || 25).toFixed(1)),
+        cloud: Math.max(0, Math.min(100, Math.round(Number(clouds[i]) || 0))),
+        wind: parseFloat((Number(winds[i]) || 0).toFixed(1))
+      });
+    }
+
+    const nowLocalIso = new Date().toISOString().slice(0, 13);
+    let currIdx = times.findIndex(t => t.startsWith(nowLocalIso));
+    if (currIdx === -1) {
+      currIdx = Math.min(new Date().getHours(), hourly.length - 1);
+    }
+
+    return {
+      source: `Live weather · ${label}`,
+      fetchedAt: Date.now(),
+      hourly: hourly,
+      current: hourly[currIdx] || hourly[0]
+    };
+  } catch (err) {
+    clearTimeout(timeoutId);
+    console.warn('Coordinate fetch error:', err);
+    throw err;
+  }
+}
+
+/**
  * Returns formatted text and badge class for honest status labels.
  */
 function getWeatherBadgeMeta(source, fetchedAt) {
@@ -220,13 +272,16 @@ function getWeatherBadgeMeta(source, fetchedAt) {
   const elapsedMin = Math.floor(elapsedSec / 60);
   const timeText = elapsedMin <= 0 ? 'just now' : `${elapsedMin}m ago`;
 
+  if (source && source.startsWith('Live weather')) {
+    const label = source.includes('·') ? source : 'Live weather · Open-Meteo';
+    return {
+      text: `${label} · updated ${timeText}`,
+      cls: 'turquoise',
+      dotColor: 'var(--turquoise)'
+    };
+  }
+
   switch (source) {
-    case 'Live weather':
-      return {
-        text: `Live weather · Open-Meteo · updated ${timeText}`,
-        cls: 'turquoise',
-        dotColor: 'var(--turquoise)'
-      };
     case 'Cached weather data':
       return {
         text: `Cached weather data · updated ${timeText}`,
@@ -253,6 +308,7 @@ function getWeatherBadgeMeta(source, fetchedAt) {
 if (typeof window !== 'undefined') {
   window.REGIONS = REGIONS;
   window.getWeather = getWeather;
+  window.fetchWeatherForCoordinates = fetchWeatherForCoordinates;
   window.getWeatherBadgeMeta = getWeatherBadgeMeta;
   window.getOfflineDemoData = getOfflineDemoData;
 }

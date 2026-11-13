@@ -659,6 +659,102 @@ async function applyLiveWeatherToInputs() {
   if (btn) btn.textContent = '⚡ Use live weather';
 }
 
+function onLocationPresetChange() {
+  const sel = document.getElementById('locationPresetSel');
+  if (!sel) return;
+  const val = sel.value;
+  if (val === 'custom') {
+    document.getElementById('customLat')?.focus();
+    return;
+  }
+  const [lat, lon, name, cap] = val.split(',');
+  const latEl = document.getElementById('customLat');
+  const lonEl = document.getElementById('customLon');
+  const capEl = document.getElementById('capacityInput');
+  if (latEl) latEl.value = lat;
+  if (lonEl) lonEl.value = lon;
+  if (capEl && cap) capEl.value = cap;
+
+  fetchCustomLocationWeather(name);
+}
+
+async function fetchCustomLocationWeather(cityName) {
+  const lat = parseFloat(document.getElementById('customLat')?.value || '12.97');
+  const lon = parseFloat(document.getElementById('customLon')?.value || '77.59');
+  const btn = document.getElementById('fetchLocationWeatherBtn');
+
+  const sel = document.getElementById('locationPresetSel');
+  const name = cityName || (sel && sel.value !== 'custom'
+    ? sel.options[sel.selectedIndex].text.split('·')[0].replace('📍', '').trim()
+    : `${lat}°N, ${lon}°E`);
+
+  if (btn) {
+    btn.textContent = '⏳ Ingesting Satellite Weather...';
+    btn.style.opacity = '0.7';
+  }
+
+  try {
+    let w = null;
+    if (typeof fetchWeatherForCoordinates === 'function') {
+      w = await fetchWeatherForCoordinates(lat, lon, name);
+    } else if (typeof getWeather === 'function') {
+      w = await getWeather('A', true);
+    }
+
+    if (w && w.current) {
+      _setVal('irradianceInput', w.current.ghi);
+      _setVal('tempInput', w.current.temp);
+
+      const currentRegion = regionSelect ? regionSelect.value : 'A';
+      applyWeatherToRegion(currentRegion, w, true);
+
+      _set('sourceStatus', `Live Open-Meteo (${name})`);
+      updateWeatherBadges(`Live weather · ${name}`, w.fetchedAt);
+
+      if (btn) {
+        btn.textContent = `✓ Synced: ${w.current.ghi} W/m², ${w.current.temp}°C (${name})`;
+        setTimeout(() => {
+          btn.textContent = '⚡ Fetch Live Weather for Coordinates';
+          btn.style.opacity = '1';
+        }, 3500);
+      }
+    }
+  } catch (err) {
+    if (btn) {
+      btn.textContent = '⚡ Fetch Live Weather for Coordinates';
+      btn.style.opacity = '1';
+    }
+  }
+}
+
+function detectUserLocation() {
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser.');
+    return;
+  }
+  const btn = document.querySelector('button[onclick="detectUserLocation()"]');
+  if (btn) btn.textContent = '📍 Locating...';
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = parseFloat(pos.coords.latitude.toFixed(2));
+      const lon = parseFloat(pos.coords.longitude.toFixed(2));
+      _setVal('customLat', lat);
+      _setVal('customLon', lon);
+      const sel = document.getElementById('locationPresetSel');
+      if (sel) sel.value = 'custom';
+      if (btn) btn.textContent = '📍 Detected!';
+      fetchCustomLocationWeather(`Your GPS Location (${lat}°N, ${lon}°E)`);
+      setTimeout(() => { if (btn) btn.textContent = '📍 My GPS'; }, 2500);
+    },
+    (err) => {
+      alert('Could not detect location: ' + err.message);
+      if (btn) btn.textContent = '📍 My GPS';
+    },
+    { timeout: 8000 }
+  );
+}
+
 let _isSyncing = false;
 async function syncLiveWeather() {
   if (_isSyncing) return;
