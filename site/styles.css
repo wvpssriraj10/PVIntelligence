@@ -215,8 +215,9 @@ h1, h2, h3, h4, p { margin-top: 0; }
   background: var(--coral); border-radius: 50%; box-shadow: 0 0 8px var(--coral);
 }
 .profile-pill {
-  display: inline-flex; align-items: center; gap: 9px; padding: 3px 12px 3px 4px;
-  background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--radius-pill);
+  width: 38px; height: 38px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface-raised); border: 1px solid var(--border); border-radius: 50%;
   cursor: pointer; transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 .profile-pill:hover { border-color: var(--border-hover); background: var(--surface-hover); }
@@ -226,7 +227,7 @@ h1, h2, h3, h4, p { margin-top: 0; }
   display: flex; align-items: center; justify-content: center;
   font-size: 11.5px; font-weight: 800; color: #fff;
 }
-.profile-name { font-size: 12.5px; font-weight: 700; color: var(--text); }
+.profile-name { display: none; }
 
 /* Region Pill Select in Header */
 .region-pill-select {
@@ -238,6 +239,22 @@ h1, h2, h3, h4, p { margin-top: 0; }
   cursor: pointer; outline: none; transition: border-color var(--transition-fast);
 }
 .region-pill-select:focus { border-color: var(--brand-purple); }
+
+/* Option Styling for Native Select Dropdowns */
+select option,
+.region-pill-select option,
+.select option {
+  background-color: #1c2233;
+  color: #f8fafc;
+  padding: 8px 12px;
+}
+[data-theme="light"] select option,
+[data-theme="light"] .region-pill-select option,
+[data-theme="light"] .select option,
+html.light select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
 
 /* ---- SUB-NAV BAR (Horizontal Pill Rail) --------------------- */
 .subnav-bar {
