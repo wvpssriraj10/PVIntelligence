@@ -13,12 +13,14 @@ The system is designed around a real-use case: a solar site with limited histori
 ---
 
 ## ✨ Key Features
-* **Time-Series Forecasting:** LSTM/GRU-based forecasting pipeline for PV output prediction.
-* **Transfer Learning:** Shared knowledge from a data-rich region is reused for a data-scarce region.
-* **Explainable AI:** Model reasoning is surfaced through SHAP-style contribution analysis and forecast explanations.
-* **Interactive Landing Page:** A modern front-end experience for project presentation, live summary cards, manual input simulation, and forecasting insights.
-* **Prototype-Friendly Input Flow:** Users can enter values manually or simulate connected sensor/prototype readings and see generated power and forecast horizon.
-* **Project Showcase UI:** Includes sections for product overview, model details, project team, technical details, and report generation.
+* **Time-Series Forecasting:** Stacked LSTM/GRU neural network for photovoltaic (PV) power prediction.
+* **Transfer Learning:** Domain adaptation transferring representation weights from data-rich Region A (120 days) to data-scarce Region B (18 days), reducing data requirements by 80% with 53% lower validation RMSE.
+* **Explainable AI (XAI):** SHAP (SHapley Additive exPlanations) feature attribution quantifying the marginal impact of irradiance, temperature, cloud cover, and cyclical time features.
+* **Live Weather & Solar Telemetry (Open-Meteo):** Real-time solar irradiance (GHI in W/m²), ambient temperature (°C), cloud cover (%), and wind speed ingestion for both Region A (Bhadla) and Region B (Charanka) coordinates.
+* **Resilient Dual-Tier Fallback & Caching:** 15-minute `localStorage` cache TTL with 8-second timeout. Gracefully cascades to cached telemetry or offline demo data with honest provenance badges (`Live weather`, `Cached weather data`, `Offline demo data`, `Manual input`).
+* **Interactive DCA Analytics Dashboard:** FedEx DCA-inspired layout featuring a 64px persistent header, responsive 4-column KPI grid, 24h solar curve engine, 7-day energy forecasts, and sensor telemetry tables.
+* **Prototype & Simulation Input Flow:** Users can enter manual values or click *"⚡ Use live weather"* to dynamically compute real-time power and multi-day horizons.
+* **Project Showcase UI:** Dedicated sections for architecture, datasets, transfer learning benchmarks, AI operational insights, executive report export, and research team profiles.
 
 ---
 
@@ -62,7 +64,7 @@ The system is designed around a real-use case: a solar site with limited histori
              │
    ┌─────────┴─────────┐
    ▼                   ▼
-[ XAI Insights ]   [ Web Showcase / Landing Page ]
+[ XAI Insights ]   [ DCA Dashboard & Live Telemetry ]
 ```
 
 ---
@@ -85,6 +87,22 @@ The root `index.html` redirects to the site preview for convenience.
 
 ---
 
+## 🚀 Live Deployment
+
+### Option 1: Vercel (Team-Neutral URL for Group Submissions)
+Deploying to Vercel provides a clean, neutral URL (e.g. `https://pvintelligence.vercel.app`) rather than a single member's username:
+
+1. Sign in to [vercel.com](https://vercel.com) with GitHub.
+2. Click **"Add New..."** &rarr; **"Project"** and select `PVIntelligence`.
+3. The included `vercel.json` automatically sets `site/` as the public web root.
+4. Set the project name (e.g., `pvintelligence` or `pv-intelligence`), then click **Deploy**.
+5. Every `git push` to `main` will automatically trigger instant production updates.
+
+### Option 2: GitHub Pages
+Available at: [https://wvpssriraj10.github.io/PVIntelligence/](https://wvpssriraj10.github.io/PVIntelligence/)
+
+---
+
 ## 📁 Project Structure
 
 ```text
@@ -99,6 +117,7 @@ PVIntelligence/
 ├── site/                     # Landing page and interactive frontend showcase
 │   ├── index.html            # Main project website
 │   ├── styles.css            # Styling and theme
+│   ├── weather.js            # Live Open-Meteo API ingestion, caching & fallback
 │   └── script.js             # Front-end logic and chart rendering
 ├── src/                      # Core Python training and inference logic
 ├── .gitignore                # Files ignored by Git
