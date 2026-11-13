@@ -136,7 +136,7 @@ async function getWeather(regionKey, forceRefresh = false) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${reg.lat}&longitude=${reg.lon}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_10m&forecast_days=7&timezone=auto`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${reg.lat}&longitude=${reg.lon}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_10m&forecast_days=16&timezone=auto`;
 
   try {
     const res = await fetch(url, { signal: controller.signal });
@@ -216,7 +216,7 @@ async function getWeather(regionKey, forceRefresh = false) {
  * Fetches real-time 7-day solar telemetry for any arbitrary latitude and longitude.
  */
 async function fetchWeatherForCoordinates(lat, lon, label = 'Custom location') {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_10m&forecast_days=7&timezone=auto`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_10m&forecast_days=16&timezone=auto`;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000);
 
