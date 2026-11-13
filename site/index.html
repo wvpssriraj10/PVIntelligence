@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=4.1" />
+  <link rel="stylesheet" href="styles.css?v=4.2" />
 </head>
 <body>
 
@@ -56,11 +56,6 @@
         <button id="themeToggleBtn" class="header-btn header-btn-icon" type="button" aria-label="Toggle dark/light theme" onclick="toggleTheme()">
           <span id="themeIcon">☾</span>
         </button>
-
-        <!-- User Profile Pill -->
-        <div id="profileBtn" class="profile-pill" role="button" tabindex="0" aria-label="User profile" onclick="openProfileModal()">
-          <div class="avatar-ring">SR</div>
-        </div>
       </div>
     </div>
   </header>
@@ -102,33 +97,6 @@
       <div class="notif-item">
         <strong>✓ Transfer learning calibrated</strong>
         Region B model updated with 53% lower RMSE using 18 training days.
-      </div>
-    </div>
-  </div>
-
-  <!-- Profile / Auth Modal -->
-  <div id="profileModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalProfileTitle">
-    <div class="modal-card">
-      <button class="modal-close" type="button" aria-label="Close profile modal" onclick="closeProfileModal()">&times;</button>
-      <div class="modal-header">
-        <div class="avatar-ring" style="width:48px;height:48px;font-size:18px;margin:0 auto 12px">SR</div>
-        <h2 id="modalProfileTitle">Station Engineer</h2>
-        <p>PVIntelligence Telemetry &amp; Edge Node Access</p>
-      </div>
-      <div class="auth-form-stack">
-        <label>Account Name
-          <input type="text" value="W V P S Sriraj" readonly />
-        </label>
-        <label>Active Plant Node
-          <input type="text" value="Region A · 650 kWp Industrial Array" readonly />
-        </label>
-        <label>Hardware Security Token
-          <input type="text" value="ESP32-TLS-AUTH-TOKEN-VERIFIED" readonly />
-        </label>
-        <label>Role &amp; Permissions
-          <input type="text" value="MLOps Lead · Full Model &amp; SCADA Access" readonly />
-        </label>
-        <button class="btn primary" type="button" style="margin-top:8px" onclick="closeProfileModal()">Done</button>
       </div>
     </div>
   </div>

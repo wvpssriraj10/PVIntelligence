@@ -54,16 +54,8 @@ function _setThemeIcon(icon) {
 }
 
 /* ============================================================
-   PROFILE & NOTIFICATION CONTROLS
+   NOTIFICATION POPOVER & ALERTS
    ============================================================ */
-function openProfileModal() {
-  const m = document.getElementById('profileModal');
-  if (m) m.classList.add('open');
-}
-function closeProfileModal() {
-  const m = document.getElementById('profileModal');
-  if (m) m.classList.remove('open');
-}
 function toggleNotifPopover() {
   const p = document.getElementById('notifPopover');
   if (p) p.classList.toggle('open');
@@ -77,10 +69,6 @@ window.addEventListener('click', (e) => {
       notifPopover.classList.remove('open');
     }
   }
-  const modal = document.getElementById('profileModal');
-  if (modal && e.target === modal) {
-    closeProfileModal();
-  }
 });
 
 /* ============================================================
@@ -93,7 +81,6 @@ window.addEventListener('keydown', (e) => {
     if (s) s.focus();
   }
   if (e.key === 'Escape') {
-    closeProfileModal();
     const p = document.getElementById('notifPopover');
     if (p) p.classList.remove('open');
   }
