@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=8.0" />
+  <link rel="stylesheet" href="styles.css?v=9.0" />
 </head>
 <body>
 
@@ -432,11 +432,11 @@
         </div>
 
         <!-- Part 1: Base Model Architecture & Training Convergence -->
-        <div id="basemodel-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="basemodel-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge purple">Part 1</span> Base Model (Region A — 120 Days Pre-Training)
           </h2>
-          </div>
+        </div>
 
         <div class="cards-grid cols-2" style="align-items:start">
           <div class="dca-card">
@@ -492,8 +492,8 @@
         </div>
 
         <!-- Part 2: Transfer Learning Fine-Tuning & Learning Curves -->
-        <div id="transfer-card" style="margin-top:32px;margin-bottom:14px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="transfer-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge turquoise">Part 2</span> Fine-Tuned Transfer Learning (Region B — 18 Days Adaptation)
           </h2>
         </div>
@@ -608,11 +608,11 @@
         </div>
 
         <!-- Part 1: SHAP Feature Attribution -->
-        <div id="shap-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="shap-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge turquoise">Part 1</span> SHAP Feature Attribution &amp; Explainability
           </h2>
-          </div>
+        </div>
 
         <div class="cards-grid cols-2" style="align-items:start">
           <div>
@@ -639,11 +639,11 @@
         </div>
 
         <!-- Part 2: Anomaly Detection Scanner -->
-        <div id="anomaly-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="anomaly-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge coral">Part 2</span> Anomaly &amp; Performance Deviation Detection
           </h2>
-          </div>
+        </div>
 
         <div class="dca-card">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
@@ -657,15 +657,15 @@
           </div>
         </div>
 
-        <div id="anomList" class="list-stack" role="list" aria-live="polite" aria-label="Detected anomalies"></div>
+        <div id="anomList" class="list-stack" role="list" style="margin-top:16px" aria-live="polite" aria-label="Detected anomalies"></div>
 
         <!-- Part 3: AI Operational Insights -->
-        <div id="insights-card">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="insights-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge violet">Part 3</span> Automated Operational AI Insights
           </h2>
         </div>
-        <div id="insightList" class="list-stack" role="list"></div>
+        <div id="insightList" class="list-stack" role="list" style="margin-top:16px"></div>
       </section>
 
       <!-- ── 4. DATA & REGIONAL ANALYTICS ──────────────────────── -->
@@ -685,11 +685,11 @@
         </div>
 
         <!-- Part 1: Data Preparation & Scalers -->
-        <div id="prep-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="prep-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge turquoise">Part 1</span> Data Preparation &amp; Feature Engineering
           </h2>
-          </div>
+        </div>
 
         <div class="cards-grid cols-4">
           <div class="dca-card metric-card">
@@ -752,8 +752,8 @@
         </div>
 
         <!-- Part 2: Region A vs Region B Comparison -->
-        <div id="compare-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="compare-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge purple">Part 2</span> Regional Telemetry Benchmark (Region A vs Region B)
           </h2>
         </div>
@@ -784,8 +784,8 @@
         </div>
 
         <!-- Part 3: Sensor Records Log Table -->
-        <div id="records-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="records-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge neutral">Part 3</span> Sensor Telemetry Log &amp; Historical Records
           </h2>
         </div>
@@ -811,6 +811,14 @@
               </div>
             </div>
           </div>
+          <div class="dca-table-wrap">
+            <table class="dca-table" id="recentTable" aria-label="Recent plant records">
+              <thead>
+                <tr><th>Timestamp</th><th>Array</th><th class="num">Solar Irradiance (GHI)</th><th class="num">Ambient Temp</th><th class="num">Cloud Cover</th><th class="num">Actual Output</th><th>Status</th></tr>
+              </thead>
+              <tbody id="recentTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -831,8 +839,8 @@
         </div>
 
         <!-- Part 1: Executive Audit Report -->
-        <div id="report-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="report-card" class="section-part-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <h2>
             <span class="status-pill-badge turquoise">Part 1</span> Executive Audit Report Generator
           </h2>
           <div class="page-header-actions">
@@ -844,11 +852,11 @@
         <div class="dca-card" id="reportText" role="document" style="font-family:var(--font-mono);font-size:13px;line-height:1.7;white-space:pre-wrap"></div>
 
         <!-- Part 2: Engineering & Research Team -->
-        <div id="team-card" style="margin-bottom:24px">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="team-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge purple">Part 2</span> Engineering &amp; Research Team
           </h2>
-          </div>
+        </div>
 
         <div class="pipeline-row" role="list" aria-label="System pipeline">
           <div class="pipe-step" role="listitem">
@@ -891,7 +899,7 @@
                 <div class="team-id monospaced">23BCE8414</div>
               </div>
             </div>
-            <p class="team-role">MLOps &amp; Web Lead — Architected the SHAP explainability pipeline, DCA dashboard, and ESP32 integration layer.</p>
+            <p class="team-role">MLOps &amp; Web Lead — Architected the SHAP explainability pipeline, DCA dashboard, and live satellite weather integration layer.</p>
             <a class="github-link" href="https://github.com/wvpssriraj10" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
           </div>
 
@@ -933,8 +941,8 @@
         </div>
 
         <!-- Part 3: System Architecture & Technical Specifications -->
-        <div id="about-card">
-          <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div id="about-card" class="section-part-header">
+          <h2>
             <span class="status-pill-badge violet">Part 3</span> System Architecture &amp; Methodology Documentation
           </h2>
         </div>
@@ -983,7 +991,7 @@
     </div>
   </div>
 
-  <script src="weather.js?v=3.0"></script>
-  <script src="script.js?v=8.0"></script>
+  <script src="weather.js?v=4.0"></script>
+  <script src="script.js?v=9.0"></script>
 </body>
 </html>

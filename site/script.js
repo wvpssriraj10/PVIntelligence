@@ -428,10 +428,13 @@ function go(id) {
         cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
+  } else {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }
 
   try { localStorage.setItem('pv_last_page', targetId); } catch (e) {}
 }
+window.go = go;
 
 /* ============================================================
    RECENT ACTIVITY / TELEMETRY TABLE POPULATION
@@ -1269,7 +1272,27 @@ function _heroStatusPill(cls, text) {
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
   setRegion('A');
-  go('landing');
+
+  /* ---- SUBNAV & ROUTING LISTENERS ------------------------- */
+  document.querySelectorAll('#subnav .subnav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = btn.getAttribute('data-id');
+      if (id) go(id);
+    });
+  });
+
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) go(hash);
+  });
+
+  const initHash = window.location.hash.replace('#', '');
+  if (initHash && SECTION_MAP[initHash]) {
+    go(initHash);
+  } else {
+    go('landing');
+  }
 
   /* ---- MANUAL INPUT CHANGE LISTENERS --------------------- */
   ['irradianceInput', 'tempInput', 'capacityInput', 'forecastDaysInput'].forEach(id => {
@@ -1544,7 +1567,7 @@ function buildReport() {
     '4. RECENT OPERATIONAL ADVISORIES',
     '----------------------------------------------------',
     '  [Verified] Transfer fine-tuning calibrated with Region B node.',
-    '  [Optimal] Real-time sensor feed connected via ESP32 telemetry bus.',
+    '  [Optimal] Real-time sensor feed connected via Open-Meteo API.',
     '===================================================='
   ].join('\n');
 }

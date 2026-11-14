@@ -699,9 +699,28 @@ html.light select option {
   position: relative; overflow: hidden;
 }
 .card:hover { border-color: var(--border-hover); }
+/* Section Part Header Bar */
+.section-part-header {
+  margin-top: 32px;
+  margin-bottom: 14px;
+}
+.section-part-header:first-of-type {
+  margin-top: 24px;
+}
+.section-part-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Card Gap */
 .card-gap { margin-top: 20px; }
 
-.cards-grid { display: grid; gap: 16px; margin-top: 20px; }
+.cards-grid { display: grid; gap: 16px; margin-top: 16px; }
 .cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
 .cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
 .cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
