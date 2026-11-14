@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=5.0" />
+  <link rel="stylesheet" href="styles.css?v=6.0" />
 </head>
 <body>
 
@@ -186,147 +186,136 @@
 
         <!-- Plant Location Selector & Live Telemetry Controls (Interactive Demo Anchor) -->
         <div id="input-card" style="margin-top:24px">
-          <div class="page-header-actions">
-            <span class="status-pill-badge turquoise weather-status-badge" id="sourceStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
-          </div>
-        </div>
+          <div class="input-grid">
+            <div class="dca-card" role="form" aria-label="Location and simulation parameters">
+              <div class="dca-card-header">
+                <div>
+                  <h2 class="dca-card-title">Plant Location &amp; Live Weather Feeds</h2>
+                  <div class="dca-card-subtitle">Pick a city or enter custom GPS coordinates to auto-ingest live satellite weather</div>
+                </div>
+                <span class="status-pill-badge turquoise weather-status-badge" id="sourceStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
+              </div>
 
-        <div class="input-grid">
-          <div class="dca-card" role="form" aria-label="Location and simulation parameters">
-            <h2 class="dca-card-title">Plant Location &amp; Live Weather Feeds</h2>
-            <div class="dca-card-subtitle" style="margin-bottom:12px">Pick a city or enter custom GPS coordinates to auto-ingest live satellite weather</div>
-
-            <!-- Target Location & GPS Coordinates Selector -->
-            <div style="background:var(--surface-raised);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:16px">
-              <label style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;display:block">
-                Choose Location / Preset
-              </label>
-              <select id="locationPresetSel" class="select" style="width:100%;margin-bottom:10px" onchange="onLocationPresetChange()">
-                <option value="12.97,77.59,Bengaluru,500">📍 Bengaluru (Karnataka) · 12.97° N, 77.59° E</option>
-                <option value="13.08,80.28,Chennai,500">📍 Chennai (Tamil Nadu) · 13.08° N, 80.28° E</option>
-                <option value="16.51,80.52,Amaravati / VIT-AP,500">📍 Amaravati / VIT-AP Campus · 16.51° N, 80.52° E</option>
-                <option value="17.38,78.48,Hyderabad,500">📍 Hyderabad (Telangana) · 17.38° N, 78.48° E</option>
-                <option value="28.61,77.21,New Delhi,500">📍 New Delhi · 28.61° N, 77.21° E</option>
-                <option value="19.07,72.88,Mumbai,500">📍 Mumbai (Maharashtra) · 19.07° N, 72.88° E</option>
-                <option value="27.54,71.91,Bhadla Array (Region A),650" selected>📍 Bhadla Solar Array (Region A) · 27.54° N, 71.91° E</option>
-                <option value="23.90,71.20,Charanka Array (Region B),520">📍 Charanka Solar Array (Region B) · 23.90° N, 71.20° E</option>
-                <option value="custom">📍 Custom Coordinates (Enter Below)...</option>
-              </select>
-
-              <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
-                <label style="font-size:11.5px;font-weight:600;color:var(--text-muted);display:block">Latitude (°N)
-                  <input id="customLat" type="number" step="0.01" value="27.54" style="height:36px;padding:0 10px;font-size:12.5px" />
+              <!-- Target Location & GPS Coordinates Selector -->
+              <div style="background:var(--surface-raised);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:16px">
+                <label style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;display:block">
+                  Choose Location / Preset
                 </label>
-                <label style="font-size:11.5px;font-weight:600;color:var(--text-muted);display:block">Longitude (°E)
-                  <input id="customLon" type="number" step="0.01" value="71.91" style="height:36px;padding:0 10px;font-size:12.5px" />
-                </label>
-                <button class="btn secondary" id="gpsBtn" type="button" style="height:36px;padding:0 12px;font-size:12px;white-space:nowrap" onclick="detectUserLocation()" title="Use browser GPS">
-                  📍 My GPS
+                <select id="locationPresetSel" class="select" style="width:100%;margin-bottom:10px" onchange="onLocationPresetChange()">
+                  <option value="12.97,77.59,Bengaluru,500">📍 Bengaluru (Karnataka) · 12.97° N, 77.59° E</option>
+                  <option value="13.08,80.28,Chennai,500">📍 Chennai (Tamil Nadu) · 13.08° N, 80.28° E</option>
+                  <option value="16.51,80.52,Amaravati / VIT-AP,500">📍 Amaravati / VIT-AP Campus · 16.51° N, 80.52° E</option>
+                  <option value="17.38,78.48,Hyderabad,500">📍 Hyderabad (Telangana) · 17.38° N, 78.48° E</option>
+                  <option value="28.61,77.21,New Delhi,500">📍 New Delhi · 28.61° N, 77.21° E</option>
+                  <option value="19.07,72.88,Mumbai,500">📍 Mumbai (Maharashtra) · 19.07° N, 72.88° E</option>
+                  <option value="27.54,71.91,Bhadla Array (Region A),650" selected>📍 Bhadla Solar Array (Region A) · 27.54° N, 71.91° E</option>
+                  <option value="23.90,71.20,Charanka Array (Region B),520">📍 Charanka Solar Array (Region B) · 23.90° N, 71.20° E</option>
+                  <option value="custom">📍 Custom Coordinates (Enter Below)...</option>
+                </select>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+                  <label style="font-size:11.5px;font-weight:600;color:var(--text-muted);display:block">Latitude (°N)
+                    <input id="customLat" type="number" step="0.01" value="27.54" style="height:36px;padding:0 10px;font-size:12.5px" />
+                  </label>
+                  <label style="font-size:11.5px;font-weight:600;color:var(--text-muted);display:block">Longitude (°E)
+                    <input id="customLon" type="number" step="0.01" value="71.91" style="height:36px;padding:0 10px;font-size:12.5px" />
+                  </label>
+                  <button class="btn secondary" id="gpsBtn" type="button" style="height:36px;padding:0 12px;font-size:12px;white-space:nowrap" onclick="detectUserLocation()" title="Use browser GPS">
+                    📍 My GPS
+                  </button>
+                </div>
+
+                <button class="btn secondary" id="fetchLocationWeatherBtn" type="button" style="width:100%;margin-top:10px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px" onclick="fetchCustomLocationWeather()">
+                  ⚡ Fetch Live Weather for Coordinates
                 </button>
               </div>
 
-              <button class="btn secondary" id="fetchLocationWeatherBtn" type="button" style="width:100%;margin-top:10px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px" onclick="fetchCustomLocationWeather()">
-                ⚡ Fetch Live Weather for Coordinates
-              </button>
-            </div>
+              <!-- Forecast Horizon Parameter (User Configurable) -->
+              <div class="input-stack" style="margin-bottom:16px">
+                <label>
+                  <span style="font-weight:700;display:flex;justify-content:space-between;margin-bottom:6px">
+                    <span>Forecast Horizon (Days)</span>
+                    <span style="font-size:11.5px;color:var(--turquoise)">Customizable (e.g. 7, 10, or 14 days)</span>
+                  </span>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <input id="forecastDaysInput" type="number" min="1" max="30" value="7" aria-label="Forecast days" style="flex:1;height:40px" oninput="updateLiveSummary()" />
+                    <button class="btn secondary" type="button" style="padding:0 12px;font-size:12px;height:40px;white-space:nowrap" onclick="setForecastDays(7)">7 Days</button>
+                    <button class="btn secondary" type="button" style="padding:0 12px;font-size:12px;height:40px;white-space:nowrap" onclick="setForecastDays(10)">10 Days</button>
+                    <button class="btn secondary" type="button" style="padding:0 12px;font-size:12px;height:40px;white-space:nowrap" onclick="setForecastDays(14)">14 Days</button>
+                  </div>
+                </label>
 
-            <!-- Forecast Horizon Parameter (User Configurable) -->
-            <div class="input-stack" style="margin-bottom:16px">
-              <label>
-                <span style="font-weight:700;display:flex;justify-content:space-between;margin-bottom:6px">
-                  <span>Forecast Horizon (Days)</span>
-                  <span style="font-size:11.5px;color:var(--turquoise)">Customizable (e.g. 7, 10, or 14 days)</span>
-                </span>
-                <div style="display:flex;gap:8px;align-items:center">
-                  <input id="forecastDaysInput" type="number" min="1" max="30" value="7" aria-label="Forecast days" style="flex:1;height:40px" oninput="updateLiveSummary()" />
-                  <button class="btn secondary" type="button" style="padding:0 12px;font-size:12px;height:40px;white-space:nowrap" onclick="setForecastDays(7)">7 Days</button>
-                  <button class="btn secondary" type="button" style="padding:0 12px;font-size:12px;height:40px;white-space:nowrap" onclick="setForecastDays(10)">10 Days</button>
-                  <button class="btn secondary" type="button" style="padding:0 12px;font-size:12px;height:40px;white-space:nowrap" onclick="setForecastDays(14)">14 Days</button>
+                <!-- Backend telemetry inputs auto-populated by live satellite weather (hidden so user doesn't have to manually type parameters) -->
+                <div style="display:none" aria-hidden="true">
+                  <input id="irradianceInput" type="number" min="0" max="1400" value="780" />
+                  <input id="tempInput" type="number" min="-10" max="60" value="31" />
+                  <input id="capacityInput" type="number" min="50" max="2000" value="650" />
                 </div>
-              </label>
+              </div>
 
-              <!-- Backend telemetry inputs auto-populated by live satellite weather -->
-              <div style="display:none" aria-hidden="true">
-                <input id="irradianceInput" type="number" min="0" max="1400" value="780" />
-                <input id="tempInput" type="number" min="-10" max="60" value="31" />
-                <input id="capacityInput" type="number" min="50" max="2000" value="650" />
+              <div class="actions" style="margin-top:14px">
+                <button class="btn primary" type="button" onclick="runLiveForecastClick()" aria-label="Run forecast">&#9654;&nbsp; Run Live Forecast</button>
+                <button class="btn secondary" type="button" onclick="document.getElementById('dashboard-card')?.scrollIntoView({behavior:'smooth'})">Scroll to Charts &darr;</button>
               </div>
             </div>
 
-            <div class="actions" style="margin-top:14px">
-              <button class="btn primary" type="button" onclick="runLiveForecastClick()" aria-label="Run forecast">&#9654;&nbsp; Run Live Forecast</button>
-              <button class="btn secondary" type="button" onclick="document.getElementById('dashboard-card')?.scrollIntoView({behavior:'smooth'})">Scroll to Charts &darr;</button>
-            </div>
-          </div>
-
-          <!-- Result card -->
-          <div class="dca-card summary-panel" role="region" aria-label="Forecast result">
-            <div>
-              <div class="dca-card-header">
-                <div>
-                  <h2 class="dca-card-title">Forecast Result</h2>
-                  <div class="dca-card-subtitle">Real-time model inference</div>
+            <!-- Result card -->
+            <div class="dca-card summary-panel" role="region" aria-label="Forecast result">
+              <div>
+                <div class="dca-card-header">
+                  <div>
+                    <h2 class="dca-card-title">Forecast Result</h2>
+                    <div class="dca-card-subtitle">Real-time model inference</div>
+                  </div>
+                  <span class="kpi-trend turquoise">Simulated</span>
                 </div>
-                <span class="kpi-trend turquoise">Simulated</span>
+
+                <div class="summary-metric">
+                  <span class="summary-label">Current Estimated Output</span>
+                  <strong id="liveGenerated" aria-live="polite">380 kW</strong>
+                </div>
+                <div class="summary-metric">
+                  <span class="summary-label">Forecast Horizon</span>
+                  <strong id="liveDays" aria-live="polite">7 days</strong>
+                </div>
+                <div class="summary-metric">
+                  <span class="summary-label">Expected Generation Total</span>
+                  <strong id="liveForecast" aria-live="polite">17,300 kWh</strong>
+                </div>
               </div>
 
-              <div class="summary-metric">
-                <span class="summary-label">Current Estimated Output</span>
-                <strong id="liveGenerated" aria-live="polite">380 kW</strong>
-              </div>
-              <div class="summary-metric">
-                <span class="summary-label">Forecast Horizon</span>
-                <strong id="liveDays" aria-live="polite">7 days</strong>
-              </div>
-              <div class="summary-metric">
-                <span class="summary-label">Expected Generation Total</span>
-                <strong id="liveForecast" aria-live="polite">17,300 kWh</strong>
+              <div style="padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between">
+                <span class="summary-label">Telemetry Source</span>
+                <strong id="sourceStatus" style="color:var(--text)">Manual input</strong>
               </div>
             </div>
-
-            <div style="padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between">
-              <span class="summary-label">Telemetry Source</span>
-              <strong id="sourceStatus" style="color:var(--text)">Manual input</strong>
-            </div>
           </div>
         </div>
 
-        <div class="dca-card card-gap">
-          <div class="dca-card-header">
-            <h2 class="dca-card-title" id="histTitle">Region A — History Sample</h2>
-            <span class="status-pill-badge turquoise" id="histBadge">Showing 3 of 120 days</span>
-          </div>
-          <div class="dca-table-wrap">
-            <table class="dca-table" id="histTable" aria-label="Historical sensor data">
-              <thead>
-                <tr><th>Date</th><th>Hour</th><th>GHI</th><th>Temp °C</th><th class="num">Cloud %</th><th class="num">Output kW</th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-        </div>
-
-        <!-- Solar Generation Profile & 24h/7d Forecasting Surface -->
+        <!-- Solar Generation Profile & Multi-Day Forecasting Surface (50/50 Side-by-Side) -->
         <div id="dashboard-card" style="margin-top:24px">
-          <div class="analytics-actions-grid">
-            <div class="dca-card">
-              <div class="dca-card-header">
-                <div>
-                  <h2 class="dca-card-title">Solar Generation Profile &amp; 24h Forecast</h2>
-                  <div class="dca-card-subtitle">Real-time telemetry and LSTM+GRU neural network generation predictions</div>
+          <div class="cards-grid cols-2" style="align-items:stretch">
+            
+            <!-- Left Card: 24h Hourly Solar Generation Profile -->
+            <div class="dca-card" style="display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div class="dca-card-header">
+                  <div>
+                    <h2 class="dca-card-title">24h Solar Generation Hourly Curve</h2>
+                    <div class="dca-card-subtitle">Real-time telemetry and LSTM+GRU neural network generation predictions</div>
+                  </div>
+                  <div class="chart-legend-pills">
+                    <span class="legend-pill"><span class="legend-dot turquoise"></span> Reference Actual</span>
+                    <span class="legend-pill"><span class="legend-dot pink"></span> Predicted</span>
+                    <span class="legend-pill"><span class="legend-dot purple"></span> Solar Peak</span>
+                  </div>
                 </div>
-                <div class="chart-legend-pills">
-                  <span class="legend-pill"><span class="legend-dot turquoise"></span> Reference Actual</span>
-                  <span class="legend-pill"><span class="legend-dot pink"></span> Predicted</span>
-                  <span class="legend-pill"><span class="legend-dot purple"></span> Solar Peak</span>
-                </div>
-              </div>
-              <div class="hero-chart-wrap">
-                <canvas id="heroChart" height="210" aria-label="Full-day solar generation curve with 7-day forecast"></canvas>
-                <div id="heroPulseDot" class="hero-live-dot" style="display:none;" aria-hidden="true">
-                  <span class="dot-ring"></span>
-                  <span class="dot-core"></span>
+                <div class="hero-chart-wrap" style="height:280px">
+                  <canvas id="heroChart" height="280" aria-label="Full-day solar generation curve with predicted vs actual"></canvas>
+                  <div id="heroPulseDot" class="hero-live-dot" style="display:none;" aria-hidden="true">
+                    <span class="dot-ring"></span>
+                    <span class="dot-core"></span>
+                  </div>
                 </div>
               </div>
               <div class="analytics-footer-stats">
@@ -339,99 +328,89 @@
                   <strong class="stat-col-value monospaced" id="footerDayAverage">285.4 kW</strong>
                 </div>
                 <div class="stat-col">
-                  <span class="stat-col-label">Telemetry Ingestion Link</span>
+                  <span class="stat-col-label">Telemetry Ingestion</span>
                   <strong class="stat-col-value" id="telemetryFeedLink" style="color:var(--turquoise)">● Live Weather Feed</strong>
                 </div>
               </div>
             </div>
 
-            <div class="dca-card quick-actions-card">
+            <!-- Right Card: Multi-Day Energy Forecast Bars -->
+            <div class="dca-card" style="display:flex;flex-direction:column;justify-content:space-between">
               <div>
-                <div class="dca-card-header" style="margin-bottom:8px">
+                <div class="dca-card-header">
                   <div>
-                    <h2 class="dca-card-title">Quick Actions &amp; Navigation</h2>
-                    <div class="dca-card-subtitle">One-click jump to pipeline modules</div>
+                    <h2 class="dca-card-title" id="forecastChartTitle">7-Day Generation Forecast</h2>
+                    <div class="dca-card-subtitle">Multi-day daily energy output projections (kWh) based on weather models</div>
                   </div>
+                  <span class="status-pill-badge purple" id="forecastBadgeTitle">Dynamic Horizon</span>
                 </div>
-                <div class="actions-stack">
-                  <button class="action-item-pill" type="button" onclick="go('transfer')">
-                    <div class="action-left"><span class="action-icon">🧠</span><span>Transfer Learning Experiment</span></div>
-                    <span class="action-arrow">&rarr;</span>
-                  </button>
-                  <button class="action-item-pill" type="button" onclick="go('xai')">
-                    <div class="action-left"><span class="action-icon">🔍</span><span>Inspect SHAP Feature Impact</span></div>
-                    <span class="action-arrow">&rarr;</span>
-                  </button>
-                  <button class="action-item-pill" type="button" onclick="go('xai')">
-                    <div class="action-left"><span class="action-icon">⚠</span><span>Scan Anomaly Thresholds</span></div>
-                    <span class="action-arrow">&rarr;</span>
-                  </button>
-                  <button class="action-item-pill" type="button" onclick="go('prep')">
-                    <div class="action-left"><span class="action-icon">📊</span><span>Data Preprocessing &amp; Regions</span></div>
-                    <span class="action-arrow">&rarr;</span>
-                  </button>
-                  <button class="action-item-pill" type="button" onclick="go('project')">
-                    <div class="action-left"><span class="action-icon">📄</span><span>View Team &amp; Architecture</span></div>
-                    <span class="action-arrow">&rarr;</span>
-                  </button>
+                <div class="hero-chart-wrap" style="height:280px">
+                  <canvas id="weekChart" height="280" aria-label="Multi-day energy forecast"></canvas>
                 </div>
               </div>
-              <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
-                <div class="kpi-trend neutral" style="width:100%;justify-content:center">
-                  System Status: All Ingestion Pipelines Active
+              <div class="analytics-footer-stats">
+                <div class="stat-col">
+                  <span class="stat-col-label">Forecast Horizon</span>
+                  <strong class="stat-col-value monospaced" id="weekHorizonFooter">7 Days Projected</strong>
+                </div>
+                <div class="stat-col">
+                  <span class="stat-col-label">Total Expected Energy</span>
+                  <strong class="stat-col-value monospaced" id="weekTotalFooter">17,300 kWh</strong>
+                </div>
+                <div class="stat-col">
+                  <span class="stat-col-label">Forecast Model</span>
+                  <strong class="stat-col-value" style="color:var(--purple)">LSTM+GRU Ensemble</strong>
                 </div>
               </div>
             </div>
+
           </div>
 
-          <!-- Multi-Day Forecast & Weather Telemetry Row -->
-          <div style="margin-top:20px">
-            <div class="page-header-actions">
-            <span class="status-pill-badge turquoise weather-status-badge" id="dashStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
-          </div>
-        </div>
+          <!-- Hidden compatibility dayChart canvas for legacy script callbacks -->
+          <canvas id="dayChart" style="display:none" aria-hidden="true"></canvas>
 
-        <div class="dca-card" style="margin-bottom:20px;padding:16px 20px">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13.5px">
-            <span>☀ Peak expected at <strong style="color:var(--text)" id="glancePeak">12:40 PM</strong></span>
-            <span>☁ Cloud risk <strong style="color:var(--turquoise)" id="glanceCloudRisk">Low</strong></span>
-            <span>🌡 Ambient: <strong id="glanceTemp" style="color:var(--text)">31.2°C</strong></span>
-            <span>Model error: <strong style="color:var(--text)" id="glanceError">±5.8 kW</strong></span>
-          </div>
-        </div>
-
-        <div class="cards-grid cols-2" style="align-items:start">
-          <div class="dca-card">
-            <h2 class="dca-card-title">24h Reference Actual vs Predicted Curve</h2>
-            <div class="hero-chart-wrap" style="height:210px">
-              <canvas id="dayChart" height="210" aria-label="24h actual vs predicted chart"></canvas>
+          <!-- Weather Telemetry Cards & Glance Status -->
+          <div class="cards-grid cols-3" style="margin-top:20px">
+            <div class="dca-card metric-card">
+              <span class="kpi-label">☁ Cloud Cover</span>
+              <div class="metric-value monospaced" id="dashCloud">32%</div>
+              <span class="kpi-trend turquoise" id="dashCloudTrend">▼ Live feed</span>
+            </div>
+            <div class="dca-card metric-card">
+              <span class="kpi-label">🌡 Ambient Temp</span>
+              <div class="metric-value monospaced" id="dashTemp">31.2°C</div>
+              <span class="kpi-trend violet" id="dashTempTrend">▲ Live feed</span>
+            </div>
+            <div class="dca-card metric-card">
+              <span class="kpi-label">💨 Wind Speed</span>
+              <div class="metric-value monospaced" id="dashWind">9 km/h</div>
+              <span class="kpi-trend neutral" id="dashWindSub">Stable (2.5 m/s)</span>
             </div>
           </div>
-          <div class="dca-card">
-            <h2 class="dca-card-title">7-Day Generation Forecast</h2>
-            <div class="hero-chart-wrap" style="height:210px">
-              <canvas id="weekChart" height="210" aria-label="7-day energy forecast"></canvas>
+
+          <!-- Live Telemetry Glance Strip -->
+          <div class="dca-card" style="margin-top:16px;padding:14px 20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px">
+              <span>☀ Peak expected at <strong style="color:var(--text)" id="glancePeak">12:40 PM</strong></span>
+              <span>☁ Cloud risk <strong style="color:var(--turquoise)" id="glanceCloudRisk">Low</strong></span>
+              <span>🌡 Ambient: <strong id="glanceTemp" style="color:var(--text)">31.2°C</strong></span>
+              <span>Model error: <strong style="color:var(--text)" id="glanceError">±5.8 kW</strong></span>
+              <span class="status-pill-badge turquoise weather-status-badge" id="dashStatusPill" role="status">Live weather &middot; Open-Meteo &middot; updated just now</span>
             </div>
           </div>
-        </div>
 
-        <div class="cards-grid cols-3" style="margin-top:20px">
-          <div class="dca-card metric-card">
-            <span class="kpi-label">☁ Cloud Cover</span>
-            <div class="metric-value monospaced" id="dashCloud">32%</div>
-            <span class="kpi-trend turquoise" id="dashCloudTrend">▼ Live feed</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">🌡 Ambient Temp</span>
-            <div class="metric-value monospaced" id="dashTemp">31.2°C</div>
-            <span class="kpi-trend violet" id="dashTempTrend">▲ Live feed</span>
-          </div>
-          <div class="dca-card metric-card">
-            <span class="kpi-label">💨 Wind Speed</span>
-            <div class="metric-value monospaced" id="dashWind">9 km/h</div>
-            <span class="kpi-trend neutral" id="dashWindSub">Stable (2.5 m/s)</span>
-          </div>
-        </div>
+          <!-- Quick Navigation Bar -->
+          <div class="dca-card" style="margin-top:16px;padding:14px 20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <span style="font-size:12.5px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em">Quick Navigation:</span>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <button class="btn-pill" type="button" onclick="go('transfer')">🧠 Transfer Learning Experiment &rarr;</button>
+                <button class="btn-pill" type="button" onclick="go('xai')">🔍 SHAP Feature Impact &rarr;</button>
+                <button class="btn-pill" type="button" onclick="go('xai')">⚠ Anomaly Thresholds &rarr;</button>
+                <button class="btn-pill" type="button" onclick="go('prep')">📊 Data Preprocessing &amp; Regions &rarr;</button>
+                <button class="btn-pill" type="button" onclick="go('project')">📄 Team &amp; Architecture &rarr;</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -736,6 +715,21 @@
             <canvas id="cloudHist" height="200" aria-label="Cloud cover distribution"></canvas>
           </div>
         </div>
+
+        <div class="dca-card card-gap">
+          <div class="dca-card-header">
+            <h2 class="dca-card-title" id="histTitle">Region A — History Sample</h2>
+            <span class="status-pill-badge turquoise" id="histBadge">Showing 3 of 120 days</span>
+          </div>
+          <div class="dca-table-wrap">
+            <table class="dca-table" id="histTable" aria-label="Historical sensor data">
+              <thead>
+                <tr><th>Date</th><th>Hour</th><th>GHI</th><th>Temp °C</th><th class="num">Cloud %</th><th class="num">Output kW</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
         </div>
 
         <!-- Part 2: Region A vs Region B Comparison -->
@@ -974,6 +968,6 @@
   </div>
 
   <script src="weather.js?v=1.3"></script>
-  <script src="script.js?v=5.1"></script>
+  <script src="script.js?v=6.0"></script>
 </body>
 </html>

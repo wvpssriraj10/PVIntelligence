@@ -141,7 +141,7 @@ class LocalChart {
     const parent = this.canvas.parentElement;
     if (!parent) return;
     const w = parent.clientWidth;
-    const h = parseInt(this.canvas.getAttribute('height')) || 210;
+    const h = parent.clientHeight || parseInt(this.canvas.getAttribute('height')) || 270;
     if (w <= 10) return; // Hidden tab
     const dpr = window.devicePixelRatio || 1;
 
@@ -184,7 +184,7 @@ class LocalChart {
 
     ctx.clearRect(0, 0, W, H);
 
-    const pad = { top: title ? 32 : 20, right: 20, bottom: 36, left: 52 };
+    const pad = { top: title ? 32 : 28, right: 24, bottom: 44, left: 76 };
     const pw  = Math.max(10, W - pad.left - pad.right);
     const ph  = Math.max(10, H - pad.top - pad.bottom);
 
@@ -217,26 +217,36 @@ class LocalChart {
       ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + pw, y); ctx.stroke();
 
       ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
-      ctx.font = '11px Figtree, sans-serif';
+      ctx.font = '500 11.5px Figtree, sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(fmtVal(v), pad.left - 6, y + 4);
+      const unit = type === 'bar' ? ' kWh' : ' kW';
+      ctx.fillText(fmtVal(v) + (v > 0 ? unit : ''), pad.left - 10, y + 4);
     }
+
+    /* Crisp baseline axis line */
+    const baselineY = toY(0);
+    ctx.strokeStyle = isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, baselineY);
+    ctx.lineTo(pad.left + pw, baselineY);
+    ctx.stroke();
 
     /* X-axis labels */
     ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
-    ctx.font = '11px Figtree, sans-serif';
+    ctx.font = '600 11.5px Figtree, sans-serif';
     ctx.textAlign = 'center';
-    const xStep = Math.max(1, Math.ceil(labels.length / 8));
+    const xStep = labels.length > 10 ? 2 : 1;
     labels.forEach((lbl, i) => {
-      if (i % xStep !== 0 && i !== labels.length - 1) return;
+      if (xStep > 1 && i % xStep !== 0 && i !== labels.length - 1) return;
       const x = type === 'bar' ? toXBar(i) : toXLine(i);
-      ctx.fillText(String(lbl), x, H - 8);
+      ctx.fillText(String(lbl), x, H - 14);
     });
 
     /* ---- BAR CHART ---------------------------------------- */
     if (type === 'bar') {
       const totalDs = datasets.length;
-      const barW = (pw / labels.length) * 0.65;
+      const barW = Math.min(42, (pw / labels.length) * 0.72);
 
       datasets.forEach((ds, di) => {
         const vals = ds.data || [];
@@ -245,25 +255,42 @@ class LocalChart {
         vals.forEach((v, i) => {
           const cx   = pad.left + (i + 0.5) * (pw / vals.length);
           const x    = totalDs > 1 ? cx - barW / 2 + di * (bw + 2) : cx - bw / 2;
-          const barH = Math.max(2, ((v - yMin) / yRange) * ph);
           const y    = toY(v);
 
           let color = Array.isArray(ds.backgroundColor)
             ? ds.backgroundColor[i % ds.backgroundColor.length]
             : (ds.backgroundColor || '#6366f1');
 
-          /* Rounded top bar */
-          const r = Math.min(4, bw / 2);
+          /* Clean rounded top bar anchored to baseline */
+          const r = Math.min(6, bw / 2, Math.max(0, baselineY - y));
           ctx.beginPath();
-          ctx.moveTo(x + r, y);
+          ctx.moveTo(x, baselineY);
+          ctx.lineTo(x, y + r);
+          if (r > 0) ctx.quadraticCurveTo(x, y, x + r, y);
           ctx.lineTo(x + bw - r, y);
-          ctx.arcTo(x + bw, y, x + bw, y + r, r);
-          ctx.lineTo(x + bw, y + barH);
-          ctx.lineTo(x, y + barH);
-          ctx.arcTo(x, y, x + r, y, r);
+          if (r > 0) ctx.quadraticCurveTo(x + bw, y, x + bw, y + r);
+          ctx.lineTo(x + bw, baselineY);
           ctx.closePath();
-          ctx.fillStyle = color;
+
+          let fillStyle = color;
+          if (typeof color === 'string' && color.startsWith('#')) {
+            try {
+              const grad = ctx.createLinearGradient(0, y, 0, baselineY);
+              grad.addColorStop(0, color);
+              grad.addColorStop(1, isLight ? 'rgba(99,102,241,0.25)' : 'rgba(99,102,241,0.2)');
+              fillStyle = grad;
+            } catch (e) { fillStyle = color; }
+          }
+          ctx.fillStyle = fillStyle;
           ctx.fill();
+
+          /* Value label on top of bar */
+          if (labels.length <= 14 && v > 0) {
+            ctx.fillStyle = isLight ? '#475569' : '#cbd5e1';
+            ctx.font = '600 10.5px Figtree, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(fmtVal(v), cx, Math.max(pad.top + 10, y - 6));
+          }
         });
       });
     }
@@ -884,30 +911,50 @@ function updateCharts(region) {
 
   const isLight = document.documentElement.classList.contains('light');
 
-  if (dayChart) dayChart.destroy();
-  dayChart = new Chart(document.getElementById('dayChart'), {
-    type: 'line',
-    data: {
-      labels: d.hours,
-      datasets: [
-        { label: 'Reference Actual', data: d.actual, borderColor: isLight ? '#059669' : '#10b981', tension: 0.3 },
-        { label: 'Predicted (LSTM+GRU)', data: d.pred, borderColor: isLight ? '#c026d3' : '#d946ef', borderDash: [6, 4], tension: 0.3 }
-      ]
-    }
-  });
+  const dayCanvas = document.getElementById('dayChart');
+  if (dayCanvas) {
+    if (dayChart) dayChart.destroy();
+    dayChart = new Chart(dayCanvas, {
+      type: 'line',
+      data: {
+        labels: d.hours,
+        datasets: [
+          { label: 'Reference Actual', data: d.actual, borderColor: isLight ? '#059669' : '#10b981', tension: 0.3 },
+          { label: 'Predicted (LSTM+GRU)', data: d.pred, borderColor: isLight ? '#c026d3' : '#d946ef', borderDash: [6, 4], tension: 0.3 }
+        ]
+      }
+    });
+  }
+
+  const reqDays = Math.max(1, Math.min(16, Number(document.getElementById('forecastDaysInput')?.value || 7)));
+
+  const titleEl = document.getElementById('forecastChartTitle');
+  if (titleEl) titleEl.textContent = `${reqDays}-Day Generation Forecast`;
+
+  const badgeEl = document.getElementById('forecastBadgeTitle');
+  if (badgeEl) badgeEl.textContent = `${reqDays}-Day Horizon`;
+
+  const horizonFooter = document.getElementById('weekHorizonFooter');
+  if (horizonFooter) horizonFooter.textContent = `${reqDays} Days Projected`;
+
+  const totalFooter = document.getElementById('weekTotalFooter');
+  if (totalFooter) totalFooter.textContent = (d.wk7 || 0).toLocaleString() + ' kWh';
 
   if (weekChart) weekChart.destroy();
   const weekLabels = d.weekLabels && d.weekLabels.length === d.week.length
     ? d.weekLabels
     : ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'];
 
-  weekChart = new Chart(document.getElementById('weekChart'), {
-    type: 'bar',
-    data: {
-      labels: weekLabels,
-      datasets: [{ label: 'Daily Output (kWh)', data: d.week, backgroundColor: isLight ? '#4f46e5' : '#6366f1' }]
-    }
-  });
+  const weekCanvas = document.getElementById('weekChart');
+  if (weekCanvas) {
+    weekChart = new Chart(weekCanvas, {
+      type: 'bar',
+      data: {
+        labels: weekLabels,
+        datasets: [{ label: 'Daily Output (kWh)', data: d.week, backgroundColor: isLight ? '#4f46e5' : '#6366f1' }]
+      }
+    });
+  }
 }
 
 /* ============================================================
@@ -922,7 +969,7 @@ function drawHeroChart(region) {
 
   const parent = canvas.parentElement;
   const W = (parent ? parent.clientWidth : 0) || canvas.clientWidth || 440;
-  const H = 210;
+  const H = (parent ? parent.clientHeight : 0) || 280;
   if (W <= 10) return;
 
   const dpr = window.devicePixelRatio || 1;
@@ -936,7 +983,7 @@ function drawHeroChart(region) {
 
   const isLight = document.documentElement.classList.contains('light');
 
-  const pad = { top: 22, right: 24, bottom: 32, left: 56 };
+  const pad = { top: 28, right: 24, bottom: 44, left: 76 };
   const pw  = Math.max(10, W - pad.left - pad.right);
   const ph  = Math.max(10, H - pad.top - pad.bottom);
 
@@ -952,7 +999,7 @@ function drawHeroChart(region) {
   ctx.strokeStyle = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
   ctx.lineWidth = 1;
   ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
-  ctx.font = '11.5px Figtree, sans-serif';
+  ctx.font = '500 11.5px Figtree, sans-serif';
   ctx.textAlign = 'right';
 
   [vMax, Math.round(vMax / 2), 0].forEach(val => {
@@ -961,8 +1008,16 @@ function drawHeroChart(region) {
     ctx.moveTo(pad.left, y);
     ctx.lineTo(pad.left + pw, y);
     ctx.stroke();
-    ctx.fillText(`${val} kW`, pad.left - 10, y + 4);
+    ctx.fillText(`${val} kW`, pad.left - 8, y + 4);
   });
+
+  /* Baseline axis line */
+  ctx.strokeStyle = isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top + ph);
+  ctx.lineTo(pad.left + pw, pad.top + ph);
+  ctx.stroke();
 
   const nowHour = new Date().getHours();
   const isNight = nowHour < 6 || nowHour >= 19;
@@ -1067,10 +1122,10 @@ function drawHeroChart(region) {
 
   /* X-axis time labels */
   ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
-  ctx.font = '11px Figtree, sans-serif';
+  ctx.font = '600 11.5px Figtree, sans-serif';
   ctx.textAlign = 'center';
-  [0, 3, 6, 9, 12].forEach(i => {
-    if (i < d.hours.length) ctx.fillText(d.hours[i], toX(i), H - 10);
+  [0, 2, 4, 6, 8, 10, 12].forEach(i => {
+    if (i < d.hours.length) ctx.fillText(d.hours[i], toX(i), H - 14);
   });
 }
 
