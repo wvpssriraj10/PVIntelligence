@@ -1,3 +1,4 @@
+from setuptools import setup, find_packages
 import os
 
 DIRS = ["data/raw", "data/processed", "notebooks", "src", "models", "outputs"]
@@ -9,3 +10,10 @@ def init_repo():
 
 if __name__ == "__main__":
     init_repo()
+
+setup(
+    name="pvintelligence",
+    version="0.1.0",
+    packages=find_packages(),
+)
+
