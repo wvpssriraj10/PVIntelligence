@@ -184,7 +184,7 @@ class LocalChart {
 
     ctx.clearRect(0, 0, W, H);
 
-    const pad = { top: title ? 32 : 28, right: 24, bottom: 44, left: 76 };
+    const pad = { top: title ? 36 : 28, right: 28, bottom: 48, left: 76 };
     const pw  = Math.max(10, W - pad.left - pad.right);
     const ph  = Math.max(10, H - pad.top - pad.bottom);
 
@@ -209,6 +209,17 @@ class LocalChart {
       ctx.fillText(title, pad.left, 16);
     }
 
+    /* Determine appropriate unit for Y-axis */
+    const firstDs = datasets[0] || {};
+    const dsLabel = String(firstDs.label || '');
+    const titleStr = String(title || '');
+    let unit = '';
+    if (dsLabel.includes('kWh') || titleStr.includes('kWh') || dsLabel.includes('Energy') || titleStr.includes('Energy')) {
+      unit = ' kWh';
+    } else if (dsLabel.includes('kW') || dsLabel.includes('RMSE') || titleStr.includes('RMSE') || dsLabel.includes('Power') || titleStr.includes('Power') || type === 'line') {
+      unit = ' kW';
+    }
+
     /* Horizontal gridlines + y-axis labels */
     for (let v = yMin; v <= yMax + step * 0.001; v += step) {
       const y = toY(v);
@@ -219,7 +230,6 @@ class LocalChart {
       ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
       ctx.font = '500 11.5px Figtree, sans-serif';
       ctx.textAlign = 'right';
-      const unit = type === 'bar' ? ' kWh' : ' kW';
       ctx.fillText(fmtVal(v) + (v > 0 ? unit : ''), pad.left - 10, y + 4);
     }
 
@@ -240,7 +250,7 @@ class LocalChart {
     labels.forEach((lbl, i) => {
       if (xStep > 1 && i % xStep !== 0 && i !== labels.length - 1) return;
       const x = type === 'bar' ? toXBar(i) : toXLine(i);
-      ctx.fillText(String(lbl), x, H - 14);
+      ctx.fillText(String(lbl), x, baselineY + 22);
     });
 
     /* ---- BAR CHART ---------------------------------------- */
@@ -1363,7 +1373,7 @@ window.addEventListener('DOMContentLoaded', () => {
   tlChart = new Chart(document.getElementById('tlChart'), {
     type: 'bar',
     data: {
-      labels: ['Scratch', 'Frozen', 'Fine-tuned'],
+      labels: ['Scratch (90d)', 'Frozen (25d)', 'Fine-Tuned (18d)'],
       datasets: [{ label: 'RMSE (kW)', data: [14.8, 11.2, 6.9], backgroundColor: ['#f43f5e', '#f59e0b', '#10b981'] }]
     },
     options: { plugins: { title: { display: true, text: 'RMSE by strategy' } } }

@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=6.0" />
+  <link rel="stylesheet" href="styles.css?v=7.0" />
 </head>
 <body>
 
@@ -462,8 +462,8 @@
           
           <div class="dca-card">
             <h2 class="dca-card-title">Training Loss Convergence</h2>
-            <div class="hero-chart-wrap" style="height:200px">
-              <canvas id="lossChart" height="200" aria-label="Training loss curve"></canvas>
+            <div class="hero-chart-wrap" style="height:280px">
+              <canvas id="lossChart" height="280" aria-label="Training loss curve"></canvas>
             </div>
           </div>
         </div>
@@ -499,32 +499,49 @@
           </h2>
           </div>
 
-        <div class="cards-grid cols-2" style="align-items:start">
-          <div class="dca-card">
-            <h2 class="dca-card-title">Fine-Tuning Controls</h2>
-            <div class="input-stack">
-              <label>Strategy
-                <select class="select" aria-label="Transfer learning strategy">
-                  <option>Train from scratch</option>
-                  <option>Frozen feature extractor</option>
-                  <option selected>Fine-tuned transfer (Recommended)</option>
-                </select>
-              </label>
-              <label>Fine-tuning epochs
-                <input type="range" min="5" max="100" value="25" aria-label="Fine-tune epochs" aria-valuenow="25" />
-              </label>
+        <div class="cards-grid cols-2" style="align-items:stretch">
+          <div class="dca-card" style="display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <h2 class="dca-card-title">Fine-Tuning Controls</h2>
+              <div class="dca-card-subtitle" style="margin-bottom:14px">Configure transfer fine-tuning hyperparameters for Region B</div>
+              <div class="input-stack">
+                <label>Strategy
+                  <select class="select" aria-label="Transfer learning strategy">
+                    <option>Train from scratch</option>
+                    <option>Frozen feature extractor</option>
+                    <option selected>Fine-tuned transfer (Recommended)</option>
+                  </select>
+                </label>
+                <label style="margin-top:12px">Fine-tuning epochs
+                  <input type="range" min="5" max="100" value="25" aria-label="Fine-tune epochs" aria-valuenow="25" />
+                </label>
+              </div>
             </div>
-            <div class="actions">
-              <button class="btn primary" type="button"
+            <div style="margin-top:18px">
+              <div class="analytics-footer-stats" style="margin-bottom:14px">
+                <div class="stat-col">
+                  <span class="stat-col-label">Base Pre-Training</span>
+                  <strong class="stat-col-value monospaced">120 Days</strong>
+                </div>
+                <div class="stat-col">
+                  <span class="stat-col-label">Adaptation Target</span>
+                  <strong class="stat-col-value monospaced">18 Days</strong>
+                </div>
+                <div class="stat-col">
+                  <span class="stat-col-label">Data Savings</span>
+                  <strong class="stat-col-value" style="color:var(--turquoise)">-80%</strong>
+                </div>
+              </div>
+              <button class="btn primary" type="button" style="width:100%"
                 onclick="this.classList.add('loading');setTimeout(()=>{this.classList.remove('loading');this.textContent='Fine-Tuned ✓'},900)"
                 aria-label="Run transfer learning">Execute Transfer Fine-Tuning</button>
             </div>
           </div>
           
-          <div class="dca-card">
+          <div class="dca-card" style="display:flex;flex-direction:column;justify-content:space-between">
             <h2 class="dca-card-title">RMSE by Strategy Comparison</h2>
-            <div class="hero-chart-wrap" style="height:200px">
-              <canvas id="tlChart" height="200" aria-label="RMSE by strategy"></canvas>
+            <div class="hero-chart-wrap" style="height:280px">
+              <canvas id="tlChart" height="280" aria-label="RMSE by strategy"></canvas>
             </div>
           </div>
         </div>
@@ -561,8 +578,8 @@
               <span class="legend-pill"><span class="legend-dot turquoise"></span> Transfer Learning</span>
             </div>
           </div>
-          <div class="hero-chart-wrap" style="height:220px">
-            <canvas id="tlDaysChart" height="220" aria-label="RMSE vs training days curve"></canvas>
+          <div class="hero-chart-wrap" style="height:280px">
+            <canvas id="tlDaysChart" height="280" aria-label="RMSE vs training days curve"></canvas>
           </div>
         </div>
         </div>
@@ -711,8 +728,8 @@
 
         <div class="dca-card card-gap">
           <h2 class="dca-card-title">Cloud Cover Distribution</h2>
-          <div class="hero-chart-wrap" style="height:200px">
-            <canvas id="cloudHist" height="200" aria-label="Cloud cover distribution"></canvas>
+          <div class="hero-chart-wrap" style="height:280px">
+            <canvas id="cloudHist" height="280" aria-label="Cloud cover distribution"></canvas>
           </div>
         </div>
 
@@ -759,8 +776,8 @@
 
         <div class="dca-card card-gap">
           <h2 class="dca-card-title">Regional Generation Output Comparison</h2>
-          <div class="hero-chart-wrap" style="height:220px">
-            <canvas id="compChart" height="220" aria-label="Region comparison chart"></canvas>
+          <div class="hero-chart-wrap" style="height:280px">
+            <canvas id="compChart" height="280" aria-label="Region comparison chart"></canvas>
           </div>
         </div>
         </div>
@@ -968,6 +985,6 @@
   </div>
 
   <script src="weather.js?v=2.0"></script>
-  <script src="script.js?v=6.1"></script>
+  <script src="script.js?v=7.0"></script>
 </body>
 </html>

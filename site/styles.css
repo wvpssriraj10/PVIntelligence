@@ -528,7 +528,7 @@ html.light select option {
   overflow: hidden; margin-bottom: 16px;
 }
 .hero-chart-wrap canvas {
-  width: 100% !important; height: 280px !important; display: block;
+  width: 100% !important; height: 100% !important; display: block;
 }
 
 /* Pulsing Beacon Dot */
