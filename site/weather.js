@@ -44,6 +44,14 @@ const REGIONS = {
    ============================================================ */
 
 /**
+ * Helper to get local date and hour formatted as 'YYYY-MM-DDTHH' to match Open-Meteo's timezone=auto time strings
+ */
+function getLocalIsoHour(d = new Date()) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}`;
+}
+
+/**
  * Offline sample fallback data when no cache and no internet exists.
  */
 function getOfflineDemoData(regionKey) {
@@ -165,7 +173,7 @@ async function getWeather(regionKey, forceRefresh = false) {
     }
 
     // Determine current hour index
-    const nowLocalIso = new Date().toISOString().slice(0, 13);
+    const nowLocalIso = getLocalIsoHour(new Date());
     let currIdx = times.findIndex(t => t.startsWith(nowLocalIso));
     if (currIdx === -1) {
       const hour = new Date().getHours();
@@ -245,7 +253,7 @@ async function fetchWeatherForCoordinates(lat, lon, label = 'Custom location') {
       });
     }
 
-    const nowLocalIso = new Date().toISOString().slice(0, 13);
+    const nowLocalIso = getLocalIsoHour(new Date());
     let currIdx = times.findIndex(t => t.startsWith(nowLocalIso));
     if (currIdx === -1) {
       currIdx = Math.min(new Date().getHours(), hourly.length - 1);

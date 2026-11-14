@@ -1154,9 +1154,26 @@ function updateLiveSummary(isAutoFromWeather = false) {
   const totalKwh = dailyKwh * days;
   const peakKw   = (1000 / 1000) * (cap * 0.75);
 
-  const gen    = `${outputKw.toFixed(1)} kW`;
+  const reg = regionSelect ? regionSelect.value : 'A';
+  const d = DATA[reg];
+
+  let currentKw = outputKw;
+  let totalEnergyKwh = totalKwh;
+  let peakPowerKw = peakKw;
+
+  if (d && typeof d.cur === 'number' && d.cur > 0) {
+    currentKw = d.cur;
+  }
+  if (d && typeof d.wk7 === 'number' && d.wk7 > 0) {
+    totalEnergyKwh = d.wk7;
+  }
+  if (d && typeof d.peak === 'number' && d.peak > 0) {
+    peakPowerKw = d.peak;
+  }
+
+  const gen    = `${currentKw.toFixed(1)} kW`;
   const fcDays = `${days} ${days === 1 ? 'day' : 'days'}`;
-  const fcKwh  = `${Math.round(totalKwh).toLocaleString()} kWh`;
+  const fcKwh  = `${Math.round(totalEnergyKwh).toLocaleString()} kWh`;
 
   /* Input page result card */
   _set('liveGenerated', gen);
@@ -1166,16 +1183,14 @@ function updateLiveSummary(isAutoFromWeather = false) {
   /* Hero card */
   _set('heroKw',    gen);
   _set('heroPower', fcKwh);
-  _set('heroPeak',  `${Math.round(peakKw)} kW`);
+  _set('heroPeak',  `${Math.round(peakPowerKw)} kW`);
 
   /* Dashboard KPIs */
   _set('curKw',  gen);
-  _set('peakKw', `${Math.round(peakKw)} kW`);
-  _set('wk7',    `${Math.round(totalKwh).toLocaleString()} kWh`);
+  _set('peakKw', `${Math.round(peakPowerKw)} kW`);
+  _set('wk7',    `${Math.round(totalEnergyKwh).toLocaleString()} kWh`);
 
   // Dynamically recalculate multi-day forecast bars for requested horizon (7, 10, 14 days)
-  const reg = regionSelect ? regionSelect.value : 'A';
-  const d = DATA[reg];
   if (d) {
     const w = _weatherState[reg];
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -1225,6 +1240,11 @@ function _set(id, val) {
   if (el) el.textContent = val;
 }
 
+function _setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
 function _heroStatusPill(cls, text) {
   const pill = document.getElementById('heroStatusPill');
   if (!pill) return;
@@ -1244,6 +1264,16 @@ window.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('input', () => updateLiveSummary(false));
+    }
+  });
+
+  ['customLat', 'customLon'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => {
+        const sel = document.getElementById('locationPresetSel');
+        if (sel) sel.value = 'custom';
+      });
     }
   });
 
