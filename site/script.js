@@ -184,7 +184,7 @@ class LocalChart {
 
     ctx.clearRect(0, 0, W, H);
 
-    const pad = { top: title ? 36 : 28, right: 28, bottom: 48, left: 76 };
+    const pad = { top: title ? 32 : 22, right: 28, bottom: 44, left: 72 };
     const pw  = Math.max(10, W - pad.left - pad.right);
     const ph  = Math.max(10, H - pad.top - pad.bottom);
 
@@ -214,7 +214,9 @@ class LocalChart {
     const dsLabel = String(firstDs.label || '');
     const titleStr = String(title || '');
     let unit = '';
-    if (dsLabel.includes('kWh') || titleStr.includes('kWh') || dsLabel.includes('Energy') || titleStr.includes('Energy')) {
+    if (rawMax <= 1.0) {
+      unit = ''; // Dimensionless loss (e.g. lossChart)
+    } else if (dsLabel.includes('kWh') || titleStr.includes('kWh') || dsLabel.includes('Energy') || titleStr.includes('Energy')) {
       unit = ' kWh';
     } else if (dsLabel.includes('kW') || dsLabel.includes('RMSE') || titleStr.includes('RMSE') || dsLabel.includes('Power') || titleStr.includes('Power') || type === 'line') {
       unit = ' kW';
@@ -233,16 +235,16 @@ class LocalChart {
       ctx.fillText(fmtVal(v) + (v > 0 ? unit : ''), pad.left - 10, y + 4);
     }
 
-    /* Crisp baseline axis line */
-    const baselineY = toY(0);
+    /* Crisp baseline axis line anchored to plot bottom */
+    const axisY = pad.top + ph;
     ctx.strokeStyle = isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.moveTo(pad.left, baselineY);
-    ctx.lineTo(pad.left + pw, baselineY);
+    ctx.moveTo(pad.left, axisY);
+    ctx.lineTo(pad.left + pw, axisY);
     ctx.stroke();
 
-    /* X-axis labels */
+    /* X-axis labels anchored cleanly above bottom margin */
     ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
     ctx.font = '600 11.5px Figtree, sans-serif';
     ctx.textAlign = 'center';
@@ -250,13 +252,13 @@ class LocalChart {
     labels.forEach((lbl, i) => {
       if (xStep > 1 && i % xStep !== 0 && i !== labels.length - 1) return;
       const x = type === 'bar' ? toXBar(i) : toXLine(i);
-      ctx.fillText(String(lbl), x, baselineY + 22);
+      ctx.fillText(String(lbl), x, axisY + 20);
     });
 
     /* ---- BAR CHART ---------------------------------------- */
     if (type === 'bar') {
       const totalDs = datasets.length;
-      const barW = Math.min(42, (pw / labels.length) * 0.72);
+      const barW = Math.min(48, (pw / labels.length) * 0.65);
 
       datasets.forEach((ds, di) => {
         const vals = ds.data || [];
@@ -271,23 +273,23 @@ class LocalChart {
             ? ds.backgroundColor[i % ds.backgroundColor.length]
             : (ds.backgroundColor || '#6366f1');
 
-          /* Clean rounded top bar anchored to baseline */
-          const r = Math.min(6, bw / 2, Math.max(0, baselineY - y));
+          /* Clean rounded top bar anchored to baseline axis */
+          const r = Math.min(6, bw / 2, Math.max(0, axisY - y));
           ctx.beginPath();
-          ctx.moveTo(x, baselineY);
+          ctx.moveTo(x, axisY);
           ctx.lineTo(x, y + r);
           if (r > 0) ctx.quadraticCurveTo(x, y, x + r, y);
           ctx.lineTo(x + bw - r, y);
           if (r > 0) ctx.quadraticCurveTo(x + bw, y, x + bw, y + r);
-          ctx.lineTo(x + bw, baselineY);
+          ctx.lineTo(x + bw, axisY);
           ctx.closePath();
 
           let fillStyle = color;
           if (typeof color === 'string' && color.startsWith('#')) {
             try {
-              const grad = ctx.createLinearGradient(0, y, 0, baselineY);
+              const grad = ctx.createLinearGradient(0, y, 0, axisY);
               grad.addColorStop(0, color);
-              grad.addColorStop(1, isLight ? 'rgba(99,102,241,0.25)' : 'rgba(99,102,241,0.2)');
+              grad.addColorStop(1, isLight ? 'rgba(99,102,241,0.22)' : 'rgba(99,102,241,0.2)');
               fillStyle = grad;
             } catch (e) { fillStyle = color; }
           }
@@ -314,13 +316,13 @@ class LocalChart {
         const dashed = !!ds.borderDash;
 
         if (di === 0 && coords.length > 1 && !dashed) {
-          const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ph);
+          const grad = ctx.createLinearGradient(0, pad.top, 0, axisY);
           grad.addColorStop(0, isLight ? 'rgba(79, 70, 229, 0.22)' : 'rgba(99, 102, 241, 0.28)');
           grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
           ctx.beginPath();
-          ctx.moveTo(coords[0].x, pad.top + ph);
+          ctx.moveTo(coords[0].x, axisY);
           coords.forEach(({ x, y }) => ctx.lineTo(x, y));
-          ctx.lineTo(coords[coords.length - 1].x, pad.top + ph);
+          ctx.lineTo(coords[coords.length - 1].x, axisY);
           ctx.closePath();
           ctx.fillStyle = grad; ctx.fill();
         }
@@ -328,7 +330,7 @@ class LocalChart {
         ctx.beginPath();
         coords.forEach(({ x, y }, i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
         ctx.strokeStyle = color;
-        ctx.lineWidth = dashed ? 1.8 : 2.5;
+        ctx.lineWidth = dashed ? 2.0 : 2.5;
         ctx.lineJoin = 'round'; ctx.lineCap = 'round';
         if (dashed) ctx.setLineDash(ds.borderDash);
         ctx.stroke();
@@ -1375,8 +1377,7 @@ window.addEventListener('DOMContentLoaded', () => {
     data: {
       labels: ['Scratch (90d)', 'Frozen (25d)', 'Fine-Tuned (18d)'],
       datasets: [{ label: 'RMSE (kW)', data: [14.8, 11.2, 6.9], backgroundColor: ['#f43f5e', '#f59e0b', '#10b981'] }]
-    },
-    options: { plugins: { title: { display: true, text: 'RMSE by strategy' } } }
+    }
   });
 
   /* ---- EMPIRICAL LEARNING CURVE: RMSE vs TRAINING DAYS --- */
@@ -1397,11 +1398,6 @@ window.addEventListener('DOMContentLoaded', () => {
           borderColor: '#10b981'
         }
       ]
-    },
-    options: {
-      plugins: {
-        title: { display: true, text: 'Validation RMSE across training sample sizes' }
-      }
     }
   });
 

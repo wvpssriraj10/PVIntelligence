@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=7.0" />
+  <link rel="stylesheet" href="styles.css?v=8.0" />
 </head>
 <body>
 
@@ -490,14 +490,13 @@
             <span class="kpi-trend violet">Early stopped</span>
           </div>
         </div>
-        </div>
 
         <!-- Part 2: Transfer Learning Fine-Tuning & Learning Curves -->
-        <div id="transfer-card">
+        <div id="transfer-card" style="margin-top:32px;margin-bottom:14px">
           <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
             <span class="status-pill-badge turquoise">Part 2</span> Fine-Tuned Transfer Learning (Region B — 18 Days Adaptation)
           </h2>
-          </div>
+        </div>
 
         <div class="cards-grid cols-2" style="align-items:stretch">
           <div class="dca-card" style="display:flex;flex-direction:column;justify-content:space-between">
@@ -539,9 +538,17 @@
           </div>
           
           <div class="dca-card" style="display:flex;flex-direction:column;justify-content:space-between">
-            <h2 class="dca-card-title">RMSE by Strategy Comparison</h2>
-            <div class="hero-chart-wrap" style="height:280px">
-              <canvas id="tlChart" height="280" aria-label="RMSE by strategy"></canvas>
+            <div>
+              <div class="dca-card-header" style="margin-bottom:14px">
+                <div>
+                  <h2 class="dca-card-title">RMSE by Strategy Comparison</h2>
+                  <div class="dca-card-subtitle">Validation error across baseline vs transferred models</div>
+                </div>
+                <span class="status-pill-badge turquoise">53% Lower Error</span>
+              </div>
+              <div class="hero-chart-wrap" style="height:280px">
+                <canvas id="tlChart" height="280" aria-label="RMSE by strategy"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -581,7 +588,6 @@
           <div class="hero-chart-wrap" style="height:280px">
             <canvas id="tlDaysChart" height="280" aria-label="RMSE vs training days curve"></canvas>
           </div>
-        </div>
         </div>
       </section>
 
@@ -631,7 +637,6 @@
             <div class="shap-wrap" id="shapBars" role="list" aria-label="SHAP feature contributions"></div>
           </div>
         </div>
-        </div>
 
         <!-- Part 2: Anomaly Detection Scanner -->
         <div id="anomaly-card" style="margin-bottom:24px">
@@ -653,16 +658,14 @@
         </div>
 
         <div id="anomList" class="list-stack" role="list" aria-live="polite" aria-label="Detected anomalies"></div>
-        </div>
 
         <!-- Part 3: AI Operational Insights -->
         <div id="insights-card">
           <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
             <span class="status-pill-badge violet">Part 3</span> Automated Operational AI Insights
           </h2>
-          </div>
-        <div id="insightList" class="list-stack" role="list"></div>
         </div>
+        <div id="insightList" class="list-stack" role="list"></div>
       </section>
 
       <!-- ── 4. DATA & REGIONAL ANALYTICS ──────────────────────── -->
@@ -747,14 +750,13 @@
             </table>
           </div>
         </div>
-        </div>
 
         <!-- Part 2: Region A vs Region B Comparison -->
         <div id="compare-card" style="margin-bottom:24px">
           <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
             <span class="status-pill-badge purple">Part 2</span> Regional Telemetry Benchmark (Region A vs Region B)
           </h2>
-          </div>
+        </div>
 
         <div class="dca-card">
           <div class="dca-table-wrap">
@@ -780,13 +782,13 @@
             <canvas id="compChart" height="280" aria-label="Region comparison chart"></canvas>
           </div>
         </div>
-        </div>
 
         <!-- Part 3: Sensor Records Log Table -->
-        <div id="records-card">
+        <div id="records-card" style="margin-bottom:24px">
           <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
             <span class="status-pill-badge neutral">Part 3</span> Sensor Telemetry Log &amp; Historical Records
           </h2>
+        </div>
           <!-- Recent Activity & Sensor Telemetry Table (Full Width) -->
         <div class="dca-card table-card">
           <div class="table-header-bar">
@@ -840,7 +842,6 @@
         </div>
 
         <div class="dca-card" id="reportText" role="document" style="font-family:var(--font-mono);font-size:13px;line-height:1.7;white-space:pre-wrap"></div>
-        </div>
 
         <!-- Part 2: Engineering & Research Team -->
         <div id="team-card" style="margin-bottom:24px">
@@ -930,14 +931,13 @@
             <a class="github-link" href="https://github.com/Jahnavi99955" target="_blank" rel="noreferrer">&#128279; GitHub Profile</a>
           </div>
         </div>
-        </div>
 
         <!-- Part 3: System Architecture & Technical Specifications -->
         <div id="about-card">
           <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
             <span class="status-pill-badge violet">Part 3</span> System Architecture &amp; Methodology Documentation
           </h2>
-          </div>
+        </div>
 
         <div class="dca-card">
           <h2 class="dca-card-title">Network Architecture</h2>
@@ -951,7 +951,6 @@
 
           <h2 class="dca-card-title">Explainability Protocol</h2>
           <p style="color:var(--text-secondary);margin:8px 0 16px">SHAP computes marginal Shapley values for each feature, showing plant engineers exactly why a specific output was forecasted.</p>
-        </div>
         </div>
       </section>
     </main>
@@ -984,7 +983,7 @@
     </div>
   </div>
 
-  <script src="weather.js?v=2.0"></script>
-  <script src="script.js?v=7.0"></script>
+  <script src="weather.js?v=3.0"></script>
+  <script src="script.js?v=8.0"></script>
 </body>
 </html>
