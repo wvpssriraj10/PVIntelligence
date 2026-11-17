@@ -894,7 +894,7 @@ input[type='range'] {
 
 /* ---- NOTIFICATION DRAWER / POPOVER ------------------------- */
 .notif-popover {
-  position: absolute; top: 68px; right: 24px; width: 340px;
+  position: fixed; top: 68px; right: 24px; width: 340px; max-width: calc(100vw - 32px);
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-glass);
   padding: 18px; z-index: 150; display: none;

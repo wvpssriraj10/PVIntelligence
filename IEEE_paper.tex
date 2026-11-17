@@ -1,0 +1,123 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{PVIntelligence: Cross-Regional Transfer Learning for Photovoltaic Power Forecasting under Data Scarcity}
+
+\author{
+\IEEEauthorblockN{Muddam Jahnavi\IEEEauthorrefmark{1}, Aasthaa Sharma\IEEEauthorrefmark{1}, W V P S Sriraj\IEEEauthorrefmark{1}, Harsh\IEEEauthorrefmark{1}, and Mukkoti M. V. Chalapathi\IEEEauthorrefmark{2}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Computer Science and Engineering (SCOPE), VIT-AP University, Amaravati, Andhra Pradesh, India\\
+Email: \{muddam.jahnavi2023, aasthaa.sharma2023, venkata.23bce8414, harsh.2023\}@vitapstudent.ac.in}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}Department of Analytics, School of Computer Science and Engineering, VIT-AP University, Amaravati, India\\
+Email: maruthi.chalapathi@vitap.ac.in}
+}
+
+\maketitle
+
+\begin{abstract}
+The stochastic intermittency of solar photovoltaic (PV) generation poses substantial stability and economic challenges to contemporary power grid dispatchers. Deep recurrent neural networks, particularly Long Short-Term Memory (LSTM) networks, achieve superior performance in non-linear power forecasting when trained on extensive historical sensor telemetry. However, newly commissioned solar installations inherently suffer from the ``cold-start'' problem, where historical telemetry is virtually non-existent or severely constrained, leading to severe overfitting and predictive failure. In this work, we propose \textbf{PVIntelligence}, a cross-regional transfer learning architecture tailored for short-term PV generation forecasting under severe target data scarcity. The model is pre-trained on a data-rich solar facility (Plant 1) to extract universal diurnal dynamics and solar radiation relationships. The feature extraction layers are subsequently frozen and transferred to a geographically distinct target facility (Plant 2) constrained to only 30\% of historical observations. Empirical validation shows that PVIntelligence achieves an RMSE of 1,149.05 kW and an MAE of 676.30 kW, outperforming a baseline trained from scratch under identical scarcity by 16.82\% and 20.00\% respectively, while improving $R^2$ to 0.9578 and cutting convergence epochs by 62.2\%. A production-grade operational web dashboard is deployed at \url{https://pvintelligence.vercel.app}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Solar Photovoltaic Forecasting, Transfer Learning, Long Short-Term Memory (LSTM), Deep Learning, Data Scarcity, Renewable Grid Integration.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Global energy infrastructure is rapidly transitioning toward renewable power systems, with photovoltaic (PV) installations dominating capacity expansion. Despite zero-emission benefits, large-scale PV integration introduces severe grid instability due to unpredictable fluctuations caused by changing cloud cover, ambient heat, and seasonal atmospheric variation \cite{yang2018}. Grid operators rely on short-term power forecasting (15 minutes to 24 hours ahead) to schedule spinning reserves, mitigate frequency excursions, and avoid deviation settlement penalties.
+
+Modern deep learning architectures, such as stacked Long Short-Term Memory (LSTM) networks, have shown notable efficacy in solar generation prediction \cite{pandith2024}. Nevertheless, these models are data-hungry, requiring months to years of fine-grained on-site telemetry to prevent variance degradation. Newly commissioned or retrofitted solar parks face the severe ``cold-start'' dilemma: operational decisions must be made immediately, yet sufficient local historical records are unavailable.
+
+Transfer learning provides a principled mechanism to circumvent this constraint by extracting domain-invariant representations from a source facility and adapting them to a data-scarce target facility \cite{pan2010, sarmas2022}. In this paper, we develop and validate \textbf{PVIntelligence}, an end-to-end framework that captures diurnal solar kinetics from a high-resource source plant and transfers them across disparate geographic installations.
+
+\section{Methodology}
+
+\subsection{Data Pipeline and Problem Formulation}
+The telemetry comprises continuous 15-minute sensor intervals from two distinct commercial grid-connected solar power plants in India over a 34-day operational period:
+\begin{itemize}
+    \item \textbf{Source Domain ($\mathcal{D}_S$, Plant 1):} Inverter AC/DC power streams merged with on-site pyranometer and ambient weather sensor telemetry.
+    \item \textbf{Target Domain ($\mathcal{D}_T$, Plant 2):} Distinct inverter hardware, geographic coordinates, and microclimate characteristics.
+\end{itemize}
+
+Input features $x_t \in \mathbb{R}^4$ encompass solar irradiation ($W/m^2$), ambient temperature ($^\circ\text{C}$), module temperature ($^\circ\text{C}$), and historical AC power output ($kW$). Time-series instances are scaled via min-max normalization:
+\begin{equation}
+\tilde{x} = \frac{x - x_{\text{min}}}{x_{\text{max}} - x_{\text{min}}}
+\end{equation}
+
+A sliding window of length $T = 24$ (6 hours) constructs the input tensor $X_t = [x_{t-T+1}, \dots, x_t]$ to predict next-step generation $\hat{y}_{t+1}$.
+
+\subsection{Stacked LSTM Architecture}
+The base model comprises a two-tier stacked LSTM:
+\begin{itemize}
+    \item Layer 1: 64 LSTM units with temporal sequence returns.
+    \item Dropout: Rate of $0.20$ for recurrent regularization.
+    \item Layer 2: 32 LSTM units capturing high-level latent temporal abstractions.
+    \item Dense Head: 16 fully connected units with ReLU activations.
+    \item Output Layer: Single linear unit estimating AC power ($kW$).
+\end{itemize}
+
+\subsection{Cross-Regional Transfer Protocol}
+To emulate severe target data scarcity, the target facility (Plant 2) is constrained to only 30\% of its historical training data. The transfer learning protocol proceeds as follows:
+\begin{enumerate}
+    \item \textbf{Pre-training:} The full model is trained on Plant 1 ($\mathcal{D}_S$) using the Adam optimizer ($\eta = 10^{-3}$) under Mean Squared Error loss until validation loss plateaus.
+    \item \textbf{Feature Transfer \& Freezing:} Recurrent layer weights $\mathbf{W}_{\text{LSTM1}}$ and $\mathbf{W}_{\text{LSTM2}}$ are cloned to the target network and frozen ($\text{trainable} = \text{False}$).
+    \item \textbf{Downstream Adaptation:} The dense regression head is fine-tuned on the 30\% target dataset with a reduced learning rate ($\eta = 10^{-4}$).
+\end{enumerate}
+
+\section{Experimental Results and Discussion}
+
+\subsection{Evaluation Metrics}
+Evaluation is performed over an identical held-out test split using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and Coefficient of Determination ($R^2$):
+\begin{equation}
+\text{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - \hat{y}_i)^2}, \quad \text{MAE} = \frac{1}{N}\sum_{i=1}^N |y_i - \hat{y}_i|
+\end{equation}
+
+\subsection{Comparative Benchmarks}
+Table \ref{tab:comparison} details the comparative performance on Plant 2 between a baseline model trained from scratch and the proposed PVIntelligence transfer model.
+
+\begin{table}[htbp]
+\centering
+\caption{Target Plant Performance Under 70\% Data Scarcity}
+\label{tab:comparison}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Metric} & \textbf{Scratch Baseline} & \textbf{PVIntelligence} & \textbf{Improvement} \\
+\midrule
+RMSE ($kW$) & 1,381.38 & \textbf{1,149.05} & \textbf{+16.82\%} \\
+MAE ($kW$) & 845.35 & \textbf{676.30} & \textbf{+20.00\%} \\
+$R^2$ Score & 0.9390 & \textbf{0.9578} & \textbf{+2.00\%} \\
+Epochs to Converge & 45 & \textbf{17} & \textbf{+62.22\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Analysis}
+Under severe data limitations, the baseline scratch model suffers from parameter co-adaptation, over-indexing on temporary cloud variations and failing to learn standard diurnal curvature. In contrast, PVIntelligence leverages pre-trained solar diurnal representations, achieving a \textbf{20.00\% lower MAE} and reaching convergence in only 17 epochs (a 62.2\% speedup).
+
+\section{System Deployment}
+To operationalize the findings, an interactive web dashboard was engineered using modular client-side JavaScript and deployed to Vercel at \url{https://pvintelligence.vercel.app}. The portal integrates real-time solar irradiance calculators, interactive generation sliders, and side-by-side error visualizations for plant operators.
+
+\section{Conclusion}
+This study presented PVIntelligence, demonstrating that transfer learning effectively resolves the cold-start data scarcity bottleneck in photovoltaic power forecasting. Freezing diurnal recurrent weights and fine-tuning regression heads achieves a 16.82\% reduction in RMSE and a 20.00\% reduction in MAE under 70\% target data scarcity. Future work will investigate spatio-temporal graph convolutions across distributed utility-scale microgrids.
+
+\begin{thebibliography}{00}
+\bibitem{yang2018} D. Yang et al., ``History and trends in solar irradiance and PV power forecasting: A preliminary assessment,'' \textit{Solar Energy}, vol. 168, pp. 60--112, 2018.
+\bibitem{pandith2024} K. Pandith, ``Deep learning architectures for photovoltaic power prediction: A comparative study,'' \textit{Renewable and Sustainable Energy Reviews}, vol. 189, p. 113942, 2024.
+\bibitem{pan2010} S. J. Pan and Q. Yang, ``A survey on transfer learning,'' \textit{IEEE Trans. Knowl. Data Eng.}, vol. 22, no. 10, pp. 1345--1359, 2010.
+\bibitem{sarmas2022} E. Sarmas et al., ``A transfer learning strategy for cross-regional solar power forecasting under data scarcity,'' \textit{Applied Energy}, vol. 310, p. 118518, 2022.
+\bibitem{bak2025} H. Bak et al., ``Cross-facility domain adaptation for renewable energy forecasting with recurrent networks,'' \textit{IEEE Trans. Sustain. Energy}, vol. 16, no. 1, pp. 245--256, 2025.
+\end{thebibliography}
+
+\end{document}

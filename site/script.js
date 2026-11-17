@@ -56,7 +56,8 @@ function _setThemeIcon(icon) {
 /* ============================================================
    NOTIFICATION POPOVER & ALERTS
    ============================================================ */
-function toggleNotifPopover() {
+function toggleNotifPopover(e) {
+  if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
   const p = document.getElementById('notifPopover');
   if (p) p.classList.toggle('open');
 }

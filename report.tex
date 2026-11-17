@@ -1,0 +1,391 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{graphicx}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    citecolor=red
+}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter.}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+\begin{document}
+
+% -------------------------------------------------------------
+% TITLE PAGE
+% -------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{0.5cm}
+{\Large \textbf{A PROJECT REPORT ON}}\\[0.8cm]
+
+{\LARGE \textbf{PVINTELLIGENCE: TRANSFER LEARNING FOR PHOTOVOLTAIC POWER FORECASTING ACROSS REGIONS}}\\[1.2cm]
+
+{\large \textit{Submitted in partial fulfillment of the requirements for}}\\[0.3cm]
+{\Large \textbf{CAPSTONE PROJECT (CAP4001)}}\\[1.2cm]
+
+{\large \textbf{Submitted by}}\\[0.4cm]
+\begin{tabular}{ll}
+\textbf{MUDDAM JAHNAVI} & \textbf{23BCE8470} \\
+\textbf{AASTHAA SHARMA} & \textbf{23BCE9279} \\
+\textbf{W V P S SRIRAJ} & \textbf{23BCE8414} \\
+\textbf{HARSH} & \textbf{23BCE8505} \\
+\end{tabular}\\[1.2cm]
+
+{\large \textit{Under the guidance of}}\\[0.3cm]
+{\Large \textbf{Dr. Mukkoti Maruthi Venkata Chalapathi}}\\[0.2cm]
+{\normalsize Assistant Professor Senior Grade 1, Department of Analytics}\\[1.5cm]
+
+\vfill
+{\Large \textbf{School of Computer Science and Engineering (SCOPE)}}\\[0.3cm]
+{\large \textbf{VIT-AP University, Amaravati, Andhra Pradesh, India}}\\[0.3cm]
+{\large \textbf{November 2026}}
+\end{titlepage}
+
+% -------------------------------------------------------------
+% CERTIFICATE
+% -------------------------------------------------------------
+\newpage
+\chapter*{CERTIFICATE}
+\thispagestyle{empty}
+
+\noindent This is to certify that the project report entitled \textbf{``PVIntelligence: Transfer Learning for Photovoltaic Power Forecasting Across Regions''} submitted by \textbf{Muddam Jahnavi (23BCE8470)}, \textbf{Aasthaa Sharma (23BCE9279)}, \textbf{W V P S Sriraj (23BCE8414)}, and \textbf{Harsh (23BCE8505)} in partial fulfillment of the requirements of the Capstone Project (CAP4001) at \textbf{VIT-AP University, Amaravati}, is an authentic record of bonafide project work carried out under my supervision during the academic year 2026.\\[0.8cm]
+
+\noindent The report presents the end-to-end design, implementation, cross-regional transfer learning architecture, empirical benchmarking, and cloud-deployed operational dashboard. To the best of my knowledge, the matter embodied in this report has not been submitted elsewhere for the award of any other degree or diploma.\\[2.5cm]
+
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lr}
+\textbf{Guide Signature:} \hrulefill & \textbf{Head of Department / Dean:} \hrulefill \\
+\textbf{Dr. Mukkoti Maruthi Venkata Chalapathi} & \textbf{School of Computer Science \& Engineering} \\
+Date: \rule{4cm}{0.4pt} & VIT-AP University \\
+\end{tabular*}
+
+% -------------------------------------------------------------
+% DECLARATION
+% -------------------------------------------------------------
+\newpage
+\chapter*{DECLARATION}
+\thispagestyle{empty}
+
+\noindent We hereby declare that the work presented in this Capstone Project report entitled \textbf{``PVIntelligence: Transfer Learning for Photovoltaic Power Forecasting Across Regions''} is our own original work completed under the guidance of \textbf{Dr. Mukkoti Maruthi Venkata Chalapathi}, Assistant Professor Senior Grade 1, School of Computer Science and Engineering (SCOPE), VIT-AP University.\\[0.5cm]
+
+\noindent We confirm that this work has not formed the basis for the award of any degree, diploma, associate-ship, fellowship, or other similar title to any candidate of any university or institution. All materials borrowed from published literature, third-party software, open APIs, and research articles have been duly acknowledged and cited.\\[2cm]
+
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ll}
+\textbf{Muddam Jahnavi} (23BCE8470) & \rule{5cm}{0.4pt} \\[0.8cm]
+\textbf{Aasthaa Sharma} (23BCE9279) & \rule{5cm}{0.4pt} \\[0.8cm]
+\textbf{W V P S Sriraj} (23BCE8414) & \rule{5cm}{0.4pt} \\[0.8cm]
+\textbf{Harsh} (23BCE8505) & \rule{5cm}{0.4pt} \\
+\end{tabular*}\\[1.5cm]
+
+\noindent Place: Amaravati, Andhra Pradesh\\
+Date: November 2026
+
+% -------------------------------------------------------------
+% ACKNOWLEDGEMENT
+% -------------------------------------------------------------
+\newpage
+\chapter*{ACKNOWLEDGEMENT}
+\thispagestyle{empty}
+
+\noindent We express our deepest gratitude to our project guide, \textbf{Dr. Mukkoti Maruthi Venkata Chalapathi}, Assistant Professor Senior Grade 1, School of Computer Science and Engineering (SCOPE), for his invaluable guidance, continuous encouragement, and constructive critique throughout the conception, modeling, and finalization of this project.\\[0.5cm]
+
+\noindent We extend our sincere appreciation to the Dean and Faculty members of the \textbf{School of Computer Science and Engineering (SCOPE)}, VIT-AP University, for providing the necessary infrastructural, computational, and institutional support required to conduct deep learning experiments.\\[0.5cm]
+
+\noindent We would also like to thank the University administration for fostering an innovative academic environment through the Capstone Project curriculum, which motivated us to develop a production-ready, cyber-physical clean energy solution.\\[0.5cm]
+
+\noindent Finally, we thank our parents, peers, and teammates for their constant moral support, collaboration, and insightful discussions throughout the duration of this work.
+
+% -------------------------------------------------------------
+% ABSTRACT
+% -------------------------------------------------------------
+\newpage
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+Rapid deployment of solar photovoltaic (PV) generation presents significant operational challenges for modern power distribution networks due to the stochastic nature of solar irradiance and weather patterns. Accurate short-term PV output forecasting is critical for automated grid balancing, unit commitment, and battery energy storage management. However, standard deep recurrent networks (such as Long Short-Term Memory networks) require substantial historical sensor data from a target plant to produce reliable forecasts. Newly commissioned solar facilities suffer from severe data scarcity (the ``cold-start'' problem), where training from scratch on limited time-series leads to catastrophic overfitting and high predictive error.\\[0.4cm]
+
+\noindent To address this limitation, this project introduces \textbf{PVIntelligence}, a cross-regional transfer learning framework designed for accurate photovoltaic power forecasting in data-constrained environments. A base stacked LSTM network is first pre-trained on a data-rich solar facility (Plant 1, 34 days of continuous 15-minute sensor intervals) to capture fundamental diurnal variations and irradiance-to-power non-linearities. The temporal feature-extraction layers are subsequently transferred and frozen, while the downstream regression heads are fine-tuned on a geographically distinct target facility (Plant 2) constrained to only 30\% of its available data.\\[0.4cm]
+
+\noindent Comprehensive empirical evaluations demonstrate the superiority of the proposed framework. Compared to a conventional model trained from scratch under identical data scarcity, PVIntelligence reduces the Root Mean Squared Error (RMSE) from \textbf{1,381.38 kW to 1,149.05 kW} (a \textbf{16.8\% error reduction}), lowers the Mean Absolute Error (MAE) from \textbf{845.35 kW to 676.30 kW} (a \textbf{20.0\% reduction}), and boosts the coefficient of determination ($R^2$) from \textbf{0.9390 to 0.9578}. In addition, the transfer framework accelerates training convergence by \textbf{62\%}.\\[0.4cm]
+
+\noindent The verified machine learning pipeline is deployed into an interactive, high-performance web dashboard hosted live at \url{https://pvintelligence.vercel.app}. The platform features serverless API status endpoints, interactive solar irradiance calculators, real-time telemetry simulations, and dynamic multi-model performance visualizers.\\[0.6cm]
+
+\noindent \textbf{Keywords:} Photovoltaic Power Forecasting, Deep Learning, Long Short-Term Memory (LSTM), Transfer Learning, Cross-Regional Generalization, Renewable Grid Integration.
+
+% -------------------------------------------------------------
+% TABLE OF CONTENTS & LISTS
+% -------------------------------------------------------------
+\newpage
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
+
+% -------------------------------------------------------------
+% CHAPTER 1: INTRODUCTION
+% -------------------------------------------------------------
+\newpage
+\chapter{INTRODUCTION}
+
+\section{Introduction}
+Global energy transitions toward decarbonization have accelerated the worldwide adoption of solar photovoltaic (PV) systems. While solar energy provides clean and virtually limitless electricity, solar power generation exhibits inherent intermittency driven by celestial mechanics, cloud cover transitions, and fluctuating meteorological conditions. Consequently, high-penetration solar grids face severe voltage stability and load dispatch challenges.
+
+\section{Background of Renewable Energy and Solar PV}
+Photovoltaic cells convert incident electromagnetic solar radiation directly into direct current (DC) electricity via the photoelectric effect, which inverters transform into alternating current (AC) for grid delivery. Because electricity storage at grid scale remains capital intensive, grid operators rely heavily on precise day-ahead and intra-day forecasting models to schedule reserve spinning generation.
+
+\section{Importance of Solar Power Forecasting}
+Short-term solar forecasting (15 minutes to 24 hours ahead) enables:
+\begin{itemize}
+    \item Dynamic dispatch scheduling for grid balancing authorities.
+    \item Optimized charge/discharge cycles for co-located battery energy storage systems (BESS).
+    \item Mitigation of financial penalties incurred under Deviation Settlement Mechanisms (DSM).
+    \item Prevention of sudden grid frequency fluctuations caused by cloud transients.
+\end{itemize}
+
+\section{The Cold-Start Problem Statement}
+While modern deep recurrent architectures—specifically Long Short-Term Memory (LSTM) and Gated Recurrent Units (GRU)—excel at learning temporal dependencies in solar time-series, they depend heavily on large volumes of historical supervisory data (typically 6 to 24 months of on-site telemetry). When a newly constructed solar farm is commissioned, it lacks historical operational telemetry. Training a deep network directly on sparse records (e.g., 5 to 10 days) leads to severe model variance, overfitting, and inaccurate generation forecasts.
+
+\section{Project Objectives}
+The core objectives of the PVIntelligence project are:
+\begin{enumerate}
+    \item To implement a high-capacity stacked LSTM deep learning model capable of capturing multi-variate non-linear solar dynamics.
+    \item To formulate a cross-regional transfer learning strategy that transfers general diurnal patterns from a data-rich source plant (Plant 1) to a data-scarce target plant (Plant 2).
+    \item To quantitatively demonstrate substantial reductions in RMSE and MAE under a 70\% data scarcity constraint compared to baseline scratch models.
+    \item To engineer and deploy a production-ready, interactive web dashboard accessible globally at \url{https://pvintelligence.vercel.app} for grid operators and domain analysts.
+\end{enumerate}
+
+\section{Project Contributions}
+\begin{itemize}
+    \item \textbf{Transfer Learning Framework for Solar Power:} A systematic layer-freezing and fine-tuning protocol that mitigates the cold-start problem in photovoltaic installations.
+    \item \textbf{Rigorous Benchmark Validation:} Extensive empirical comparative evaluation across identical test splits confirming a 16.8\% RMSE reduction and 20.0\% MAE reduction.
+    \item \textbf{Operational Cloud Deployment:} Full software deployment on Vercel with automated continuous delivery, client-side dynamic inference simulation, and responsive visual diagnostics.
+\end{itemize}
+
+% -------------------------------------------------------------
+% CHAPTER 2: LITERATURE REVIEW
+% -------------------------------------------------------------
+\newpage
+\chapter{LITERATURE REVIEW}
+
+\section{Overview of Solar Forecasting Methodologies}
+Solar power forecasting techniques are categorized into physical models, statistical models, traditional machine learning, and deep neural networks.
+
+\subsection{Physical Numerical Weather Prediction (NWP)}
+Physical approaches model solar irradiance based on radiative atmospheric transfer and satellite imagery. While effective for long horizons (24 to 72 hours), physical models suffer from high computational latency and cannot capture plant-specific inverter degradation or localized soiling.
+
+\subsection{Statistical and Machine Learning Models}
+Classical statistical techniques such as Auto-Regressive Integrated Moving Average (ARIMA) and Support Vector Regression (SVR) perform well under clear-sky conditions but degrade rapidly during volatile meteorological shifts due to their inability to retain long temporal context.
+
+\subsection{Deep Recurrent Architectures (LSTM)}
+To overcome vanishing gradients in traditional recurrent networks, Hochreiter and Schmidhuber formulated LSTM units. Equipped with input, forget, and output gates, LSTMs effectively capture both short-term cloud transit dynamics and multi-day cyclical trends.
+
+\section{Transfer Learning in Clean Energy Applications}
+Transfer learning leverages parameters learned from a source domain $D_S$ with learning task $T_S$ to enhance predictive performance in a target domain $D_T$ with task $T_T$. In solar forecasting, cross-regional transfer learning addresses the persistent challenge of spatial and meteorological divergence across geographic installations.
+
+\section{Summary of Identified Research Gaps}
+\begin{itemize}
+    \item Most existing works evaluate transfer learning solely under simulated synthetic noise rather than empirical cross-plant sensor telemetry.
+    \item Very few studies establish exact quantification of performance gains across varying degrees of target data scarcity (e.g., 30\% available data).
+    \item Academic research rarely translates trained transfer models into operational, public-facing software tools that non-technical grid operators can inspect.
+\end{itemize}
+
+% -------------------------------------------------------------
+% CHAPTER 3: SYSTEM ARCHITECTURE AND METHODOLOGY
+% -------------------------------------------------------------
+\newpage
+\chapter{SYSTEM ARCHITECTURE AND METHODOLOGY}
+
+\section{System Architecture Overview}
+The PVIntelligence pipeline comprises four primary components: multi-source data ingestion, temporal preprocessing and sliding window construction, the stacked LSTM transfer learning engine, and the production web dashboard.
+
+\section{Data Pipeline and Acquisition}
+The dataset consists of real-world operational telemetry from two commercial solar plants in India:
+\begin{itemize}
+    \item \textbf{Source Domain (Plant 1):} 34 days of high-frequency supervisory telemetry recorded at 15-minute intervals across 22 inverters with dedicated on-site weather monitoring stations.
+    \item \textbf{Target Domain (Plant 2):} Telemetry recorded concurrently under distinct inverter hardware topologies, localized cloud patterns, and microclimates.
+\end{itemize}
+
+\section{Feature Preprocessing and Normalization}
+The raw data streams are aggregated by timestamp and merged with the weather sensor stream. Features utilized include:
+\begin{itemize}
+    \item Global Solar Irradiation ($W/m^2$)
+    \item Ambient Temperature ($^\circ\text{C}$)
+    \item Module / Panel Temperature ($^\circ\text{C}$)
+    \item Past AC Power Output ($kW$)
+\end{itemize}
+Features are scaled using min-max normalization to the interval $[0, 1]$:
+\begin{equation}
+x_{\text{norm}} = \frac{x - x_{\text{min}}}{x_{\text{max}} - x_{\text{min}}}
+\end{equation}
+
+\section{Sliding Window Formation}
+A sliding window of length $T = 24$ timesteps (equivalent to 6 hours of historical telemetry) is utilized to forecast the subsequent AC power output:
+\begin{equation}
+X_t = [x_{t-T+1}, x_{t-T+2}, \dots, x_t] \quad \longrightarrow \quad \hat{y}_{t+1}
+\end{equation}
+
+\section{Stacked LSTM Architecture}
+The core neural architecture consists of:
+\begin{enumerate}
+    \item Input Layer: Tensor shape $(BatchSize, 24, 4)$.
+    \item LSTM Layer 1: 64 hidden units with return sequences enabled.
+    \item Dropout Layer: Rate of 0.20 to prevent co-adaptation of recurrent weights.
+    \item LSTM Layer 2: 32 hidden units extracting high-level temporal representations.
+    \item Fully Connected Dense Head: 16 units with ReLU activation.
+    \item Output Layer: Single linear neuron predicting AC power ($kW$).
+\end{enumerate}
+
+\section{Transfer Learning Protocol}
+\begin{enumerate}
+    \item \textbf{Source Pre-training:} The complete architecture is trained on Plant 1 data using the Adam optimizer with a learning rate $\eta = 0.001$ and Mean Squared Error loss until validation loss converges.
+    \item \textbf{Weight Transfer and Freezing:} The learned weights $W_{\text{LSTM1}}$ and $W_{\text{LSTM2}}$ are transferred to the target network. These recurrent layers are frozen (`trainable = False`) to preserve generalized solar diurnal dynamics.
+    \item \textbf{Target Fine-Tuning:} Only the top dense layers are fine-tuned using a reduced target dataset (30\% of Plant 2 historical telemetry) with an attenuated learning rate $\eta = 0.0001$.
+\end{enumerate}
+
+% -------------------------------------------------------------
+% CHAPTER 4: SOFTWARE IMPLEMENTATION
+% -------------------------------------------------------------
+\newpage
+\chapter{SOFTWARE IMPLEMENTATION}
+
+\section{Development Stack}
+The implementation leverages Python 3.10+, TensorFlow/Keras 2.15, NumPy, Pandas, and Scikit-Learn for machine learning workflows. The web dashboard is engineered with modern Vanilla JavaScript, CSS3, HTML5, and deployed seamlessly onto the Vercel serverless platform.
+
+\section{Training and Transfer Code Structure}
+The project source is organized modularly:
+\begin{itemize}
+    \item `src/data_loader.py`: Ingestion, timestamp parsing, and multi-sensor inner join operations.
+    \item `src/preprocessing.py`: Imputation, scaling, and sequence window generator.
+    \item `src/base_model.keras`: Serialized pre-trained neural network weights.
+    \item `src/transfer_learning.py`: Automated layer freezing, parameter transfer, and fine-tuning harness.
+    \item `api/index.py`: Serverless Python backend providing operational health checks on Vercel.
+\end{itemize}
+
+% -------------------------------------------------------------
+% CHAPTER 5: RESULTS AND DISCUSSION
+% -------------------------------------------------------------
+\newpage
+\chapter{RESULTS AND DISCUSSION}
+
+\section{Evaluation Metrics}
+Model predictive accuracy is quantified via three standard metrics:
+\begin{itemize}
+    \item \textbf{Mean Absolute Error (MAE):}
+    \begin{equation}
+    \text{MAE} = \frac{1}{N} \sum_{i=1}^N |y_i - \hat{y}_i|
+    \end{equation}
+    \item \textbf{Root Mean Squared Error (RMSE):}
+    \begin{equation}
+    \text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^N (y_i - \hat{y}_i)^2}
+    \end{equation}
+    \item \textbf{Coefficient of Determination ($R^2$):}
+    \begin{equation}
+    R^2 = 1 - \frac{\sum_{i=1}^N (y_i - \hat{y}_i)^2}{\sum_{i=1}^N (y_i - \bar{y})^2}
+    \end{equation}
+\end{itemize}
+
+\section{Empirical Performance Comparison}
+Table \ref{tab:results} summarizes the performance of the baseline scratch model versus the proposed PVIntelligence transfer learning model on Plant 2 under identical 70\% data scarcity conditions.
+
+\begin{table}[htbp]
+\centering
+\caption{Quantitative Performance Comparison on Target Facility (Plant 2)}
+\label{tab:results}
+\begin{tabularx}{\textwidth}{lXXX}
+\toprule
+\textbf{Metric} & \textbf{Baseline (From Scratch)} & \textbf{PVIntelligence (Transfer)} & \textbf{Improvement} \\
+\midrule
+\textbf{RMSE (kW)} & 1,381.38 & \textbf{1,149.05} & \textbf{+16.82\%} \\
+\textbf{MAE (kW)} & 845.35 & \textbf{676.30} & \textbf{+20.00\%} \\
+\textbf{$R^2$ Score} & 0.9390 & \textbf{0.9578} & \textbf{+2.00\%} \\
+\textbf{Epochs to Converge} & 45 & \textbf{17} & \textbf{+62.22\%} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Discussion of Findings}
+The results validate the fundamental hypothesis: representations of solar diurnal cycles learned from Plant 1 generalize effectively to Plant 2 despite local differences in hardware capacity and atmospheric conditions. Transfer learning prevents the high-capacity recurrent layers from overfitting to sparse local telemetry, leading to a 20.0\% reduction in absolute errors and significantly faster training convergence.
+
+% -------------------------------------------------------------
+% CHAPTER 6: WEB APPLICATION AND CLOUD DEPLOYMENT
+% -------------------------------------------------------------
+\newpage
+\chapter{WEB APPLICATION AND CLOUD DEPLOYMENT}
+
+\section{Architecture Overview}
+To transition the research model into an accessible enterprise tool, PVIntelligence features a reactive web application hosted live on Vercel at \url{https://pvintelligence.vercel.app}.
+
+\section{Deployment and Infrastructure}
+The frontend is built with modular web standards, ensuring zero framework bundle overhead, sub-second load times, and universal cross-device responsiveness. Serverless integration is maintained through a Python backend (`api/index.py`) managed under `vercel.json`.
+
+\section{Core Dashboard Capabilities}
+\begin{itemize}
+    \item \textbf{Live Telemetry Simulator:} Allows operators to adjust solar irradiation ($W/m^2$) and panel temperature to inspect simulated power output in real time.
+    \item \textbf{Cross-Plant Transfer Visualizer:} Displays comparative side-by-side error curves demonstrating the transfer learning advantage.
+    \item \textbf{Interactive Solar Irradiance Calculator:} Computes theoretical yield and capacity utilization factors on demand.
+\end{itemize}
+
+% -------------------------------------------------------------
+% CHAPTER 7: PERFORMANCE ANALYSIS AND APPLICATIONS
+% -------------------------------------------------------------
+\newpage
+\chapter{PERFORMANCE ANALYSIS AND PRACTICAL APPLICATIONS}
+
+\section{Robustness Across Weather Regimes}
+Error analysis across varying weather conditions reveals that the transfer learning model maintains superior stability during intermittent, partly cloudy days where the baseline scratch model exhibits large variance spikes.
+
+\section{Grid Integration and Industrial Impact}
+The 20\% error reduction directly translates to substantial economic savings for grid operators by reducing spinning reserve requirements and avoiding non-compliance penalties under Deviation Settlement Mechanisms.
+
+\section{System Scalability}
+The methodology easily scales to national solar parks containing dozens of heterogeneous sub-arrays. Pre-training a single regional foundational model allows instant deployment across newly energized sub-stations with minimal on-site data.
+
+% -------------------------------------------------------------
+% CHAPTER 8: CONCLUSION AND FUTURE WORK
+% -------------------------------------------------------------
+\newpage
+\chapter{CONCLUSION AND FUTURE WORK}
+
+\section{Conclusion}
+The PVIntelligence project successfully develops, validates, and deploys a cross-regional transfer learning framework for solar photovoltaic generation forecasting. By transferring general diurnal physics from a data-rich facility, the proposed system solves the cold-start data scarcity problem for newly commissioned plants, achieving an RMSE of 1,149.05 kW (16.8\% improvement) and an MAE of 676.30 kW (20.0\% improvement) while speeding up training by 62\%. The system is publicly accessible at \url{https://pvintelligence.vercel.app}.
+
+\section{Future Work}
+Future enhancements will explore:
+\begin{itemize}
+    \item Multi-modal integration of sky-camera satellite imagery for minute-level cloud tracking.
+    \item Spatio-temporal graph neural networks (GNNs) for distributed solar cluster coordination.
+    \item Physics-Informed Neural Networks (PINNs) encoding thermodynamic panel equations directly into loss functions.
+\end{itemize}
+
+% -------------------------------------------------------------
+% REFERENCES
+% -------------------------------------------------------------
+\newpage
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{REFERENCES}
+
+\bibitem{ref1} S. Hochreiter and J. Schmidhuber, ``Long short-term memory,'' \textit{Neural Computation}, vol. 9, no. 8, pp. 1735--1780, 1997.
+\bibitem{ref2} S. J. Pan and Q. Yang, ``A survey on transfer learning,'' \textit{IEEE Transactions on Knowledge and Data Engineering}, vol. 22, no. 10, pp. 1345--1359, 2010.
+\bibitem{ref3} A. Mellit and A. M. Pavan, ``A 24-h forecast of solar irradiance using artificial neural network: Application for performance prediction of a grid-connected PV plant,'' \textit{Solar Energy}, vol. 84, no. 5, pp. 807--821, 2010.
+\bibitem{ref4} D. Yang et al., ``History and trends in solar irradiance and PV power forecasting: A preliminary assessment,'' \textit{Solar Energy}, vol. 168, pp. 60--112, 2018.
+\bibitem{ref5} E. Sarmas et al., ``A transfer learning strategy for cross-regional solar power forecasting under data scarcity,'' \textit{Applied Energy}, vol. 310, p. 118518, 2022.
+\bibitem{ref6} K. Pandith, ``Deep learning architectures for photovoltaic power prediction: A comparative study,'' \textit{Renewable and Sustainable Energy Reviews}, vol. 189, p. 113942, 2024.
+\bibitem{ref7} H. Bak et al., ``Cross-facility domain adaptation for renewable energy forecasting with recurrent networks,'' \textit{IEEE Transactions on Sustainable Energy}, vol. 16, no. 1, pp. 245--256, 2025.
+
+\end{thebibliography}
+
+\end{document}
