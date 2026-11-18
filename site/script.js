@@ -1460,7 +1460,7 @@ window.addEventListener('DOMContentLoaded', () => {
     ['Anomaly Alert',     'coral',     'High cloud cover on Aug 15 reduced Region A generation by roughly 34% versus forecast.'],
     ['Model Calibration', 'turquoise', 'Region B required 80% less training data via transfer learning, matching Region A RMSE within 1.1 kW.'],
     ['Soiling Advisory',  'amber',     'Panel efficiency in Region A shows a mild downward drift over the last 20 days, consistent with dust.'],
-    ['Geographic Alignment', 'violet', 'Region A (Bhadla coords) and Region B (Charanka coords) share similar solar profiles with a minor ~3-minute longitude offset.'],
+    ['Geographic Alignment', 'violet', 'Region A (Plant 1) and Region B (Plant 2) at Gandikota share synchronized solar profiles across all 22 monitored inverters.'],
     ['Model Boundary',    'coral',     'Forecast confidence drops below 85% whenever cloud cover exceeds 60%, across both regions.'],
     ['Grid Stability',    'turquoise', 'Weekend industrial generation matches weekday baselines within normal ±2.4% tolerance.']
   ];

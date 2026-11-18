@@ -8,23 +8,23 @@
 
 /* ============================================================
    REGIONS CONFIGURATION
-   Region A: 650 kWp array modeled at Bhadla coordinates (Rajasthan)
-   Region B: 520 kWp array modeled at Charanka coordinates (Gujarat)
+   Region A: 650 kWp array modeled at Gandikota coordinates (Plant 1)
+   Region B: 520 kWp array modeled at Gandikota coordinates (Plant 2)
    ============================================================ */
 const REGIONS = {
   A: {
     key: 'A',
-    name: 'Region A · 650 kWp (Bhadla coords)',
-    lat: 27.54,
-    lon: 71.91,
+    name: 'Region A · 650 kWp (Plant 1)',
+    lat: 14.81,
+    lon: 78.28,
     capacity: 650,
     baseRmse: 5.8
   },
   B: {
     key: 'B',
-    name: 'Region B · 520 kWp (Charanka coords)',
-    lat: 23.90,
-    lon: 71.20,
+    name: 'Region B · 520 kWp (Plant 2)',
+    lat: 14.81,
+    lon: 78.28,
     capacity: 520,
     baseRmse: 6.9
   }

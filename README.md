@@ -33,7 +33,7 @@ The system is designed around a real-world solar engineering bottleneck: newly c
 ---
 
 ### 4. Data Engineering & Regional Telemetry Benchmark
-*Diurnal periodic feature encoding (hour sin/cos), clear-sky normalization, cloud cover distributions, and regional climate benchmark comparison (Bhadla, Rajasthan vs. Charanka, Gujarat).*
+*Diurnal periodic feature encoding (hour sin/cos), clear-sky normalization, cloud cover distributions, and regional climate benchmark comparison (Gandikota Plant 1 vs. Plant 2, Andhra Pradesh).*
 ![Data Preprocessing & Regional Analytics](docs/screenshots/04_data_analytics.png)
 
 ---
@@ -42,7 +42,7 @@ The system is designed around a real-world solar engineering bottleneck: newly c
 * **Time-Series Forecasting:** Stacked LSTM/GRU neural network for photovoltaic (PV) power prediction.
 * **Transfer Learning:** Domain adaptation transferring representation weights from data-rich Region A (120 days) to data-scarce Region B (18 days), reducing data requirements by 80% with 53% lower validation RMSE.
 * **Explainable AI (XAI):** SHAP (SHapley Additive exPlanations) feature attribution quantifying the marginal impact of irradiance, temperature, cloud cover, and cyclical time features.
-* **Live Satellite Weather Telemetry (Open-Meteo):** Real-time global satellite weather auto-ingestion by city presets (Bengaluru, Chennai, Amaravati/VIT-AP, Hyderabad, Delhi, Mumbai, Bhadla, Charanka) or custom GPS coordinates.
+* **Live Satellite Weather Telemetry (Open-Meteo):** Real-time global satellite weather auto-ingestion by city presets (Bengaluru, Chennai, Amaravati/VIT-AP, Hyderabad, Delhi, Mumbai, Gandikota Solar Park) or custom GPS coordinates.
 * **Dynamic Forecast Horizon:** Configurable multi-day forecasting horizons (7 days, 10 days, 14 days) with instant total generation projection for viva demonstration.
 * **Streamlined 5-Module Presentation UI:** Reorganized into 5 logical modules with plain-English "Section Purpose" explainer banners for evaluators:
   1. `⚡ Live Forecast & Demo`: City presets, GPS auto-detect, customizable forecast days, and real-time generation curves.

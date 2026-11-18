@@ -1,0 +1,31 @@
+Hey guys, please read this carefully before our viva and presentation! A few things in our old draft were outdated or assumed incorrectly. Here is the actual architecture so we are all 100% aligned:
+
+1. No Streamlit / No app.py:
+We are NOT running a local Streamlit app. Our project is a live cloud Single-Page Application deployed on Vercel at https://pvintelligence.vercel.app (HTML5 Canvas engine + Python serverless backend). Never say 'run streamlit run app.py' in the viva.
+
+2. Our data is NOT synthetic:
+We did NOT use a fake generator formula. Our data is 100% real commercial solar SCADA and pyranometer sensor data from Gandikota, Andhra Pradesh, India (Plant 1 & Plant 2 from Kaggle, May 15 to June 17, 2020, across 22 inverters). Real plant data gives our project way more marks and credibility!
+
+3. Live Weather API:
+Our website connects live to the Open-Meteo Solar API in real time to fetch live solar irradiance (W/m2), temperature, and cloud cover based on actual coordinates.
+
+4. Explainable AI (SHAP):
+We didn't just build an LSTM; we built an explainer using SHAP (src/explainability.py) that proves why the model made a prediction (e.g. +6.8 kW from irradiance, -1.2 kW from heat derating).
+
+5. Actual Code Files:
+If the examiner asks what scripts we have:
+- src/data_loader.py & src/preprocessing.py (data merging & sliding windows)
+- src/transfer_learning.py (pretraining on Plant 1, freezing LSTM 1, fine-tuning on Plant 2)
+- src/predict.py (inference in kW)
+- src/explainability.py (SHAP waterfall/summary plots)
+- site/ folder + api/index.py (Vercel deployment)
+
+6. Key Metrics to Remember:
+- Base model trained on Plant 1 (34 days).
+- Target Plant 2 fine-tuned on just 14 days of data (70% data scarcity).
+- RMSE dropped by 16.82% (1,381.38 kW -> 1,149.05 kW).
+- MAE dropped by 20.00% (845.35 kW -> 676.30 kW).
+- R2 increased from 0.9390 -> 0.9578.
+- Convergence 62.2% faster (17 epochs vs 45 epochs).
+
+I have already updated PVIntelligence_Thesis_Final.docx and PVIntelligence_Research_Defence_Fixed.pptx with all these corrections!
