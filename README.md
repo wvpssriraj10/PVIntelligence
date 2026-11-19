@@ -42,13 +42,14 @@ The system is designed around a real-world solar engineering bottleneck: newly c
 * **Time-Series Forecasting:** Stacked LSTM/GRU neural network for photovoltaic (PV) power prediction.
 * **Transfer Learning:** Domain adaptation transferring representation weights from data-rich Region A (120 days) to data-scarce Region B (18 days), reducing data requirements by 80% with 53% lower validation RMSE.
 * **Explainable AI (XAI):** SHAP (SHapley Additive exPlanations) feature attribution quantifying the marginal impact of irradiance, temperature, cloud cover, and cyclical time features.
-* **Live Satellite Weather Telemetry (Open-Meteo):** Real-time global satellite weather auto-ingestion by city presets (Bengaluru, Chennai, Amaravati/VIT-AP, Hyderabad, Delhi, Mumbai, Gandikota Solar Park) or custom GPS coordinates.
+* **Live Satellite Weather Telemetry (Open-Meteo):** Real-time global satellite weather auto-ingestion by city presets (Gandikota Solar Park, Amaravati/VIT-AP, Bengaluru, Chennai, Hyderabad, Delhi, Mumbai) or custom GPS coordinates.
 * **Dynamic Forecast Horizon:** Configurable multi-day forecasting horizons (7 days, 10 days, 14 days) with instant total generation projection for viva demonstration.
+* **Interactive Transfer Fine-Tuning Calibration:** In-browser controls for selecting adaptation strategy (Scratch, Frozen, Fine-Tuned), adjusting training epochs (5–100), testing EarlyStopping convergence, and dynamically updating validation RMSE benchmarks.
 * **Streamlined 5-Module Presentation UI:** Reorganized into 5 logical modules with plain-English "Section Purpose" explainer banners for evaluators:
   1. `⚡ Live Forecast & Demo`: City presets, GPS auto-detect, customizable forecast days, and real-time generation curves.
   2. `🧠 Transfer Learning (Core ML)`: Region A base pre-training, fine-tuned adaptation, and empirical RMSE vs. training days proof.
   3. `🔍 Explainability & Diagnostics`: SHAP attribution bars, threshold-based fault scanner (soiling & clipping), and AI insights.
-  4. `📊 Data & Regional Analytics`: Feature engineering, MinMax scalers, and Rajasthan vs. Gujarat climate comparison.
+  4. `📊 Data & Regional Analytics`: Feature engineering, MinMax scalers, and Gandikota Plant 1 vs. Plant 2 regional comparison.
   5. `📄 Team & Architecture`: Printable executive audit report, student profiles, and end-to-end pipeline diagrams.
 * **Resilient Dual-Tier Fallback & Caching:** 15-minute `localStorage` cache TTL with 8-second timeout. Gracefully cascades to cached telemetry or offline demo data with honest provenance badges (`Live weather`, `Cached weather data`, `Offline demo data`, `Manual input`).
 
@@ -151,6 +152,8 @@ PVIntelligence/
 │   ├── script.js              # Chart rendering, navigation & inference
 │   └── weather.js             # Open-Meteo live satellite weather ingestion
 ├── src/                       # Core Python modeling scripts
+├── PVIntelligence_Thesis_Final.docx       # Official B.Tech Capstone Thesis & Project Report
+├── PVIntelligence_Research_Defence.pptx    # Final Presentation Defense Slide Deck
 ├── pyproject.toml             # Python packaging configuration
 ├── README.md                  # Project documentation & benchmark overview
 ├── setup.py                   # Package setup entry
