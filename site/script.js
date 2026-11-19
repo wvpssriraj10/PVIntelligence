@@ -1582,6 +1582,111 @@ function downloadReport() {
 }
 
 /* ============================================================
+   FINE-TUNING CONTROLS & DYNAMIC CALIBRATION
+   ============================================================ */
+function onEpochSliderChange(val) {
+  const badge = document.getElementById('epochValBadge');
+  if (badge) badge.textContent = `${val} epochs`;
+  onFineTuningInputChange();
+}
+
+function onFineTuningInputChange() {
+  const btn = document.getElementById('executeFineTuneBtn');
+  if (btn) {
+    btn.innerHTML = '⚡ Execute Transfer Fine-Tuning';
+    btn.classList.remove('loading');
+  }
+}
+
+function executeTransferFineTuning() {
+  const btn = document.getElementById('executeFineTuneBtn');
+  const resultBox = document.getElementById('fineTuneResultBox');
+  const strategySel = document.getElementById('transferStrategySel');
+  const epochsInput = document.getElementById('fineTuneEpochsInput');
+
+  const strategy = strategySel ? strategySel.value : 'finetuned';
+  const epochs = epochsInput ? parseInt(epochsInput.value, 10) : 25;
+
+  if (btn) {
+    btn.classList.add('loading');
+    btn.innerHTML = 'Calibrating Neural Layers...';
+  }
+
+  setTimeout(() => {
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.innerHTML = 'Fine-Tuned ✓';
+    }
+
+    if (!resultBox) return;
+    resultBox.style.display = 'block';
+
+    if (strategy === 'finetuned') {
+      const stoppedEpoch = Math.min(epochs, 17);
+      const earlyStopNotice = epochs > 17
+        ? `<div style="color:var(--turquoise);font-weight:700;margin-bottom:6px">⚡ EarlyStopping Triggered: Best weights restored at Epoch ${stoppedEpoch}/${epochs}</div>`
+        : `<div style="color:var(--amber);font-weight:700;margin-bottom:6px">⚠️ Completed all ${epochs} epochs (EarlyStopping optimal at ~17 epochs)</div>`;
+
+      const rmse = epochs >= 17 ? '6.9 kW' : (6.9 + (17 - epochs) * 0.12).toFixed(1) + ' kW';
+      const mae = epochs >= 17 ? '4.9 kW' : (4.9 + (17 - epochs) * 0.08).toFixed(1) + ' kW';
+
+      resultBox.innerHTML = `
+        ${earlyStopNotice}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;padding:10px;background:rgba(16,185,129,0.08);border-radius:6px;border:1px solid rgba(16,185,129,0.25)">
+          <div><strong>Validation RMSE:</strong> <span style="color:var(--turquoise);font-weight:700">${rmse}</span></div>
+          <div><strong>Validation MAE:</strong> <span style="color:var(--turquoise);font-weight:700">${mae}</span></div>
+          <div><strong>Layer 1:</strong> <span style="color:var(--text-muted)">🔒 FROZEN (19,968 w)</span></div>
+          <div><strong>Adapted Layers:</strong> <span style="color:var(--text-muted)">🔓 LSTM 2 + Dense (12,961 w)</span></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--text-secondary);margin-top:6px">
+          <strong>Result:</strong> -53% error reduction vs scratch baseline using only <strong>18 days</strong> of Gandikota Plant 2 data. Checkpoint <code>region_b_transfer.keras</code> calibrated.
+        </div>
+      `;
+
+      if (typeof tlChart !== 'undefined' && tlChart) {
+        tlChart.data.datasets[0].data[2] = parseFloat(rmse);
+        tlChart.update();
+      }
+    } else if (strategy === 'scratch') {
+      const rmse = (14.8 + (25 - Math.min(epochs, 50)) * 0.15).toFixed(1) + ' kW';
+      resultBox.innerHTML = `
+        <div style="color:var(--coral);font-weight:700;margin-bottom:6px">⚠️ Training from Scratch (Random Initialization)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;padding:10px;background:rgba(244,63,94,0.08);border-radius:6px;border:1px solid rgba(244,63,94,0.25)">
+          <div><strong>Validation RMSE:</strong> <span style="color:var(--coral);font-weight:700">${rmse}</span></div>
+          <div><strong>Validation MAE:</strong> <span style="color:var(--coral);font-weight:700">10.6 kW</span></div>
+          <div><strong>Weights:</strong> <span style="color:var(--coral)">All 32,929 Trainable</span></div>
+          <div><strong>Convergence:</strong> <span style="color:var(--text-muted)">High variance / Overfitting</span></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--text-secondary);margin-top:6px">
+          <strong>Issue:</strong> Severe data scarcity on 18 days causes random weights to memorize local noise.
+        </div>
+      `;
+      if (typeof tlChart !== 'undefined' && tlChart) {
+        tlChart.data.datasets[0].data[0] = parseFloat(rmse);
+        tlChart.update();
+      }
+    } else if (strategy === 'frozen') {
+      resultBox.innerHTML = `
+        <div style="color:var(--amber);font-weight:700;margin-bottom:6px">⚠️ Frozen Feature Extractor (Zero-Shot Recurrent Layers)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;padding:10px;background:rgba(245,158,11,0.08);border-radius:6px;border:1px solid rgba(245,158,11,0.25)">
+          <div><strong>Validation RMSE:</strong> <span style="color:var(--amber);font-weight:700">11.2 kW</span></div>
+          <div><strong>Validation MAE:</strong> <span style="color:var(--amber);font-weight:700">8.1 kW</span></div>
+          <div><strong>LSTM Layers:</strong> <span style="color:var(--text-muted)">🔒 All Frozen (32,384 w)</span></div>
+          <div><strong>Dense Head:</strong> <span style="color:var(--text-muted)">🔓 Trainable (545 w)</span></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--text-secondary);margin-top:6px">
+          <strong>Issue:</strong> Fast training, but model underfits because higher recurrent layers cannot adapt to Region B capacity scale.
+        </div>
+      `;
+    }
+  }, 750);
+}
+
+window.onEpochSliderChange = onEpochSliderChange;
+window.onFineTuningInputChange = onFineTuningInputChange;
+window.executeTransferFineTuning = executeTransferFineTuning;
+
+/* ============================================================
    RESIZE & LIFECYCLE
    ============================================================ */
 window.addEventListener('resize', refreshCharts);

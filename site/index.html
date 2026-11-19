@@ -504,15 +504,19 @@
               <div class="dca-card-subtitle" style="margin-bottom:14px">Configure transfer fine-tuning hyperparameters for Region B</div>
               <div class="input-stack">
                 <label>Strategy
-                  <select class="select" aria-label="Transfer learning strategy">
-                    <option>Train from scratch</option>
-                    <option>Frozen feature extractor</option>
-                    <option selected>Fine-tuned transfer (Recommended)</option>
+                  <select id="transferStrategySel" class="select" onchange="onFineTuningInputChange()" aria-label="Transfer learning strategy">
+                    <option value="scratch">Train from scratch</option>
+                    <option value="frozen">Frozen feature extractor</option>
+                    <option value="finetuned" selected>Fine-tuned transfer (Recommended)</option>
                   </select>
                 </label>
-                <label style="margin-top:12px">Fine-tuning epochs
-                  <input type="range" min="5" max="100" value="25" aria-label="Fine-tune epochs" aria-valuenow="25" />
-                </label>
+                <div style="margin-top:12px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <label for="fineTuneEpochsInput" style="font-size:12px;font-weight:700;color:var(--text-secondary);margin:0">Fine-tuning epochs</label>
+                    <span id="epochValBadge" class="status-pill-badge blue" style="font-size:11.5px;padding:2px 8px">25 epochs</span>
+                  </div>
+                  <input id="fineTuneEpochsInput" type="range" min="5" max="100" value="25" oninput="onEpochSliderChange(this.value)" aria-label="Fine-tune epochs" aria-valuenow="25" style="width:100%" />
+                </div>
               </div>
             </div>
             <div style="margin-top:18px">
@@ -530,9 +534,13 @@
                   <strong class="stat-col-value" style="color:var(--turquoise)">-80%</strong>
                 </div>
               </div>
-              <button class="btn primary" type="button" style="width:100%"
-                onclick="this.classList.add('loading');setTimeout(()=>{this.classList.remove('loading');this.textContent='Fine-Tuned ✓'},900)"
-                aria-label="Run transfer learning">Execute Transfer Fine-Tuning</button>
+              <button class="btn primary" id="executeFineTuneBtn" type="button" style="width:100%"
+                onclick="executeTransferFineTuning()"
+                aria-label="Run transfer learning">⚡ Execute Transfer Fine-Tuning</button>
+              
+              <!-- Dynamic Result Box -->
+              <div id="fineTuneResultBox" style="display:none;margin-top:14px;padding:12px 14px;background:var(--surface-raised);border-radius:var(--radius-sm);border:1px solid var(--border);font-size:12.5px;line-height:1.5">
+              </div>
             </div>
           </div>
           
